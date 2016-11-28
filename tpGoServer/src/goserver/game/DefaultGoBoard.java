@@ -61,13 +61,11 @@ public class DefaultGoBoard implements GoBoard {
 			throw new IllegalArgumentException();
 		}
 		if (board[x][y] != EMPTY) {
-			System.out.println("panie co pan");
 			throw new IllegalArgumentException();
 		}
 		if (color != WHITE && color != BLACK) {
 			throw new IllegalArgumentException();
 		}
-		System.out.println("no spoko" + x + " " + y);
 
 		// sprawdzanie poprawnosci ruchow przez Game.ruleset.validateMove() przy
 		// wywolaniu Game.makeMove()
