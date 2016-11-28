@@ -150,6 +150,23 @@ public class BoardTest {
 		board.placeStone(Board.BLACK, 5, 4);
 		assertTrue(compareMatrix(boardCopy, board.getPreviousBoard()));
 	}
+	
+	@Test
+	public void testCapture() {
+		int size = 9;
+		Board board = new Board(size);
+		board.placeStone(Board.BLACK, 0, 0);
+		board.placeStone(Board.BLACK, 1, 0);
+		board.placeStone(Board.BLACK, 1, 1);
+		board.placeStone(Board.BLACK, 2, 1);
+		board.placeStone(Board.WHITE, 1, 2);
+		board.placeStone(Board.WHITE, 2, 0);
+		board.placeStone(Board.WHITE, 2, 2);
+		board.placeStone(Board.WHITE, 3, 1);
+		int captured = board.placeStone(Board.WHITE, 0, 1);
+		assertEquals(4, captured);
+		assertEquals(Board.EMPTY, board.getBoard()[0][0]);
+	}
 
 	public int[][] copyMatrix(int[][] matrix) {
 		int[][] newMatrix = new int[matrix.length][];

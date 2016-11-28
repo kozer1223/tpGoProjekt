@@ -3,6 +3,13 @@
  */
 package goserver.game;
 
+import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
+import goserver.util.IntPair;
+
 /**
  * @author Kacper
  *
@@ -72,10 +79,45 @@ public class Board {
 
 		board[x][y] = color;
 
-		// TODO
-		// sprawdz ile zabrano jencow
+		// zabierz jencow
+		int captured = 0;
+		if (x + 1 < size && board[x + 1][y] == getOpposingColor(color))
+			captured += captureStones(x + 1, y);
+		if (y + 1 < size && board[x][y + 1] == getOpposingColor(color))
+			captured += captureStones(x, y + 1);
+		if (x - 1 >= 0 && board[x - 1][y] == getOpposingColor(color))
+			captured += captureStones(x - 1, y);
+		if (y - 1 >= 0 && board[x][y - 1] == getOpposingColor(color))
+			captured += captureStones(x, y - 1);
 
-		return 0;
+		return captured;
+	}
+
+	/**
+	 * Zabierz kamienie z grupy, do której nale¿y kamieñ, jeœli jest udoszona.
+	 * Zwraca liczbê jeñców.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	private int captureStones(int x, int y) {
+		List<IntPair> stoneGroup = getConnectedStones(x, y);
+
+		int liberties = 0;
+
+		for (int i = 0; i < stoneGroup.size(); i++) {
+			liberties += getLiberties(stoneGroup.get(i).x, stoneGroup.get(i).y);
+		}
+		if (liberties == 0) { // uduszone
+			int captured = stoneGroup.size();
+			for (int i = 0; i < stoneGroup.size(); i++) {
+				board[stoneGroup.get(i).x][stoneGroup.get(i).y] = EMPTY;
+			}
+			return captured;
+		} else {
+			return 0;
+		}
 	}
 
 	/**
@@ -119,6 +161,76 @@ public class Board {
 		}
 	}
 
+	public List<IntPair> getConnectedStones(int x, int y) {
+		// algorytm floodfill
+		final int width = getSize();
+		final int height = getSize();
+
+		Set<IntPair> result = new HashSet<IntPair>();
+		List<IntPair> queue = new ArrayList<IntPair>();
+
+		final int color = board[x][y];
+
+		queue.add(new IntPair(x, y));
+
+		int i, cur_x, cur_y;
+
+		while (!queue.isEmpty()) {
+			cur_x = queue.get(0).x;
+			cur_y = queue.get(0).y;
+
+			// obecne pole
+			result.add(new IntPair(cur_x, cur_y));
+			if (cur_y - 1 >= 0 && board[cur_x][cur_y - 1] == color) {
+				if (result.add(new IntPair(cur_x, cur_y - 1)))
+					queue.add(new IntPair(cur_x, cur_y - 1));
+			}
+			if (cur_y + 1 < height && board[cur_x][cur_y + 1] == color) {
+				if (result.add(new IntPair(cur_x, cur_y + 1)))
+					queue.add(new IntPair(cur_x, cur_y + 1));
+			}
+			// w lewo
+			i = 1;
+			while (cur_x - i >= 0) {
+				if (board[cur_x - i][cur_y] == color) {
+					result.add(new IntPair(cur_x - i, cur_y));
+					if (cur_y - 1 >= 0 && board[cur_x - i][cur_y - 1] == color) {
+						if (result.add(new IntPair(cur_x - i, cur_y - 1)))
+							queue.add(new IntPair(cur_x - i, cur_y - 1));
+					}
+					if (cur_y + 1 < height && board[cur_x - i][cur_y + 1] == color) {
+						if (result.add(new IntPair(cur_x - i, cur_y + 1)))
+							queue.add(new IntPair(cur_x - i, cur_y + 1));
+					}
+					i++;
+				} else {
+					break;
+				}
+			}
+			// w prawo
+			i = 1;
+			while (cur_x + i < width) {
+				if (board[cur_x + i][cur_y] == color) {
+					result.add(new IntPair(cur_x + i, cur_y));
+					if (cur_y - 1 >= 0 && board[cur_x + i][cur_y - 1] == color) {
+						if (result.add(new IntPair(cur_x + i, cur_y - 1)))
+							queue.add(new IntPair(cur_x + i, cur_y - 1));
+					}
+					if (cur_y + 1 < height && board[cur_x + i][cur_y + 1] == color) {
+						if (result.add(new IntPair(cur_x + i, cur_y + 1)))
+							queue.add(new IntPair(cur_x + i, cur_y + 1));
+					}
+					i++;
+				} else {
+					break;
+				}
+			}
+			queue.remove(0);
+		}
+
+		return new ArrayList<IntPair>(result);
+	}
+
 	public int getSize() {
 		return size;
 	}
@@ -130,5 +242,6 @@ public class Board {
 	public int[][] getPreviousBoard() {
 		return previousBoard;
 	}
+	
 
 }
