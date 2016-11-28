@@ -16,5 +16,6 @@ public interface GoGame {
 	public GoBoard getBoard();
 	
 	public int getPlayersCapturedStones(GoPlayer player);
+	public boolean isPlayersTurn(GoPlayer player);
 	
 }

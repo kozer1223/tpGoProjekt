@@ -25,6 +25,12 @@ public class DefaultGameTest {
 
 		}
 
+		@Override
+		public void updateBoard() {
+			// TODO Auto-generated method stub
+			
+		}
+
 	}
 
 	@Test

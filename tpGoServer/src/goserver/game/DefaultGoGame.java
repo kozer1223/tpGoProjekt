@@ -14,6 +14,8 @@ public class DefaultGoGame implements GoGame {
 	private GoRuleset ruleset;
 	private int boardSize;
 	private int[] capturedStones;
+	
+	GoPlayer currentPlayer;
 
 	public DefaultGoGame(GoPlayer player1, GoPlayer player2, int boardSize, GoRuleset ruleset) {
 		players = new GoPlayer[2];
@@ -23,6 +25,8 @@ public class DefaultGoGame implements GoGame {
 		players[1] = player2;
 		player2.setGame(this);
 		player1.setOpposingPlayer(player1);
+		
+		currentPlayer = players[0];
 		
 		capturedStones = new int[2];
 		capturedStones[0] = 0;
@@ -41,17 +45,20 @@ public class DefaultGoGame implements GoGame {
 	 */
 	@Override
 	public void makeMove(GoPlayer player, int x, int y) {
-		int playerNo = getPlayersNo(player);
+		if (isPlayersTurn(player)){
+			int playerNo = getPlayersNo(player);
 		
-		// throws exception?
-		ruleset.validateMove(board, getPlayersColor(playerNo), x, y);
+			// throws exception
+			ruleset.validateMove(board, getPlayersColor(playerNo), x, y);
 		
-		try {
 			capturedStones[playerNo] += board.placeStone(getPlayersColor(playerNo), x, y);
-		} catch (Exception e){
-			throw e;
+
+			players[0].updateBoard();
+			players[1].updateBoard();
+			currentPlayer = getOpposingPlayer(currentPlayer);
+		} else {
+			throw new IllegalArgumentException();
 		}
-		// player.updateBoard() ???
 	}
 
 	/*
@@ -99,6 +106,10 @@ public class DefaultGoGame implements GoGame {
 		return ruleset;
 	}
 	
+	protected GoPlayer getOpposingPlayer(GoPlayer player){
+		return players[1 - getPlayersNo(player)];
+	}
+	
 	protected int getPlayersNo(GoPlayer player){
 		if (player.equals(players[0])) {
 			return 0;
@@ -120,6 +131,11 @@ public class DefaultGoGame implements GoGame {
 	@Override
 	public int getPlayersCapturedStones(GoPlayer player) {
 		return capturedStones[getPlayersNo(player)];
+	}
+
+	@Override
+	public boolean isPlayersTurn(GoPlayer player) {
+		return (currentPlayer == player);
 	}
 
 }
