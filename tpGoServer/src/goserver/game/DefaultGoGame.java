@@ -46,7 +46,11 @@ public class DefaultGoGame implements GoGame {
 		// throws exception?
 		ruleset.validateMove(board, getPlayersColor(playerNo), x, y);
 		
-		capturedStones[playerNo] += board.placeStone(getPlayersColor(playerNo), x, playerNo);
+		try {
+			capturedStones[playerNo] += board.placeStone(getPlayersColor(playerNo), x, y);
+		} catch (Exception e){
+			throw e;
+		}
 		// player.updateBoard() ???
 	}
 
@@ -106,16 +110,16 @@ public class DefaultGoGame implements GoGame {
 	}
 	
 	protected int getPlayersColor(int playerNo) {
-		return (playerNo == 0) ? board.getWhiteColor() : board.getBlackColor();
+		return (playerNo == 0) ? board.getBlackColor() : board.getWhiteColor();
 	}
 
 	protected int getPlayersColor(GoPlayer player) {
-		return (getPlayersNo(player) == 0) ? board.getWhiteColor() : board.getBlackColor();
+		return getPlayersColor(getPlayersNo(player));
 	}
 
 	@Override
 	public int getPlayersCapturedStones(GoPlayer player) {
-		return (getPlayersNo(player) == 0) ? capturedStones[0] : capturedStones[1];
+		return capturedStones[getPlayersNo(player)];
 	}
 
 }
