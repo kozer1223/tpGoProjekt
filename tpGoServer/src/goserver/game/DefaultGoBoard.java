@@ -14,7 +14,7 @@ import goserver.util.IntPair;
  * @author Kacper
  *
  */
-public class Board implements BoardInterface {
+public class DefaultGoBoard implements GoBoard {
 
 	// oznaczenia kamieni na planszy
 	public static final int EMPTY = 0;
@@ -30,7 +30,7 @@ public class Board implements BoardInterface {
 	 * 
 	 * @param size
 	 */
-	public Board(int size) {
+	public DefaultGoBoard(int size) {
 		if (size <= 0) {
 			throw new IllegalArgumentException();
 		}
