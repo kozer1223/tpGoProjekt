@@ -14,7 +14,7 @@ import goserver.util.IntPair;
  * @author Kacper
  *
  */
-public class Board {
+public class Board implements BoardInterface {
 
 	// oznaczenia kamieni na planszy
 	public static final int EMPTY = 0;
