@@ -47,13 +47,13 @@ public class Board {
 	}
 
 	/**
-	 * K³adzie kamieñ na polu (x,y) i dusi kamienie przeciwnika, jeœli mo¿liwe.
-	 * Zwraca liczbê uduszonych kamieni przeciwnika.
+	 * KÅ‚adzie kamieÅ„ na polu (x,y) i dusi kamienie przeciwnika, jeÅ›li moÅ¼liwe.
+	 * Zwraca liczbÄ™ uduszonych kamieni przeciwnika.
 	 * 
 	 * @param color
 	 * @param x
 	 * @param y
-	 * @return liczba zabranych jeñców
+	 * @return liczba zabranych jeÅ„cÃ³w
 	 * @throws IllegalArgumentException
 	 */
 	public int placeStone(int color, int x, int y) throws IllegalArgumentException {
@@ -94,8 +94,8 @@ public class Board {
 	}
 
 	/**
-	 * Zabierz kamienie z grupy, do której nale¿y kamieñ, jeœli jest udoszona.
-	 * Zwraca liczbê jeñców.
+	 * Zabierz kamienie z grupy, do ktÃ³rej naleÅ¼y kamieÅ„, jeÅ›li jest udoszona.
+	 * Zwraca liczbÄ™ jeÅ„cÃ³w.
 	 * 
 	 * @param x
 	 * @param y
@@ -121,10 +121,10 @@ public class Board {
 	}
 
 	/**
-	 * Zwraca liczbê oddechów kamienia na polu (x,y). (Oddech kamienia definiuje
-	 * jako puste pola tu¿ obok kamienia).
+	 * Zwraca liczbÄ™ oddechÃ³w kamienia na polu (x,y). (Oddech kamienia definiuje
+	 * jako puste pola tuÅ¼ obok kamienia).
 	 * 
-	 * Zwraca -1, jeœli pole (x,y) jest puste.
+	 * Zwraca -1, jeÅ›li pole (x,y) jest puste.
 	 * 
 	 * @param x
 	 * @param y
@@ -242,6 +242,5 @@ public class Board {
 	public int[][] getPreviousBoard() {
 		return previousBoard;
 	}
-	
 
 }
