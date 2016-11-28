@@ -27,8 +27,8 @@ fontsize=11
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>224</x>
-      <y>80</y>
+      <x>392</x>
+      <y>104</y>
       <w>96</w>
       <h>56</h>
     </coordinates>
@@ -41,8 +41,8 @@ _main(): void_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>80</x>
-      <y>88</y>
+      <x>248</x>
+      <y>112</y>
       <w>80</w>
       <h>96</h>
     </coordinates>
@@ -58,8 +58,8 @@ _main(): void_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>80</x>
-      <y>24</y>
+      <x>248</x>
+      <y>48</y>
       <w>80</w>
       <h>24</h>
     </coordinates>
@@ -69,8 +69,8 @@ _main(): void_
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>112</x>
-      <y>40</y>
+      <x>280</x>
+      <y>64</y>
       <w>24</w>
       <h>64</h>
     </coordinates>
@@ -80,8 +80,8 @@ _main(): void_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>32</x>
-      <y>232</y>
+      <x>200</x>
+      <y>256</y>
       <w>168</w>
       <h>128</h>
     </coordinates>
@@ -97,8 +97,8 @@ _main(): void_
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>112</x>
-      <y>176</y>
+      <x>280</x>
+      <y>200</y>
       <w>32</w>
       <h>72</h>
     </coordinates>
@@ -110,8 +110,8 @@ m2=0..1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>152</x>
-      <y>104</y>
+      <x>320</x>
+      <y>128</y>
       <w>88</w>
       <h>32</h>
     </coordinates>
@@ -123,8 +123,8 @@ m2=0*</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>192</x>
-      <y>128</y>
+      <x>360</x>
+      <y>152</y>
       <w>64</w>
       <h>136</h>
     </coordinates>
@@ -136,12 +136,15 @@ m2=0*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>48</x>
-      <y>424</y>
+      <x>216</x>
+      <y>448</y>
       <w>136</w>
       <h>64</h>
     </coordinates>
     <panel_attributes>Board
+--
+-size: int
+-board: int[][]
 --
 +placeStone(color, x, y)</panel_attributes>
     <additional_attributes/>
@@ -149,8 +152,8 @@ m2=0*</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>440</x>
-      <y>272</y>
+      <x>640</x>
+      <y>296</y>
       <w>104</w>
       <h>80</h>
     </coordinates>
@@ -167,8 +170,8 @@ Rule
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>520</x>
-      <y>392</y>
+      <x>688</x>
+      <y>416</y>
       <w>48</w>
       <h>16</h>
     </coordinates>
@@ -178,21 +181,24 @@ Rule
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>296</x>
-      <y>288</y>
+      <x>464</x>
+      <y>312</y>
       <w>104</w>
-      <h>48</h>
+      <h>80</h>
     </coordinates>
     <panel_attributes>Ruleset
 --
-+addRule(Rule rule)</panel_attributes>
++addRule(Rule rule)
++validateMove()
++onGameStart()
++onGameEnd()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>304</x>
-      <y>352</y>
+      <x>472</x>
+      <y>440</y>
       <w>80</w>
       <h>48</h>
     </coordinates>
@@ -203,19 +209,19 @@ Rule
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>336</x>
-      <y>328</y>
+      <x>504</x>
+      <y>384</y>
       <w>24</w>
-      <h>40</h>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;30.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>464</x>
-      <y>392</y>
+      <x>632</x>
+      <y>416</y>
       <w>48</w>
       <h>16</h>
     </coordinates>
@@ -225,8 +231,8 @@ Rule
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>392</x>
-      <y>392</y>
+      <x>560</x>
+      <y>416</y>
       <w>64</w>
       <h>16</h>
     </coordinates>
@@ -236,8 +242,19 @@ Rule
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>424</x>
-      <y>344</y>
+      <x>592</x>
+      <y>368</y>
+      <w>88</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>90.0;10.0;10.0;60.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>648</x>
+      <y>368</y>
       <w>56</w>
       <h>64</h>
     </coordinates>
@@ -247,43 +264,32 @@ Rule
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>480</x>
-      <y>344</y>
-      <w>24</w>
+      <x>696</x>
+      <y>368</y>
+      <w>32</w>
       <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+    <additional_attributes>10.0;10.0;20.0;60.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>504</x>
-      <y>344</y>
-      <w>56</w>
-      <h>64</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;50.0;60.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>392</x>
-      <y>296</y>
-      <w>64</w>
+      <x>560</x>
+      <y>320</y>
+      <w>96</w>
       <h>40</h>
     </coordinates>
     <panel_attributes>lt=-
 
 m2=0*</panel_attributes>
-    <additional_attributes>60.0;20.0;10.0;20.0</additional_attributes>
+    <additional_attributes>100.0;20.0;10.0;20.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>192</x>
-      <y>304</y>
+      <x>360</x>
+      <y>328</y>
       <w>120</w>
       <h>32</h>
     </coordinates>
@@ -294,8 +300,8 @@ m1=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>104</x>
-      <y>352</y>
+      <x>272</x>
+      <y>376</y>
       <w>24</w>
       <h>88</h>
     </coordinates>
@@ -306,21 +312,21 @@ m1=1</panel_attributes>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>264</x>
-      <y>152</y>
-      <w>192</w>
+      <x>432</x>
+      <y>176</y>
+      <w>224</w>
       <h>48</h>
     </coordinates>
     <panel_attributes>GameFactory {1}
 --
-+makeGame(player1, player2, ruleset)</panel_attributes>
++makeGoGame(player1, player2, boardSize, ruleset)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>192</x>
-      <y>192</y>
+      <x>360</x>
+      <y>216</y>
       <w>160</w>
       <h>88</h>
     </coordinates>
@@ -331,8 +337,8 @@ m1=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>312</x>
-      <y>96</y>
+      <x>480</x>
+      <y>120</y>
       <w>56</w>
       <h>72</h>
     </coordinates>
@@ -343,13 +349,51 @@ m1=1</panel_attributes>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>336</x>
-      <y>192</y>
+      <x>504</x>
+      <y>216</y>
       <w>48</w>
       <h>112</h>
     </coordinates>
     <panel_attributes>lt=.&gt;
 &lt;&lt;use&gt;&gt;</panel_attributes>
     <additional_attributes>10.0;10.0;10.0;120.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLNote</id>
+    <coordinates>
+      <x>0</x>
+      <y>296</y>
+      <w>136</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>Interfejsy do Game, Board,
+Ruleset, GameFactory,
+itp.?
+Wtedy można zaimplementować
+inne gry.
+bg=#CCCCFF</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>744</x>
+      <y>416</y>
+      <w>64</w>
+      <h>16</h>
+    </coordinates>
+    <panel_attributes>SuicideRule</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>712</x>
+      <y>368</y>
+      <w>80</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;80.0;60.0</additional_attributes>
   </element>
 </diagram>
