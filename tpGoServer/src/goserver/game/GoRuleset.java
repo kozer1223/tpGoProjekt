@@ -8,6 +8,11 @@ package goserver.game;
  *
  */
 public class GoRuleset {
+
+	public void validateMove(GoBoard board, int color, int x, int y) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 	// TODO
 	// addRule(GoRule rule)

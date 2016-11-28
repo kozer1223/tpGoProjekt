@@ -15,5 +15,8 @@ public interface GoBoard {
 	public int getSize();
 	public int[][] getBoard();
 	public int[][] getPreviousBoard();
+	public int getBlackColor();
+	public int getWhiteColor();
+	public int getEmptyColor();
 
 }

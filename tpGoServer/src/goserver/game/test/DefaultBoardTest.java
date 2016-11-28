@@ -13,7 +13,7 @@ import goserver.game.DefaultGoBoard;
  * @author Kacper
  *
  */
-public class BoardTest {
+public class DefaultBoardTest {
 
 	@Test
 	public void testBoardSize() {

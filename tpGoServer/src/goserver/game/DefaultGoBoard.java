@@ -243,4 +243,19 @@ public class DefaultGoBoard implements GoBoard {
 		return previousBoard;
 	}
 
+	@Override
+	public int getBlackColor() {
+		return BLACK;
+	}
+
+	@Override
+	public int getWhiteColor() {
+		return WHITE;
+	}
+
+	@Override
+	public int getEmptyColor() {
+		return EMPTY;
+	}
+
 }
