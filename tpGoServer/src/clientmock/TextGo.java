@@ -34,10 +34,12 @@ public class TextGo {
 				try{
 					int x = in.nextInt();
 					int y = in.nextInt();
+					in.nextLine();
 					curPlayer.makeMove(x, y);
 					System.out.println("correct move");
 				} catch (InputMismatchException ime){
 					String line = in.next();
+					in.nextLine();
 					if(line.contains("pass")){
 						curPlayer.passTurn();
 					}
