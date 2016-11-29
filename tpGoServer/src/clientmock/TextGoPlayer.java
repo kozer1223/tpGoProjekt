@@ -18,6 +18,10 @@ public class TextGoPlayer implements GoPlayer {
 		game.makeMove(this, x, y);
 	}
 	
+	public void passTurn(){
+		game.passTurn(this);
+	}
+	
 	public void drawBoard(){
 		GoBoard board = game.getBoard();
 		int[][] boardData = board.getBoard();

@@ -60,6 +60,20 @@ public class DefaultGoGame implements GoGame {
 			throw new IllegalArgumentException();
 		}
 	}
+	
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoGame#makeMove(goserver.game.GoPlayer)
+	 */
+	@Override
+	public void passTurn(GoPlayer player) {
+		if (isPlayersTurn(player)){
+			currentPlayer = getOpposingPlayer(currentPlayer);
+		} else {
+			throw new IllegalArgumentException();
+		}
+	}
 
 	/*
 	 * (non-Javadoc)

@@ -2,6 +2,7 @@ package clientmock;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import goserver.game.DefaultGoGame;
@@ -30,10 +31,17 @@ public class TextGo {
 			System.out.println("Player 1: " + player1.getCapturedStones() + " Player 2: " + player2.getCapturedStones());
 			System.out.println("Player " + curPlayer.playerId + "'s Turn");
 			try{
-				int x = in.nextInt();
-				int y = in.nextInt();
-				curPlayer.makeMove(x, y);
-				System.out.println("correct move");
+				try{
+					int x = in.nextInt();
+					int y = in.nextInt();
+					curPlayer.makeMove(x, y);
+					System.out.println("correct move");
+				} catch (InputMismatchException ime){
+					String line = in.next();
+					if(line.contains("pass")){
+						curPlayer.passTurn();
+					}
+				}
 
 			} catch (Exception e){
 				System.out.println(e.getMessage());

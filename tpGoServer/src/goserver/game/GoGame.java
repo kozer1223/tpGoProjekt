@@ -13,6 +13,7 @@ public interface GoGame {
 	public GoRuleset getRuleset();
 	public void setRuleset(GoRuleset ruleset);
 	public void makeMove(GoPlayer player, int x, int y);
+	public void passTurn(GoPlayer player);
 	public GoBoard getBoard();
 	
 	public int getPlayersCapturedStones(GoPlayer player);
