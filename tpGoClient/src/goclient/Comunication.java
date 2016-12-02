@@ -7,12 +7,12 @@ import java.net.Socket;
 
 public class Comunication {
 
-	Socket socket;
-	BufferedReader input;
-	PrintWriter output;
+	private Socket socket;
+	private BufferedReader input;
+	private PrintWriter output;
 	public Comunication () {
 		try {
-			socket =  new Socket("ServerGo",8888);
+			socket =  new Socket("localhost",8888);
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			output = new PrintWriter(socket.getOutputStream());
 		}
@@ -29,4 +29,4 @@ public class Comunication {
 		}
 		return line;
 	}
-}//
+}
