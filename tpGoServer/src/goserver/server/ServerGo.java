@@ -25,7 +25,7 @@ public class ServerGo {
 
 	public static void main(String[] args) {
 		try{
-		ServerSocket serverSocket = new ServerSocket(8888,0,InetAddress.getByName(null));
+		ServerSocket serverSocket = new ServerSocket(8888);
 		while(true) {
 			Socket socket = serverSocket.accept();
 			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
