@@ -10,11 +10,12 @@ public class Comunication {
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
+	
 	public Comunication () {
 		try {
 			socket =  new Socket("localhost",8888);
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			output = new PrintWriter(socket.getOutputStream());
+			output = new PrintWriter(socket.getOutputStream(),true);
 		}
 		catch(Exception e) {}
 	}
