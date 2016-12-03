@@ -3,6 +3,8 @@
  */
 package goserver.game;
 
+import goserver.util.IntPair;
+
 /**
  * @author Kacper
  *
@@ -14,20 +16,20 @@ public class DefaultGoGame implements GoGame {
 	private GoRuleset ruleset;
 	private int boardSize;
 	private int[] capturedStones;
-	
+
 	GoPlayer currentPlayer;
 
 	public DefaultGoGame(GoPlayer player1, GoPlayer player2, int boardSize, GoRuleset ruleset) {
 		players = new GoPlayer[2];
 		players[0] = player1;
 		player1.setGame(this);
-		player1.setOpposingPlayer(player2);
+		// player1.setOpposingPlayer(player2);
 		players[1] = player2;
 		player2.setGame(this);
-		player1.setOpposingPlayer(player1);
-		
+		// player1.setOpposingPlayer(player1);
+
 		currentPlayer = players[0];
-		
+
 		capturedStones = new int[2];
 		capturedStones[0] = 0;
 		capturedStones[1] = 0;
@@ -44,23 +46,27 @@ public class DefaultGoGame implements GoGame {
 	 * @see goserver.game.GoGame#makeMove(goserver.game.GoPlayer, int, int)
 	 */
 	@Override
-	public void makeMove(GoPlayer player, int x, int y) {
-		if (isPlayersTurn(player)){
+	public void makeMove(GoPlayer player, int x, int y) throws InvalidMoveException {
+		if (isPlayersTurn(player)) {
 			int playerNo = getPlayersNo(player);
-		
-			// throws exception
-			ruleset.validateMove(board, getPlayersColor(playerNo), x, y);
-		
-			capturedStones[playerNo] += board.placeStone(getPlayersColor(playerNo), x, y);
 
-			players[0].updateBoard();
-			players[1].updateBoard();
-			currentPlayer = getOpposingPlayer(currentPlayer);
+			// throws exception
+			if (ruleset.validateMove(board, getPlayersColor(playerNo), x, y)) {
+				IntPair placeResult = board.placeStone(getPlayersColor(playerNo), x, y);
+				capturedStones[playerNo] += placeResult.x;
+				capturedStones[1 - playerNo] += placeResult.y;
+
+				players[0].updateBoard();
+				players[1].updateBoard();
+				currentPlayer = getOpposingPlayer(currentPlayer);
+			} else {
+				throw new InvalidMoveException("Invalid move");
+			}
 		} else {
 			throw new IllegalArgumentException();
 		}
 	}
-	
+
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -68,7 +74,7 @@ public class DefaultGoGame implements GoGame {
 	 */
 	@Override
 	public void passTurn(GoPlayer player) {
-		if (isPlayersTurn(player)){
+		if (isPlayersTurn(player)) {
 			currentPlayer = getOpposingPlayer(currentPlayer);
 		} else {
 			throw new IllegalArgumentException();
@@ -119,12 +125,12 @@ public class DefaultGoGame implements GoGame {
 	public GoRuleset getRuleset() {
 		return ruleset;
 	}
-	
-	protected GoPlayer getOpposingPlayer(GoPlayer player){
+
+	protected GoPlayer getOpposingPlayer(GoPlayer player) {
 		return players[1 - getPlayersNo(player)];
 	}
-	
-	protected int getPlayersNo(GoPlayer player){
+
+	protected int getPlayersNo(GoPlayer player) {
 		if (player.equals(players[0])) {
 			return 0;
 		} else if (player.equals(players[1])) {
@@ -133,7 +139,7 @@ public class DefaultGoGame implements GoGame {
 			throw new IllegalArgumentException();
 		}
 	}
-	
+
 	protected int getPlayersColor(int playerNo) {
 		return (playerNo == 0) ? board.getBlackColor() : board.getWhiteColor();
 	}

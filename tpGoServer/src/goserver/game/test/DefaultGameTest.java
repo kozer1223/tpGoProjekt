@@ -8,6 +8,7 @@ import goserver.game.DefaultGoGame;
 import goserver.game.GoGame;
 import goserver.game.GoPlayer;
 import goserver.game.GoRuleset;
+import goserver.game.InvalidMoveException;
 
 public class DefaultGameTest {
 
@@ -15,12 +16,6 @@ public class DefaultGameTest {
 
 		@Override
 		public void setGame(GoGame game) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void setOpposingPlayer(GoPlayer player) {
 			// TODO Auto-generated method stub
 
 		}
@@ -61,7 +56,7 @@ public class DefaultGameTest {
 	}
 	
 	@Test
-	public void testMakeMoves() {
+	public void testMakeMoves() throws InvalidMoveException {
 		GoPlayer player1 = new EmptyGoPlayer();
 		GoPlayer player2 = new EmptyGoPlayer();
 		int size = 9;
@@ -73,7 +68,7 @@ public class DefaultGameTest {
 	}
 	
 	@Test(expected=IllegalArgumentException.class)
-	public void testConflictingMoves() {
+	public void testConflictingMoves() throws InvalidMoveException {
 		GoPlayer player1 = new EmptyGoPlayer();
 		GoPlayer player2 = new EmptyGoPlayer();
 		int size = 9;

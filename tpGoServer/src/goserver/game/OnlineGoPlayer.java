@@ -21,5 +21,15 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	public void run() {
 		//TODO
 	}
+	@Override
+	public void setGame(GoGame game) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void updateBoard() {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

@@ -3,18 +3,18 @@ package clientmock;
 import goserver.game.GoBoard;
 import goserver.game.GoGame;
 import goserver.game.GoPlayer;
+import goserver.game.InvalidMoveException;
 
 public class TextGoPlayer implements GoPlayer {
 	
 	GoGame game;
-	GoPlayer opposingPlayer;
 	public int playerId;
 	
 	public TextGoPlayer(int playerId){
 		this.playerId = playerId;
 	}
 	
-	public void makeMove(int x, int y){
+	public void makeMove(int x, int y) throws InvalidMoveException{
 		game.makeMove(this, x, y);
 	}
 	
@@ -40,11 +40,6 @@ public class TextGoPlayer implements GoPlayer {
 	@Override
 	public void setGame(GoGame game) {
 		this.game = game;
-	}
-
-	@Override
-	public void setOpposingPlayer(GoPlayer player) {
-		this.opposingPlayer = player;
 	}
 
 	@Override

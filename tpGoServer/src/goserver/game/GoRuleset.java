@@ -3,21 +3,40 @@
  */
 package goserver.game;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * @author Kacper
  *
  */
-public class GoRuleset {
+public class GoRuleset implements GoRule {
+	
+	List<GoRule> rules;
 
-	public void validateMove(GoBoard board, int color, int x, int y) {
-		// TODO Auto-generated method stub
-		
+	public GoRuleset() {
+		rules = new ArrayList<GoRule>();
+	}
+
+	public boolean validateMove(GoBoard board, int color, int x, int y) throws InvalidMoveException {
+		boolean isValid = true;
+		for(GoRule rule : rules){
+			isValid = isValid && rule.validateMove(board, color, x, y);
+		}
+		return isValid;
+	}
+	
+	public void addRule(GoRule rule){
+		rules.add(rule);
+	}
+	
+	public GoRuleset with(GoRule rule){
+		addRule(rule);
+		return this;
 	}
 	
 	// TODO
-	// addRule(GoRule rule)
 	// onGameStart()
 	// onGameEnd() / onScoreCount()
-	// validateMove(GoBoard board, int x, int y)
 
 }

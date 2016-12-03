@@ -163,7 +163,7 @@ public class DefaultBoardTest {
 		board.placeStone(DefaultGoBoard.WHITE, 2, 0);
 		board.placeStone(DefaultGoBoard.WHITE, 2, 2);
 		board.placeStone(DefaultGoBoard.WHITE, 3, 1);
-		int captured = board.placeStone(DefaultGoBoard.WHITE, 0, 1);
+		int captured = board.placeStone(DefaultGoBoard.WHITE, 0, 1).x;
 		assertEquals(4, captured);
 		assertEquals(DefaultGoBoard.EMPTY, board.getBoard()[0][0]);
 	}

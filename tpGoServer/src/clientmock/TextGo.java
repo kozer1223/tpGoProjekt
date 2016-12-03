@@ -9,6 +9,7 @@ import goserver.game.DefaultGoGame;
 import goserver.game.GoGame;
 import goserver.game.GoPlayer;
 import goserver.game.GoRuleset;
+import goserver.game.SuicideRule;
 
 public class TextGo {
 
@@ -16,7 +17,7 @@ public class TextGo {
 		TextGoPlayer player1 = new TextGoPlayer(1);
 		TextGoPlayer player2 = new TextGoPlayer(2);
 		int size = 9;
-		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset());
+		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset().with(SuicideRule.getInstance()));
 		TextGoPlayer curPlayer;
 		
 		Scanner in = new Scanner(System.in);

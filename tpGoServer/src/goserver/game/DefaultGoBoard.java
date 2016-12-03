@@ -53,10 +53,11 @@ public class DefaultGoBoard implements GoBoard {
 	 * @param color
 	 * @param x
 	 * @param y
-	 * @return liczba zabranych jeńców
+	 * @return (liczba zabranych jeńców, liczba jeńców zabranych przez
+	 *         przeciwnika w przypadku ruchu samobójczego)
 	 * @throws IllegalArgumentException
 	 */
-	public int placeStone(int color, int x, int y) throws IllegalArgumentException {
+	public IntPair placeStone(int color, int x, int y) throws IllegalArgumentException {
 		if (x < 0 || x >= size || y < 0 || y >= size) {
 			throw new IllegalArgumentException();
 		}
@@ -90,7 +91,7 @@ public class DefaultGoBoard implements GoBoard {
 		if (y - 1 >= 0 && board[x][y - 1] == getOpposingColor(color))
 			captured += captureStones(x, y - 1);
 
-		return captured;
+		return new IntPair(captured, captureStones(x,y));
 	}
 
 	/**

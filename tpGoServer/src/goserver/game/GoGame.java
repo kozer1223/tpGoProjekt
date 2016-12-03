@@ -12,7 +12,7 @@ public interface GoGame {
 	public void setPlayer2(GoPlayer player);
 	public GoRuleset getRuleset();
 	public void setRuleset(GoRuleset ruleset);
-	public void makeMove(GoPlayer player, int x, int y);
+	public void makeMove(GoPlayer player, int x, int y) throws InvalidMoveException;
 	public void passTurn(GoPlayer player);
 	public GoBoard getBoard();
 	
