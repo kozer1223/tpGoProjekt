@@ -10,7 +10,6 @@ public class Comunication {
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
-	
 	public Comunication () {
 		try {
 			socket =  new Socket("localhost",8888);
