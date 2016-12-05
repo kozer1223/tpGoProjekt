@@ -8,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import goserver.game.rules.SuicideRule;
 import goserver.util.IntPair;
 
 /**
@@ -22,9 +23,9 @@ public class DefaultGoBoard implements GoBoard {
 	public static final int WHITE = 2;
 
 	private final int size;
-	private int board[][];
-	private int previousBoard[][]; // ko rule
-	
+	protected int board[][];
+	protected int previousBoard[][]; // ko rule
+
 	private boolean suicideCheckEnabled = false;
 
 	/**
@@ -58,7 +59,7 @@ public class DefaultGoBoard implements GoBoard {
 	 * @return (liczba zabranych jeńców, liczba jeńców zabranych przez
 	 *         przeciwnika w przypadku ruchu samobójczego)
 	 * @throws IllegalArgumentException
-	 * @throws InvalidMoveException 
+	 * @throws InvalidMoveException
 	 */
 	public IntPair placeStone(int color, int x, int y) throws InvalidMoveException {
 		if (x < 0 || x >= size || y < 0 || y >= size) {
@@ -93,18 +94,16 @@ public class DefaultGoBoard implements GoBoard {
 			captured += captureStones(x - 1, y);
 		if (y - 1 >= 0 && board[x][y - 1] == getOpposingColor(color))
 			captured += captureStones(x, y - 1);
-		
-		if(suicideCheckEnabled && captured <= 0){
+
+		if (suicideCheckEnabled && captured <= 0) {
 			// sprawdz czy ruch jest samobojczy
-			if(mockCaptureStones(x,y) != 0){
+			if (mockCaptureStones(x, y) != 0) {
 				board[x][y] = EMPTY;
 				throw new InvalidMoveException(SuicideRule.invalidMoveMessage);
 			}
 		}
-		
-		System.out.println(x + " " + y);
 
-		return new IntPair(captured, captureStones(x,y));
+		return new IntPair(captured, captureStones(x, y));
 	}
 
 	/**
@@ -133,7 +132,7 @@ public class DefaultGoBoard implements GoBoard {
 			return 0;
 		}
 	}
-	
+
 	/**
 	 * Sprawdz, czy grupa kamieni jest uduszona.
 	 * 
@@ -186,7 +185,7 @@ public class DefaultGoBoard implements GoBoard {
 		return liberties;
 	}
 
-	public static int getOpposingColor(int color) {
+	public int getOpposingColor(int color) {
 		switch (color) {
 		case BLACK:
 			return WHITE;

@@ -1,7 +1,11 @@
 /**
  * 
  */
-package goserver.game;
+package goserver.game.rules;
+
+import goserver.game.GoBoard;
+import goserver.game.GoGame;
+import goserver.game.InvalidMoveException;
 
 /**
  * @author Kacper

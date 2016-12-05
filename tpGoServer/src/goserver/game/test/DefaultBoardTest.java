@@ -8,6 +8,7 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import goserver.game.DefaultGoBoard;
+import goserver.game.GoBoard;
 import goserver.game.InvalidMoveException;
 import goserver.util.MatrixUtil;
 
@@ -29,13 +30,13 @@ public class DefaultBoardTest {
 	@Test(expected = IllegalArgumentException.class)
 	public void testIllegalBoardSize() {
 		int size = 0;
-		DefaultGoBoard board = new DefaultGoBoard(size);
+		GoBoard board = new DefaultGoBoard(size);
 	}
 
 	@Test
 	public void testEmptyBoard() {
 		int size = 9;
-		DefaultGoBoard board = new DefaultGoBoard(size);
+		GoBoard board = new DefaultGoBoard(size);
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				assertEquals(board.getBoard()[i][j], DefaultGoBoard.EMPTY);
@@ -50,7 +51,7 @@ public class DefaultBoardTest {
 		int x = 2;
 		int y = 3;
 		int color = DefaultGoBoard.BLACK;
-		DefaultGoBoard board = new DefaultGoBoard(size);
+		GoBoard board = new DefaultGoBoard(size);
 		board.placeStone(color, x, y);
 		assertEquals(board.getBoard()[x][y], color);
 		assertEquals(board.getPreviousBoard()[x][y], DefaultGoBoard.EMPTY);
@@ -62,7 +63,7 @@ public class DefaultBoardTest {
 		int x = 9;
 		int y = 3;
 		int color = DefaultGoBoard.BLACK;
-		DefaultGoBoard board = new DefaultGoBoard(size);
+		GoBoard board = new DefaultGoBoard(size);
 		board.placeStone(color, x, y);
 	}
 
@@ -72,7 +73,7 @@ public class DefaultBoardTest {
 		int x = -1;
 		int y = 0;
 		int color = DefaultGoBoard.BLACK;
-		DefaultGoBoard board = new DefaultGoBoard(size);
+		GoBoard board = new DefaultGoBoard(size);
 		board.placeStone(color, x, y);
 	}
 
@@ -82,7 +83,7 @@ public class DefaultBoardTest {
 		int x = 2;
 		int y = 3;
 		int color = DefaultGoBoard.EMPTY;
-		DefaultGoBoard board = new DefaultGoBoard(size);
+		GoBoard board = new DefaultGoBoard(size);
 		board.placeStone(color, x, y);
 	}
 
@@ -92,7 +93,7 @@ public class DefaultBoardTest {
 		int x = 2;
 		int y = 3;
 		int color = DefaultGoBoard.BLACK;
-		DefaultGoBoard board = new DefaultGoBoard(size);
+		GoBoard board = new DefaultGoBoard(size);
 		board.placeStone(color, x, y);
 		board.placeStone(color, x, y);
 	}
@@ -121,7 +122,7 @@ public class DefaultBoardTest {
 		DefaultGoBoard board = new DefaultGoBoard(size);
 		assertEquals(-1, board.getLiberties(0, 0));
 	}
-	
+
 	@Test
 	public void testLibertiesSurrounded() throws InvalidMoveException {
 		int size = 9;
@@ -135,15 +136,17 @@ public class DefaultBoardTest {
 
 	@Test
 	public void testOpposingColors() {
-		assertEquals(DefaultGoBoard.getOpposingColor(DefaultGoBoard.BLACK), DefaultGoBoard.WHITE);
-		assertEquals(DefaultGoBoard.getOpposingColor(DefaultGoBoard.WHITE), DefaultGoBoard.BLACK);
-		assertEquals(DefaultGoBoard.getOpposingColor(DefaultGoBoard.EMPTY), DefaultGoBoard.EMPTY);
+		int size = 9;
+		GoBoard board = new DefaultGoBoard(size);
+		assertEquals(board.getOpposingColor(DefaultGoBoard.BLACK), DefaultGoBoard.WHITE);
+		assertEquals(board.getOpposingColor(DefaultGoBoard.WHITE), DefaultGoBoard.BLACK);
+		assertEquals(board.getOpposingColor(DefaultGoBoard.EMPTY), DefaultGoBoard.EMPTY);
 	}
 
 	@Test
 	public void testPreviousBoard() throws InvalidMoveException {
 		int size = 9;
-		DefaultGoBoard board = new DefaultGoBoard(size);
+		GoBoard board = new DefaultGoBoard(size);
 		board.placeStone(DefaultGoBoard.BLACK, 1, 2);
 		board.placeStone(DefaultGoBoard.WHITE, 3, 2);
 		board.placeStone(DefaultGoBoard.BLACK, 1, 4);
@@ -152,11 +155,11 @@ public class DefaultBoardTest {
 		board.placeStone(DefaultGoBoard.BLACK, 5, 4);
 		assertTrue(MatrixUtil.compareMatrix(boardCopy, board.getPreviousBoard()));
 	}
-	
+
 	@Test
 	public void testCapture() throws InvalidMoveException {
 		int size = 9;
-		DefaultGoBoard board = new DefaultGoBoard(size);
+		GoBoard board = new DefaultGoBoard(size);
 		board.placeStone(DefaultGoBoard.BLACK, 0, 0);
 		board.placeStone(DefaultGoBoard.BLACK, 1, 0);
 		board.placeStone(DefaultGoBoard.BLACK, 1, 1);

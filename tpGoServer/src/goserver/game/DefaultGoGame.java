@@ -3,6 +3,7 @@
  */
 package goserver.game;
 
+import goserver.game.rules.GoRuleset;
 import goserver.util.IntPair;
 
 /**
@@ -59,7 +60,9 @@ public class DefaultGoGame implements GoGame {
 
 				players[0].updateBoard();
 				players[1].updateBoard();
+				
 				currentPlayer = getOpposingPlayer(currentPlayer);
+				currentPlayer.notifyAboutTurn();
 			} else {
 				throw new InvalidMoveException("Invalid move");
 			}
@@ -77,6 +80,7 @@ public class DefaultGoGame implements GoGame {
 	public void passTurn(GoPlayer player) {
 		if (isPlayersTurn(player)) {
 			currentPlayer = getOpposingPlayer(currentPlayer);
+			currentPlayer.notifyAboutTurn();
 		} else {
 			throw new IllegalArgumentException();
 		}

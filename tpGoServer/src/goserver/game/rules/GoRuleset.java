@@ -1,10 +1,14 @@
 /**
  * 
  */
-package goserver.game;
+package goserver.game.rules;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import goserver.game.GoBoard;
+import goserver.game.GoGame;
+import goserver.game.InvalidMoveException;
 
 /**
  * @author Kacper

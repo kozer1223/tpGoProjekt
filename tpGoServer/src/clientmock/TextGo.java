@@ -6,10 +6,12 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 import goserver.game.DefaultGoGame;
+import goserver.game.DefaultGoRuleset;
 import goserver.game.GoGame;
 import goserver.game.GoPlayer;
-import goserver.game.GoRuleset;
-import goserver.game.SuicideRule;
+import goserver.game.rules.GoRuleset;
+import goserver.game.rules.KoRule;
+import goserver.game.rules.SuicideRule;
 
 public class TextGo {
 
@@ -17,36 +19,37 @@ public class TextGo {
 		TextGoPlayer player1 = new TextGoPlayer(1);
 		TextGoPlayer player2 = new TextGoPlayer(2);
 		int size = 9;
-		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset().with(SuicideRule.getInstance()));
+		GoGame game = new DefaultGoGame(player1, player2, size, DefaultGoRuleset.getDefaultRuleset());
 		TextGoPlayer curPlayer;
-		
+
 		Scanner in = new Scanner(System.in);
-		
-		while(true){
-			if(game.isPlayersTurn(player1)){
+
+		while (true) {
+			if (game.isPlayersTurn(player1)) {
 				curPlayer = player1;
 			} else {
 				curPlayer = player2;
 			}
 			curPlayer.drawBoard();
-			System.out.println("Player 1: " + player1.getCapturedStones() + " Player 2: " + player2.getCapturedStones());
+			System.out
+					.println("Player 1: " + player1.getCapturedStones() + " Player 2: " + player2.getCapturedStones());
 			System.out.println("Player " + curPlayer.playerId + "'s Turn");
-			try{
-				try{
+			try {
+				try {
 					int x = in.nextInt();
 					int y = in.nextInt();
 					in.nextLine();
 					curPlayer.makeMove(x, y);
 					System.out.println("correct move");
-				} catch (InputMismatchException ime){
+				} catch (InputMismatchException ime) {
 					String line = in.next();
 					in.nextLine();
-					if(line.contains("pass")){
+					if (line.contains("pass")) {
 						curPlayer.passTurn();
 					}
 				}
 
-			} catch (Exception e){
+			} catch (Exception e) {
 				System.out.println(e.getMessage());
 			}
 

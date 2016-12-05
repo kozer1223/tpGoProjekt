@@ -43,9 +43,15 @@ public class TextGoPlayer implements GoPlayer {
 	}
 
 	@Override
-	public void updateBoard() {
+	public void notifyAboutTurn() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void updateBoard() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

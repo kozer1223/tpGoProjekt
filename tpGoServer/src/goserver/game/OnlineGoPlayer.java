@@ -27,6 +27,11 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 		
 	}
 	@Override
+	public void notifyAboutTurn() {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
 	public void updateBoard() {
 		// TODO Auto-generated method stub
 		

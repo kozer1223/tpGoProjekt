@@ -18,6 +18,7 @@ public interface GoBoard {
 	public int getBlackColor();
 	public int getWhiteColor();
 	public int getEmptyColor();
+	public int getOpposingColor(int color);
 	public void setSuicideCheckEnabled(boolean check);
 
 }

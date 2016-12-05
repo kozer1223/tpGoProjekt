@@ -1,5 +1,7 @@
 package goserver.game;
 
+import goserver.game.rules.GoRuleset;
+
 /**
  * @author Kacper
  *
