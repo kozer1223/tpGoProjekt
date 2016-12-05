@@ -25,9 +25,14 @@ public class TextGoPlayer implements GoPlayer {
 	public void drawBoard(){
 		GoBoard board = game.getBoard();
 		int[][] boardData = board.getBoard();
+		int[][] labeledBoard = board.getBoardWithLabeledGroups();
 		for(int i=0; i<board.getSize(); i++){
 			for(int j=0; j<board.getSize(); j++){
 				System.out.print(boardData[j][i]+" ");
+			}
+			System.out.print("   ");
+			for(int j=0; j<board.getSize(); j++){
+				System.out.print(labeledBoard[j][i]+" ");
 			}
 			System.out.println();
 		}

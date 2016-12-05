@@ -20,5 +20,6 @@ public interface GoBoard {
 	public int getEmptyColor();
 	public int getOpposingColor(int color);
 	public void setSuicideCheckEnabled(boolean check);
+	public int[][] getBoardWithLabeledGroups();
 
 }

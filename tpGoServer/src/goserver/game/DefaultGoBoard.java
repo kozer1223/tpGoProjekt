@@ -4,8 +4,11 @@
 package goserver.game;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import goserver.game.rules.SuicideRule;
@@ -264,6 +267,75 @@ public class DefaultGoBoard implements GoBoard {
 		}
 
 		return new ArrayList<IntPair>(result);
+	}
+	
+	@Override
+	public int[][] getBoardWithLabeledGroups() {
+		// algorytm two-pass
+		int[][] labeled = new int[size][size];
+		Map<Integer, Set<Integer>> labels = new HashMap<Integer, Set<Integer>>();
+		int lowestLabel = 0;
+		
+		int[] neighbors = new int[2];
+		
+		// 1st pass
+		for(int i=0; i<size; i++){
+			for(int j=0; j<size; j++){
+				if(board[i][j] != EMPTY){
+					neighbors[0]=0;
+					neighbors[1]=0;
+					// 0th neighbor
+					if(i>0 && board[i-1][j] == board[i][j]){
+						neighbors[0] = labeled[i-1][j];
+					}
+					// 1st neighbor
+					if(j>0 && board[i][j-1] == board[i][j]){
+						neighbors[1] = labeled[i][j-1];
+					}
+					
+					if(neighbors[0] > 0 && neighbors[1] > 0){
+						// two neighbors
+						if (neighbors[0] != neighbors[1]){
+							// different labels
+							labeled[i][j] = Math.min(neighbors[0], neighbors[1]);
+							// store label equivalence
+							labels.get(neighbors[0]).add(neighbors[1]);
+							labels.get(neighbors[1]).add(neighbors[0]);
+						} else {
+							// same labels
+							labeled[i][j] = neighbors[0];
+						}
+					} else if(neighbors[0] > 0 && neighbors[1] == 0){
+						// one neighbor
+						labeled[i][j] = neighbors[0];
+					} else if(neighbors[0] == 0 && neighbors[1] > 0){
+						// one neighbor
+						labeled[i][j] = neighbors[1];
+					} else {
+						// no neighbor -> new label
+						lowestLabel++;
+						labeled[i][j] = lowestLabel;
+						labels.put(lowestLabel, new HashSet<Integer>());
+						labels.get(lowestLabel).add(lowestLabel);
+					}
+					
+				} else {
+					labeled[i][j] = 0;
+				}
+			}
+		}
+		
+		//2nd pass
+		for(int i=0; i<labeled.length; i++){
+			for(int j=0; j<labeled[i].length; j++){
+				if(labeled[i][j] != 0){
+					// find lowest equivalent label
+					labeled[i][j] = Collections.min(labels.get(labeled[i][j]));
+				}
+			}
+		}
+		
+		return labeled;
 	}
 
 	public int getSize() {
