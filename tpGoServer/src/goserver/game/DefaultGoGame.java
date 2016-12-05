@@ -38,6 +38,7 @@ public class DefaultGoGame implements GoGame {
 		board = new DefaultGoBoard(boardSize);
 
 		setRuleset(ruleset);
+		ruleset.onGameStart(this);
 	}
 
 	/*

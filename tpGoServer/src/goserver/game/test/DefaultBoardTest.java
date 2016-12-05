@@ -8,6 +8,8 @@ import static org.junit.Assert.*;
 import org.junit.Test;
 
 import goserver.game.DefaultGoBoard;
+import goserver.game.InvalidMoveException;
+import goserver.util.MatrixUtil;
 
 /**
  * @author Kacper
@@ -43,7 +45,7 @@ public class DefaultBoardTest {
 	}
 
 	@Test
-	public void testPlaceStone() {
+	public void testPlaceStone() throws InvalidMoveException {
 		int size = 9;
 		int x = 2;
 		int y = 3;
@@ -55,7 +57,7 @@ public class DefaultBoardTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testPlaceStoneInvalidLocationOverX() {
+	public void testPlaceStoneInvalidLocationOverX() throws InvalidMoveException {
 		int size = 9;
 		int x = 9;
 		int y = 3;
@@ -65,7 +67,7 @@ public class DefaultBoardTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testPlaceStoneInvalidLocationUnderX() {
+	public void testPlaceStoneInvalidLocationUnderX() throws InvalidMoveException {
 		int size = 9;
 		int x = -1;
 		int y = 0;
@@ -75,7 +77,7 @@ public class DefaultBoardTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testPlaceStoneInvalidColor() {
+	public void testPlaceStoneInvalidColor() throws InvalidMoveException {
 		int size = 9;
 		int x = 2;
 		int y = 3;
@@ -85,7 +87,7 @@ public class DefaultBoardTest {
 	}
 
 	@Test(expected = IllegalArgumentException.class)
-	public void testPlaceStoneOnNonEmpty() {
+	public void testPlaceStoneOnNonEmpty() throws InvalidMoveException {
 		int size = 9;
 		int x = 2;
 		int y = 3;
@@ -96,7 +98,7 @@ public class DefaultBoardTest {
 	}
 
 	@Test
-	public void testLiberties() {
+	public void testLiberties() throws InvalidMoveException {
 		int size = 9;
 		DefaultGoBoard board = new DefaultGoBoard(size);
 		int color = DefaultGoBoard.BLACK;
@@ -105,7 +107,7 @@ public class DefaultBoardTest {
 	}
 
 	@Test
-	public void testLibertiesCorner() {
+	public void testLibertiesCorner() throws InvalidMoveException {
 		int size = 9;
 		DefaultGoBoard board = new DefaultGoBoard(size);
 		int color = DefaultGoBoard.BLACK;
@@ -121,7 +123,7 @@ public class DefaultBoardTest {
 	}
 	
 	@Test
-	public void testLibertiesSurrounded() {
+	public void testLibertiesSurrounded() throws InvalidMoveException {
 		int size = 9;
 		DefaultGoBoard board = new DefaultGoBoard(size);
 		board.placeStone(DefaultGoBoard.BLACK, 1, 1);
@@ -139,20 +141,20 @@ public class DefaultBoardTest {
 	}
 
 	@Test
-	public void testPreviousBoard() {
+	public void testPreviousBoard() throws InvalidMoveException {
 		int size = 9;
 		DefaultGoBoard board = new DefaultGoBoard(size);
 		board.placeStone(DefaultGoBoard.BLACK, 1, 2);
 		board.placeStone(DefaultGoBoard.WHITE, 3, 2);
 		board.placeStone(DefaultGoBoard.BLACK, 1, 4);
 		board.placeStone(DefaultGoBoard.WHITE, 2, 2);
-		int[][] boardCopy = copyMatrix(board.getBoard());
+		int[][] boardCopy = MatrixUtil.copyMatrix(board.getBoard());
 		board.placeStone(DefaultGoBoard.BLACK, 5, 4);
-		assertTrue(compareMatrix(boardCopy, board.getPreviousBoard()));
+		assertTrue(MatrixUtil.compareMatrix(boardCopy, board.getPreviousBoard()));
 	}
 	
 	@Test
-	public void testCapture() {
+	public void testCapture() throws InvalidMoveException {
 		int size = 9;
 		DefaultGoBoard board = new DefaultGoBoard(size);
 		board.placeStone(DefaultGoBoard.BLACK, 0, 0);
@@ -166,31 +168,6 @@ public class DefaultBoardTest {
 		int captured = board.placeStone(DefaultGoBoard.WHITE, 0, 1).x;
 		assertEquals(4, captured);
 		assertEquals(DefaultGoBoard.EMPTY, board.getBoard()[0][0]);
-	}
-
-	public int[][] copyMatrix(int[][] matrix) {
-		int[][] newMatrix = new int[matrix.length][];
-		for (int i = 0; i < matrix.length; i++) {
-			newMatrix[i] = matrix[i].clone();
-		}
-		return newMatrix;
-	}
-
-	public boolean compareMatrix(int[][] matrix1, int[][] matrix2) {
-		if (matrix1.length != matrix2.length) {
-			return false;
-		}
-		for (int i = 0; i < matrix1.length; i++) {
-			if (matrix1[i].length != matrix2[i].length) {
-				return false;
-			}
-			for (int j = 0; j < matrix1.length; j++) {
-				if (matrix1[i][j] != matrix2[i][j]) {
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 
 }

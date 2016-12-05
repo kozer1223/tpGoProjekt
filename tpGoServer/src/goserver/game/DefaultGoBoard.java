@@ -24,6 +24,8 @@ public class DefaultGoBoard implements GoBoard {
 	private final int size;
 	private int board[][];
 	private int previousBoard[][]; // ko rule
+	
+	private boolean suicideCheckEnabled = false;
 
 	/**
 	 * Tworzy plansze o rozmiarze (size x size).
@@ -56,8 +58,9 @@ public class DefaultGoBoard implements GoBoard {
 	 * @return (liczba zabranych jeńców, liczba jeńców zabranych przez
 	 *         przeciwnika w przypadku ruchu samobójczego)
 	 * @throws IllegalArgumentException
+	 * @throws InvalidMoveException 
 	 */
-	public IntPair placeStone(int color, int x, int y) throws IllegalArgumentException {
+	public IntPair placeStone(int color, int x, int y) throws InvalidMoveException {
 		if (x < 0 || x >= size || y < 0 || y >= size) {
 			throw new IllegalArgumentException();
 		}
@@ -90,6 +93,16 @@ public class DefaultGoBoard implements GoBoard {
 			captured += captureStones(x - 1, y);
 		if (y - 1 >= 0 && board[x][y - 1] == getOpposingColor(color))
 			captured += captureStones(x, y - 1);
+		
+		if(suicideCheckEnabled && captured <= 0){
+			// sprawdz czy ruch jest samobojczy
+			if(mockCaptureStones(x,y) != 0){
+				board[x][y] = EMPTY;
+				throw new InvalidMoveException(SuicideRule.invalidMoveMessage);
+			}
+		}
+		
+		System.out.println(x + " " + y);
 
 		return new IntPair(captured, captureStones(x,y));
 	}
@@ -116,6 +129,28 @@ public class DefaultGoBoard implements GoBoard {
 				board[stoneGroup.get(i).x][stoneGroup.get(i).y] = EMPTY;
 			}
 			return captured;
+		} else {
+			return 0;
+		}
+	}
+	
+	/**
+	 * Sprawdz, czy grupa kamieni jest uduszona.
+	 * 
+	 * @param x
+	 * @param y
+	 * @return
+	 */
+	private int mockCaptureStones(int x, int y) {
+		List<IntPair> stoneGroup = getConnectedStones(x, y);
+
+		int liberties = 0;
+
+		for (int i = 0; i < stoneGroup.size(); i++) {
+			liberties += getLiberties(stoneGroup.get(i).x, stoneGroup.get(i).y);
+		}
+		if (liberties == 0) { // uduszone
+			return stoneGroup.size();
 		} else {
 			return 0;
 		}
@@ -257,6 +292,11 @@ public class DefaultGoBoard implements GoBoard {
 	@Override
 	public int getEmptyColor() {
 		return EMPTY;
+	}
+
+	@Override
+	public void setSuicideCheckEnabled(boolean checkEnabled) {
+		suicideCheckEnabled = checkEnabled;
 	}
 
 }

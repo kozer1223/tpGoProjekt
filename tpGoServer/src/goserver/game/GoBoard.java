@@ -10,7 +10,7 @@ import goserver.util.IntPair;
  */
 public interface GoBoard {
 	
-	public IntPair placeStone(int color, int x, int y);
+	public IntPair placeStone(int color, int x, int y) throws InvalidMoveException;
 	public List<IntPair> getConnectedStones(int x, int y);
 	public int getSize();
 	public int[][] getBoard();
@@ -18,5 +18,6 @@ public interface GoBoard {
 	public int getBlackColor();
 	public int getWhiteColor();
 	public int getEmptyColor();
+	public void setSuicideCheckEnabled(boolean check);
 
 }

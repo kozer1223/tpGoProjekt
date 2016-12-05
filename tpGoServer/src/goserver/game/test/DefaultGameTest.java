@@ -9,6 +9,7 @@ import goserver.game.GoGame;
 import goserver.game.GoPlayer;
 import goserver.game.GoRuleset;
 import goserver.game.InvalidMoveException;
+import goserver.util.MatrixUtil;
 
 public class DefaultGameTest {
 
@@ -34,7 +35,7 @@ public class DefaultGameTest {
 		GoPlayer player2 = new EmptyGoPlayer();
 		int size = 9;
 		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset());
-		assertTrue(compareMatrix(game.getBoard().getBoard(), new int[size][size]));
+		assertTrue(MatrixUtil.compareMatrix(game.getBoard().getBoard(), new int[size][size]));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -75,31 +76,6 @@ public class DefaultGameTest {
 		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset());
 		game.makeMove(player1, 0, 0);
 		game.makeMove(player2, 0, 0);
-	}
-
-	public int[][] copyMatrix(int[][] matrix) {
-		int[][] newMatrix = new int[matrix.length][];
-		for (int i = 0; i < matrix.length; i++) {
-			newMatrix[i] = matrix[i].clone();
-		}
-		return newMatrix;
-	}
-
-	public boolean compareMatrix(int[][] matrix1, int[][] matrix2) {
-		if (matrix1.length != matrix2.length) {
-			return false;
-		}
-		for (int i = 0; i < matrix1.length; i++) {
-			if (matrix1[i].length != matrix2[i].length) {
-				return false;
-			}
-			for (int j = 0; j < matrix1.length; j++) {
-				if (matrix1[i][j] != matrix2[i][j]) {
-					return false;
-				}
-			}
-		}
-		return true;
 	}
 
 }

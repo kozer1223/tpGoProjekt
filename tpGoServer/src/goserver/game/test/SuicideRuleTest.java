@@ -55,10 +55,34 @@ public class SuicideRuleTest {
 
 		try{
 			game.makeMove(player2, 0, 0);
-			assertFalse(true);
+			fail();
 		} catch(InvalidMoveException e){
 			assertEquals(e.getMessage(), SuicideRule.invalidMoveMessage);
 		}
+	}
+	
+	@Test
+	public void testAcceptableSuicideMove() throws InvalidMoveException{
+		GoPlayer player1 = new EmptyGoPlayer();
+		GoPlayer player2 = new EmptyGoPlayer();
+		int size = 9;
+		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset().with(SuicideRule.getInstance()));
+		
+		// \ 0 1 2
+		// 0 . 1 2
+		// 1 1 2
+		// 2 2
+		
+		game.makeMove(player1, 0, 1);
+		game.makeMove(player2, 1, 1);
+		game.makeMove(player1, 1, 0);
+		game.makeMove(player2, 0, 2);
+		game.makeMove(player1, 4, 0); //ruchy spoza tworzonej konfiguracji kamieni
+		game.makeMove(player2, 2, 0);
+		game.makeMove(player1, 0, 4); //ruchy spoza tworzonej konfiguracji kamieni
+		game.makeMove(player2, 0, 0);
+		assertEquals(2, game.getPlayersCapturedStones(player2));
+		
 	}
 
 }
