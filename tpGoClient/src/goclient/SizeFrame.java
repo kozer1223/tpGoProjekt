@@ -41,17 +41,19 @@ public class SizeFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(e.getSource()==button19){
 			GUI.getComunication().write("19");
+			BoardFrame nextFrame = new BoardFrame(19);
 		}
 		else if(e.getSource()==button13){
 			GUI.getComunication().write("13");
+			BoardFrame nextFrame = new BoardFrame(13);
 		}
 		else if(e.getSource()==button9){
 			GUI.getComunication().write("9");
+			BoardFrame nextFrame = new BoardFrame(9);
 		}
 		frame.setVisible(false);
 		frame.setEnabled(false);
 		frame=null;
-		BoardFrame nextFrame = new BoardFrame();
 	}
 
 }
