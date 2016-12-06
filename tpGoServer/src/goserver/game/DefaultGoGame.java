@@ -17,6 +17,7 @@ public class DefaultGoGame implements GoGame {
 	private GoRuleset ruleset;
 	private int boardSize;
 	private int[] capturedStones;
+	private int consecutivePasses;
 
 	GoPlayer currentPlayer;
 
@@ -39,6 +40,7 @@ public class DefaultGoGame implements GoGame {
 		setRuleset(ruleset);
 		ruleset.onGameStart(this);
 		
+		consecutivePasses = 0;
 		currentPlayer = players[0];
 		currentPlayer.notifyAboutTurn();
 	}
@@ -62,6 +64,7 @@ public class DefaultGoGame implements GoGame {
 				players[0].updateBoard();
 				players[1].updateBoard();
 				
+				consecutivePasses = 0;
 				currentPlayer = getOpposingPlayer(currentPlayer);
 				currentPlayer.notifyAboutTurn();
 			} else {
@@ -80,7 +83,9 @@ public class DefaultGoGame implements GoGame {
 	@Override
 	public void passTurn(GoPlayer player) {
 		if (isPlayersTurn(player)) {
+			consecutivePasses++;
 			currentPlayer = getOpposingPlayer(currentPlayer);
+			//sprawdz czy consecutivePasses >= 2
 			currentPlayer.notifyAboutTurn();
 		} else {
 			throw new IllegalArgumentException();
