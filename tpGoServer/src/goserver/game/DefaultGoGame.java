@@ -29,8 +29,6 @@ public class DefaultGoGame implements GoGame {
 		player2.setGame(this);
 		// player1.setOpposingPlayer(player1);
 
-		currentPlayer = players[0];
-
 		capturedStones = new int[2];
 		capturedStones[0] = 0;
 		capturedStones[1] = 0;
@@ -40,6 +38,9 @@ public class DefaultGoGame implements GoGame {
 
 		setRuleset(ruleset);
 		ruleset.onGameStart(this);
+		
+		currentPlayer = players[0];
+		currentPlayer.notifyAboutTurn();
 	}
 
 	/*
