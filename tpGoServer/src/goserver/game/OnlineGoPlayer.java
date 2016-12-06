@@ -29,17 +29,17 @@ public class OnlineGoPlayer extends Thread /*implements GoPlayer*/ {
 	public void run() {
 		//TODO
 	}
-	@Override
+	//@Override
 	public void setGame(GoGame game) {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
+	//@Override
 	public void notifyAboutTurn() {
 		// TODO Auto-generated method stub
 		
 	}
-	@Override
+	//@Override
 	public void updateBoard() {
 		// TODO Auto-generated method stub
 		
