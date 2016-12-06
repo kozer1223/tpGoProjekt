@@ -31,7 +31,7 @@ public class OpponentFrame implements ActionListener {
 		frame.add(buttonPlayer);
 		frame.add(buttonBot);
 		buttonPlayer.addActionListener(this);
-		buttonPlayer.addActionListener(this);
+		buttonBot.addActionListener(this);
 	}
 	
 	@Override
