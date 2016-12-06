@@ -13,10 +13,18 @@ import java.net.Socket;
  * @author Maciek
  *
  */
-public class OnlineGoPlayer extends Thread implements GoPlayer {
-	Socket socket;
+public class OnlineGoPlayer extends Thread /*implements GoPlayer*/ {
+	private Socket socket;
+	private BufferedReader input;
+	private PrintWriter output;
+	
 	public OnlineGoPlayer(Socket socket) {
 		this.socket=socket;
+		try{
+			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			PrintWriter output = new PrintWriter(socket.getOutputStream(),true);
+		}
+		catch(Exception e) {}
 	}
 	public void run() {
 		//TODO
