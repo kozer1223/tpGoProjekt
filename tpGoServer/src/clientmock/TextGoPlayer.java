@@ -24,9 +24,9 @@ public class TextGoPlayer implements GoPlayer {
 	
 	public char encodeColors(int color) {
 		if (color == game.getBoard().getBlackColor()){
-			return '○';
-		} else if (color == game.getBoard().getWhiteColor()){
 			return '●';
+		} else if (color == game.getBoard().getWhiteColor()){
+			return '○';
 		}
 		return '◦';
 	}

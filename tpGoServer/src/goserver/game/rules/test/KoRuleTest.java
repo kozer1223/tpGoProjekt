@@ -45,7 +45,7 @@ public class KoRuleTest {
 	public void testKoMove() throws InvalidMoveException {
 		GoPlayer player1 = new EmptyGoPlayer();
 		GoPlayer player2 = new EmptyGoPlayer();
-		int size = 9;
+		int size = 19;
 		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset().with(KoRule.getInstance()));
 
 		// \ 0 1 2 3
