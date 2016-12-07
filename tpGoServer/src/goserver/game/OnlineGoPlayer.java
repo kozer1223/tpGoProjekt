@@ -13,7 +13,7 @@ import java.net.Socket;
  * @author Maciek
  *
  */
-public class OnlineGoPlayer extends Thread implements GoPlayer {
+public class OnlineGoPlayer extends Thread /*implements GoPlayer*/ {
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
