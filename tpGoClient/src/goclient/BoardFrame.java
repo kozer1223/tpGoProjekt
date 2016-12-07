@@ -33,15 +33,15 @@ public class BoardFrame implements ActionListener {
 		JLabel boardImage=null;
 		if(size==19) {
 			frame.setBounds(100, 0, 570, 600);
-			boardImage = new JLabel(new ImageIcon("C:\\Users\\Maciek\\go.jpg"));
+			boardImage = new JLabel(new ImageIcon("resources\\go.jpg"));
 		}
 		else if(size==13) {
 			frame.setBounds(100, 0, 395, 430);
-			boardImage = new JLabel(new ImageIcon("C:\\Users\\Maciek\\go13.png"));
+			boardImage = new JLabel(new ImageIcon("resources\\go13.png"));
 		}
 		else if(size==9) {
 			frame.setBounds(100, 0, 270, 310);
-			boardImage = new JLabel(new ImageIcon("C:\\Users\\Maciek\\go9.png"));
+			boardImage = new JLabel(new ImageIcon("resources\\go9.png"));
 		}
 		frame.add(boardImage);
 		boardImage.setLayout(null);
