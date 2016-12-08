@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 
 import goserver.game.GoGame;
+import goserver.game.GoMoveType;
 import goserver.game.GoPlayer;
 import goserver.game.InvalidMoveException;
 import goserver.util.IntPair;
@@ -13,6 +14,8 @@ public class RandomGoBot implements GoPlayer {
 
 	GoGame game;
 	Random rng;
+	final double passChance = 0.5; // szansa na spasowanie po spasowaniu przez
+									// przeciwnika
 
 	public RandomGoBot() {
 		// TODO Auto-generated constructor stub
@@ -25,34 +28,41 @@ public class RandomGoBot implements GoPlayer {
 	}
 
 	@Override
-	public void notifyAboutTurn() {
+	public void notifyAboutTurn(GoMoveType opponentsMove) {
 		// wykonaj ruch
 		if (game.isPlayersTurn(this)) {
+			if (opponentsMove == GoMoveType.PASS) {
+				double passRnd = rng.nextDouble();
+				if (passRnd >= passChance) {
+					passTurn();
+					return;
+				}
+			}
+
 			int[][] boardData = game.getBoard().getBoard();
 			List<IntPair> validMoves = new ArrayList<IntPair>();
 
 			for (int i = 0; i < boardData.length; i++) {
 				for (int j = 0; j < boardData[i].length; j++) {
-					if(boardData[i][j] == game.getBoard().getEmptyColor()){
-						validMoves.add(new IntPair(i,j));
+					if (boardData[i][j] == game.getBoard().getEmptyColor()) {
+						validMoves.add(new IntPair(i, j));
 					}
 				}
 			}
-			
-			
+
 			int index;
-			while (!validMoves.isEmpty()){
+			while (!validMoves.isEmpty()) {
 				index = rng.nextInt(validMoves.size());
-				if(makeMove(validMoves.get(index).x, validMoves.get(index).y)){
+				if (makeMove(validMoves.get(index).x, validMoves.get(index).y)) {
 					return;
 				} else {
 					validMoves.remove(index);
 				}
 			}
-			
+
 			passTurn();
 			return;
-			
+
 		} else {
 			// ???
 		}

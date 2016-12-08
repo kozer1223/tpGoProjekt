@@ -2,6 +2,7 @@ package clientmock;
 
 import goserver.game.GoBoard;
 import goserver.game.GoGame;
+import goserver.game.GoMoveType;
 import goserver.game.GoPlayer;
 import goserver.game.InvalidMoveException;
 
@@ -72,7 +73,7 @@ public class TextGoPlayer implements GoPlayer {
 	}
 
 	@Override
-	public void notifyAboutTurn() {
+	public void notifyAboutTurn(GoMoveType opponentsMove) {
 		// TODO Auto-generated method stub
 
 	}

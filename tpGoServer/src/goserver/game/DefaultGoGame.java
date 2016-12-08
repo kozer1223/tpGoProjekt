@@ -42,7 +42,7 @@ public class DefaultGoGame implements GoGame {
 		
 		consecutivePasses = 0;
 		currentPlayer = players[0];
-		currentPlayer.notifyAboutTurn();
+		currentPlayer.notifyAboutTurn(GoMoveType.FIRST);
 	}
 
 	/*
@@ -66,7 +66,7 @@ public class DefaultGoGame implements GoGame {
 				
 				consecutivePasses = 0;
 				currentPlayer = getOpposingPlayer(currentPlayer);
-				currentPlayer.notifyAboutTurn();
+				currentPlayer.notifyAboutTurn(GoMoveType.MOVE);
 			} else {
 				throw new InvalidMoveException("Invalid move");
 			}
@@ -86,7 +86,7 @@ public class DefaultGoGame implements GoGame {
 			consecutivePasses++;
 			currentPlayer = getOpposingPlayer(currentPlayer);
 			//sprawdz czy consecutivePasses >= 2
-			currentPlayer.notifyAboutTurn();
+			currentPlayer.notifyAboutTurn(GoMoveType.PASS);
 		} else {
 			throw new IllegalArgumentException();
 		}

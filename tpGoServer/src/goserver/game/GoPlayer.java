@@ -11,7 +11,7 @@ public interface GoPlayer {
 
 	void setGame(GoGame game);
 	//void setOpposingPlayer(GoPlayer player);
-	void notifyAboutTurn();
+	void notifyAboutTurn(GoMoveType opponentsMove);
 	void updateBoard();
 
 }

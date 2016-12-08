@@ -35,7 +35,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 		
 	}
 	//@Override
-	public void notifyAboutTurn() {
+	public void notifyAboutTurn(GoMoveType opponentsMove) {
 		// TODO Auto-generated method stub
 		
 	}

@@ -6,6 +6,7 @@ import org.junit.Test;
 
 import goserver.game.DefaultGoGame;
 import goserver.game.GoGame;
+import goserver.game.GoMoveType;
 import goserver.game.GoPlayer;
 import goserver.game.InvalidMoveException;
 import goserver.game.rules.GoRuleset;
@@ -23,7 +24,7 @@ public class KoRuleTest {
 		}
 
 		@Override
-		public void notifyAboutTurn() {
+		public void notifyAboutTurn(GoMoveType opponentsMove) {
 			// TODO Auto-generated method stub
 
 		}
