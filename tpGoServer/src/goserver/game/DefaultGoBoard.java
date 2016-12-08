@@ -28,6 +28,8 @@ public class DefaultGoBoard implements GoBoard {
 	private final int size;
 	protected int board[][];
 	protected int previousBoard[][]; // ko rule
+	private int labeledBoard[][]; // oznaczone grupy kamieni
+	private Map<Integer, GoGroupType> groups; // oznaczenie grup kamieni
 
 	private boolean suicideCheckEnabled = false;
 
@@ -50,6 +52,8 @@ public class DefaultGoBoard implements GoBoard {
 				previousBoard[i][j] = EMPTY;
 			}
 		}
+		
+		labeledBoard = null;
 	}
 
 	/**
@@ -105,6 +109,7 @@ public class DefaultGoBoard implements GoBoard {
 				throw new InvalidMoveException(SuicideRule.invalidMoveMessage);
 			}
 		}
+		labeledBoard = null;
 
 		return new IntPair(captured, captureStones(x, y));
 	}
@@ -268,11 +273,11 @@ public class DefaultGoBoard implements GoBoard {
 
 		return new ArrayList<IntPair>(result);
 	}
-	
-	@Override
-	public int[][] getBoardWithLabeledGroups() {
+
+	//@Override
+	private void createLabels() {
 		// algorytm two-pass
-		int[][] labeled = new int[size][size];
+		labeledBoard = new int[size][size];
 		Map<Integer, Set<Integer>> labels = new HashMap<Integer, Set<Integer>>();
 		int lowestLabel = 0;
 		
@@ -286,56 +291,120 @@ public class DefaultGoBoard implements GoBoard {
 					neighbors[1]=0;
 					// 0th neighbor
 					if(i>0 && board[i-1][j] == board[i][j]){
-						neighbors[0] = labeled[i-1][j];
+						neighbors[0] = labeledBoard[i-1][j];
 					}
 					// 1st neighbor
 					if(j>0 && board[i][j-1] == board[i][j]){
-						neighbors[1] = labeled[i][j-1];
+						neighbors[1] = labeledBoard[i][j-1];
 					}
 					
 					if(neighbors[0] > 0 && neighbors[1] > 0){
 						// two neighbors
 						if (neighbors[0] != neighbors[1]){
 							// different labels
-							labeled[i][j] = Math.min(neighbors[0], neighbors[1]);
+							labeledBoard[i][j] = Math.min(neighbors[0], neighbors[1]);
 							// store label equivalence
 							labels.get(neighbors[0]).add(neighbors[1]);
 							labels.get(neighbors[1]).add(neighbors[0]);
 						} else {
 							// same labels
-							labeled[i][j] = neighbors[0];
+							labeledBoard[i][j] = neighbors[0];
 						}
 					} else if(neighbors[0] > 0 && neighbors[1] == 0){
 						// one neighbor
-						labeled[i][j] = neighbors[0];
+						labeledBoard[i][j] = neighbors[0];
 					} else if(neighbors[0] == 0 && neighbors[1] > 0){
 						// one neighbor
-						labeled[i][j] = neighbors[1];
+						labeledBoard[i][j] = neighbors[1];
 					} else {
 						// no neighbor -> new label
 						lowestLabel++;
-						labeled[i][j] = lowestLabel;
+						labeledBoard[i][j] = lowestLabel;
 						labels.put(lowestLabel, new HashSet<Integer>());
 						labels.get(lowestLabel).add(lowestLabel);
 					}
 					
 				} else {
-					labeled[i][j] = 0;
+					labeledBoard[i][j] = 0;
 				}
 			}
 		}
 		
 		//2nd pass
-		for(int i=0; i<labeled.length; i++){
-			for(int j=0; j<labeled[i].length; j++){
-				if(labeled[i][j] != 0){
+		for(int i=0; i<labeledBoard.length; i++){
+			for(int j=0; j<labeledBoard[i].length; j++){
+				if(labeledBoard[i][j] != 0){
 					// find lowest equivalent label
-					labeled[i][j] = Collections.min(labels.get(labeled[i][j]));
+					labeledBoard[i][j] = Collections.min(labels.get(labeledBoard[i][j]));
 				}
 			}
 		}
 		
-		return labeled;
+		//3rd pass (etykiety kolejnymi liczbami naturalnymi od 1)
+		Map<Integer, Integer> newLabels = new HashMap<Integer, Integer>();
+		groups = new HashMap<Integer, GoGroupType>();
+		lowestLabel = 0;
+		
+		for(int i=0; i<labeledBoard.length; i++){
+			for(int j=0; j<labeledBoard[i].length; j++){
+				if(labeledBoard[i][j] != 0){
+					if (newLabels.containsKey(labeledBoard[i][j])){
+						labeledBoard[i][j] = newLabels.get(labeledBoard[i][j]);
+					} else {
+						lowestLabel++;
+						newLabels.put(labeledBoard[i][j], lowestLabel);
+						labeledBoard[i][j] = lowestLabel;
+						groups.put(lowestLabel, GoGroupType.ALIVE);
+					}
+				}
+			}
+		}
+		
+		//TODO jakies madrzejsze ustalanie czy grupa jest zywa/martwa
+		
+	}
+	
+	@Override
+	public int[][] getBoardWithLabeledGroups() {
+		if (labeledBoard == null){
+			createLabels();
+		}
+		return labeledBoard;
+	}
+	
+	@Override
+	public int[] getAllGroupLabels() {
+		if (labeledBoard == null){
+			createLabels();
+		}
+		
+		int labels[] = new int[groups.keySet().size()];
+		int i = 0;
+		for(int label: groups.keySet()){
+			labels[i] = label;
+			i++;
+		}
+		
+		return labels;
+	}
+
+	@Override
+	public GoGroupType getGroupType(int label) {
+		if (labeledBoard == null){
+			createLabels();
+		}
+		
+		return groups.get(label);
+	}
+
+	@Override
+	public void setGroupType(int label, GoGroupType type) {
+		if (labeledBoard == null){
+			createLabels();
+		}
+		
+		groups.put(label, type);
+		
 	}
 
 	public int getSize() {
