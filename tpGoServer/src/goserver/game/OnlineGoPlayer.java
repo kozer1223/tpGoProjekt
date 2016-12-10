@@ -44,5 +44,10 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void notifyAboutGamePhaseChange(int gamePhase) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

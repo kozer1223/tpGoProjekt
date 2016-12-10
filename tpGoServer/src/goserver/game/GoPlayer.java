@@ -13,5 +13,6 @@ public interface GoPlayer {
 	//void setOpposingPlayer(GoPlayer player);
 	void notifyAboutTurn(GoMoveType opponentsMove);
 	void updateBoard();
+	void notifyAboutGamePhaseChange(int gamePhase);
 
 }

@@ -1,7 +1,10 @@
 package clientmock;
 
+import java.util.Map;
+
 import goserver.game.GoBoard;
 import goserver.game.GoGame;
+import goserver.game.GoGroupType;
 import goserver.game.GoMoveType;
 import goserver.game.GoPlayer;
 import goserver.game.InvalidMoveException;
@@ -21,6 +24,10 @@ public class TextGoPlayer implements GoPlayer {
 
 	public void passTurn() {
 		game.passTurn(this);
+	}
+	
+	public void applyGroupTypeChanges(Map<Integer, GoGroupType> groupTypeChanges) {
+		game.applyGroupTypeChanges(this, groupTypeChanges);
 	}
 	
 	public char encodeColors(int color) {
@@ -66,6 +73,10 @@ public class TextGoPlayer implements GoPlayer {
 	public int getCapturedStones() {
 		return game.getPlayersCapturedStones(this);
 	}
+	
+	public int getGamePhase() {
+		return game.getGamePhase();
+	}
 
 	@Override
 	public void setGame(GoGame game) {
@@ -75,13 +86,21 @@ public class TextGoPlayer implements GoPlayer {
 	@Override
 	public void notifyAboutTurn(GoMoveType opponentsMove) {
 		// TODO Auto-generated method stub
-
+		
 	}
 
 	@Override
 	public void updateBoard() {
 		// TODO Auto-generated method stub
 
+	}
+
+	@Override
+	public void notifyAboutGamePhaseChange(int gamePhase) {
+		// TODO Auto-generated method stub
+		//if (gamePhase == 1){
+		//	TextGo.printMap(game.getLabelsMap());
+		//}
 	}
 
 }

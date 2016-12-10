@@ -30,6 +30,10 @@ public class DefaultGoBoard implements GoBoard {
 	protected int previousBoard[][]; // ko rule
 	private int labeledBoard[][]; // oznaczone grupy kamieni
 	private Map<Integer, GoGroupType> groups; // oznaczenie grup kamieni
+	private Map<Integer, Integer> groupLockCount; // 0 - domyslne ustawienie,
+												  // 1 - zmieniona przez
+												  // poprzedniego gracza,
+												  // 2 - zablokowana
 
 	private boolean suicideCheckEnabled = false;
 
@@ -343,6 +347,7 @@ public class DefaultGoBoard implements GoBoard {
 		//3rd pass (etykiety kolejnymi liczbami naturalnymi od 1)
 		Map<Integer, Integer> newLabels = new HashMap<Integer, Integer>();
 		groups = new HashMap<Integer, GoGroupType>();
+		groupLockCount = new HashMap<Integer, Integer>();
 		lowestLabel = 0;
 		
 		for(int i=0; i<labeledBoard.length; i++){
@@ -355,6 +360,7 @@ public class DefaultGoBoard implements GoBoard {
 						newLabels.put(labeledBoard[i][j], lowestLabel);
 						labeledBoard[i][j] = lowestLabel;
 						groups.put(lowestLabel, GoGroupType.ALIVE);
+						groupLockCount.put(lowestLabel, 0);
 					}
 				}
 			}
@@ -397,14 +403,44 @@ public class DefaultGoBoard implements GoBoard {
 		return groups.get(label);
 	}
 
-	@Override
-	public void setGroupType(int label, GoGroupType type) {
+	protected void setGroupType(int label, GoGroupType type) {
 		if (labeledBoard == null){
 			createLabels();
 		}
 		
 		groups.put(label, type);
+		groupLockCount.put(label, 1);
+	}
+	
+	@Override
+	public boolean checkIfGroupIsLocked(int label){
+		if (labeledBoard == null){
+			createLabels();
+		}
 		
+		return groupLockCount.get(label) >= 2;
+	}
+	
+	@Override
+	public boolean applyGroupTypeChanges(Map<Integer, GoGroupType> groupTypeChanges) {
+		if (labeledBoard == null){
+			createLabels();
+		}
+		
+		boolean changed = false;
+		for(int label: groups.keySet()){
+			if (groupTypeChanges.containsKey(label) && !checkIfGroupIsLocked(label) && getGroupType(label) != groupTypeChanges.get(label)){
+				setGroupType(label, groupTypeChanges.get(label));
+				changed = true;
+			} else {
+				groupLockCount.put(label, Math.min(2, groupLockCount.get(label)+1));
+			}
+		}
+		return changed;
+	}
+	
+	public void resetGroupLabels(){
+		labeledBoard = null;
 	}
 
 	public int getSize() {

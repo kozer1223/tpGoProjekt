@@ -3,6 +3,9 @@
  */
 package goserver.game;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import goserver.game.rules.GoRuleset;
 import goserver.util.IntPair;
 
@@ -18,6 +21,7 @@ public class DefaultGoGame implements GoGame {
 	private int boardSize;
 	private int[] capturedStones;
 	private int consecutivePasses;
+	private int gamePhase; // 0 - stawianie kamieni, 1 - oznaczanie grup
 
 	GoPlayer currentPlayer;
 
@@ -40,6 +44,7 @@ public class DefaultGoGame implements GoGame {
 		setRuleset(ruleset);
 		ruleset.onGameStart(this);
 		
+		gamePhase = 0;
 		consecutivePasses = 0;
 		currentPlayer = players[0];
 		currentPlayer.notifyAboutTurn(GoMoveType.FIRST);
@@ -52,7 +57,7 @@ public class DefaultGoGame implements GoGame {
 	 */
 	@Override
 	public void makeMove(GoPlayer player, int x, int y) throws InvalidMoveException {
-		if (isPlayersTurn(player)) {
+		if (isPlayersTurn(player) && isStonePlacingPhase()) {
 			int playerNo = getPlayersNo(player);
 
 			// throws exception
@@ -78,20 +83,64 @@ public class DefaultGoGame implements GoGame {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see goserver.game.GoGame#makeMove(goserver.game.GoPlayer)
+	 * @see goserver.game.GoGame#passTurn(goserver.game.GoPlayer)
 	 */
 	@Override
 	public void passTurn(GoPlayer player) {
-		if (isPlayersTurn(player)) {
+		if (isPlayersTurn(player) && isStonePlacingPhase()) {
 			consecutivePasses++;
 			currentPlayer = getOpposingPlayer(currentPlayer);
 			//sprawdz czy consecutivePasses >= 2
-			currentPlayer.notifyAboutTurn(GoMoveType.PASS);
+			if (consecutivePasses >= 2){
+				setGamePhase(1);
+				board.getAllGroupLabels();
+				currentPlayer.notifyAboutGamePhaseChange(getGamePhase());
+			} else {
+				currentPlayer.notifyAboutTurn(GoMoveType.PASS);
+			}
 		} else {
 			throw new IllegalArgumentException();
 		}
 	}
 
+	/**
+	 * @param groupTypeChanges
+	 * @see goserver.game.GoBoard#applyGroupTypeChanges(java.util.Map)
+	 */
+	public void applyGroupTypeChanges(GoPlayer player, Map<Integer, GoGroupType> groupTypeChanges) {
+		if (isPlayersTurn(player) && isGroupMarkingPhase()){
+			if(board.applyGroupTypeChanges(groupTypeChanges)){
+				currentPlayer.notifyAboutTurn(GoMoveType.GROUP_CHANGED);
+				
+				if (areAllGroupsLocked()){
+					// oblicz wynik, powiadom o wygranej/przegranej/remisie
+				}
+				
+			} else {
+				//consecutivePasses++;
+				//if (consecutivePasses >= 2){
+				//	setGamePhase(0);
+				//	board.resetGroupLabels();
+				//	currentPlayer.notifyAboutGamePhaseChange(getGamePhase());
+				//} else {
+				currentPlayer.notifyAboutTurn(GoMoveType.GROUP_NOCHANGE);
+				//}
+			}
+			currentPlayer = getOpposingPlayer(currentPlayer);
+		} else {
+			throw new IllegalArgumentException();
+		}
+	}
+	
+	protected boolean areAllGroupsLocked() {
+		for(int label : board.getAllGroupLabels()){
+			if (!board.checkIfGroupIsLocked(label)){
+				return false;
+			}
+		}
+		return true;
+	}
+	
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -167,6 +216,40 @@ public class DefaultGoGame implements GoGame {
 	@Override
 	public boolean isPlayersTurn(GoPlayer player) {
 		return (currentPlayer == player);
+	}
+	
+	protected void setGamePhase(int gamePhase) {
+		if (gamePhase != 0 && gamePhase != 1){
+			throw new IllegalArgumentException();
+		}
+		consecutivePasses = 0;
+		this.gamePhase = gamePhase;
+	}
+
+	@Override
+	public int getGamePhase() {
+		return gamePhase;
+	}
+
+	@Override
+	public boolean isStonePlacingPhase() {
+		return getGamePhase() == 0;
+	}
+
+	@Override
+	public boolean isGroupMarkingPhase() {
+		return getGamePhase() == 1;
+	}
+	
+	@Override
+	public Map<Integer, GoGroupType> getLabelsMap() {
+		Map<Integer, GoGroupType> labelMap = new HashMap<Integer, GoGroupType>();
+		
+		for(int label : board.getAllGroupLabels()){
+			labelMap.put(label, board.getGroupType(label));
+		}
+		
+		return labelMap;
 	}
 
 }

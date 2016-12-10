@@ -35,6 +35,12 @@ public class KoRuleTest {
 			
 		}
 
+		@Override
+		public void notifyAboutGamePhaseChange(int gamePhase) {
+			// TODO Auto-generated method stub
+			
+		}
+
 	}
 
 	@Test

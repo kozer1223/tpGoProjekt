@@ -2,6 +2,6 @@ package goserver.game;
 
 public enum GoMoveType {
 
-	FIRST, MOVE, PASS;
+	FIRST, MOVE, PASS, GROUP_CHANGED, GROUP_NOCHANGE;
 
 }

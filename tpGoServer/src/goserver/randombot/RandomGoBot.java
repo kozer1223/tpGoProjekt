@@ -91,4 +91,10 @@ public class RandomGoBot implements GoPlayer {
 		// powiadamiany na bieżąco
 	}
 
+	@Override
+	public void notifyAboutGamePhaseChange(int gamePhase) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

@@ -1,6 +1,7 @@
 package goserver.game;
 
 import java.util.List;
+import java.util.Map;
 
 import goserver.util.IntPair;
 
@@ -26,6 +27,8 @@ public interface GoBoard {
 	public int[][] getBoardWithLabeledGroups();
 	public int[] getAllGroupLabels();
 	public GoGroupType getGroupType(int label);
-	public void setGroupType(int label, GoGroupType type);
+	public boolean checkIfGroupIsLocked(int label);
+	public boolean applyGroupTypeChanges(Map<Integer, GoGroupType> groupTypeChanges);
+	public void resetGroupLabels();
 
 }

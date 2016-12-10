@@ -1,5 +1,7 @@
 package goserver.game;
 
+import java.util.Map;
+
 import goserver.game.rules.GoRuleset;
 
 /**
@@ -21,5 +23,11 @@ public interface GoGame {
 	
 	public int getPlayersCapturedStones(GoPlayer player);
 	public boolean isPlayersTurn(GoPlayer player);
+	public int getGamePhase();
+	public boolean isStonePlacingPhase();
+	public boolean isGroupMarkingPhase();
+	
+	public Map<Integer, GoGroupType> getLabelsMap();
+	public void applyGroupTypeChanges(GoPlayer player, Map<Integer, GoGroupType> groupTypeChanges);
 	
 }
