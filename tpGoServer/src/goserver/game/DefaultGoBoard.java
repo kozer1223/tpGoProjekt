@@ -24,6 +24,10 @@ public class DefaultGoBoard implements GoBoard {
 	public static final int EMPTY = 0;
 	public static final int BLACK = 1;
 	public static final int WHITE = 2;
+	
+	protected static final int BLACK_TERRITORY = 3;
+	protected static final int WHITE_TERRITORY = 4;
+	protected static final int DISPUTED_TERRITORY = 5;
 
 	private final int size;
 	protected int board[][];
@@ -473,6 +477,164 @@ public class DefaultGoBoard implements GoBoard {
 	@Override
 	public void setSuicideCheckEnabled(boolean checkEnabled) {
 		suicideCheckEnabled = checkEnabled;
+	}
+
+	@Override
+	public IntPair calculateTerritoryScore() {
+		int territoryBoard[][] = new int[size][size];
+		for(int i=0; i<size; i++){
+			for(int j=0; j<size; j++){
+				territoryBoard[i][j] = board[i][j];
+			}
+		}
+		
+		int blackScore = 0;
+		int whiteScore = 0;
+		
+		for(int i=0; i<size; i++){
+			for(int j=0; j<size; j++){
+				if(territoryBoard[i][j] == EMPTY){
+					// nieoznaczone terytorium
+					Set<IntPair> territory = new HashSet<IntPair>();
+					List<IntPair> queue = new ArrayList<IntPair>();
+
+					int territoryColor = EMPTY;
+
+					queue.add(new IntPair(i, j));
+
+					int k, cur_x, cur_y;
+
+					while (!queue.isEmpty()) {
+						cur_x = queue.get(0).x;
+						cur_y = queue.get(0).y;
+
+						// obecne pole
+						territory.add(new IntPair(cur_x, cur_y));
+						if (cur_y - 1 >= 0) {
+							if (board[cur_x][cur_y - 1] == EMPTY) {
+								if (territory.add(new IntPair(cur_x, cur_y - 1)))
+									queue.add(new IntPair(cur_x, cur_y - 1));
+							} else {
+								territoryColor = adjustTerritoryColor(territoryColor, board[cur_x][cur_y - 1]);
+							}
+						}
+						if (cur_y + 1 < size) {
+							if (board[cur_x][cur_y + 1] == EMPTY) {
+								if (territory.add(new IntPair(cur_x, cur_y + 1)))
+									queue.add(new IntPair(cur_x, cur_y + 1));
+							} else {
+								territoryColor = adjustTerritoryColor(territoryColor, board[cur_x][cur_y + 1]);
+							}
+						}
+						// w lewo
+						k = 1;
+						while (cur_x - k >= 0) {
+							if (board[cur_x - k][cur_y] == EMPTY) {
+								territory.add(new IntPair(cur_x - k, cur_y));
+								if (cur_y - 1 >= 0) {
+									if (board[cur_x - k][cur_y - 1] == EMPTY) {
+										if (territory.add(new IntPair(cur_x - k, cur_y - 1)))
+											queue.add(new IntPair(cur_x - k, cur_y - 1));
+									} else {
+										territoryColor = adjustTerritoryColor(territoryColor, board[cur_x - k][cur_y - 1]);
+									}
+								}
+								if (cur_y + 1 < size) {
+									if (board[cur_x - k][cur_y + 1] == EMPTY) {
+										if (territory.add(new IntPair(cur_x - k, cur_y + 1)))
+											queue.add(new IntPair(cur_x - k, cur_y + 1));
+									} else {
+										territoryColor = adjustTerritoryColor(territoryColor, board[cur_x - k][cur_y + 1]);
+									}
+								}
+								k++;
+							} else {
+								break;
+							}
+						}
+						// w prawo
+						k = 1;
+						while (cur_x + k < size) {
+							if (board[cur_x + k][cur_y] == EMPTY) {
+								territory.add(new IntPair(cur_x + k, cur_y));
+								if (cur_y - 1 >= 0) {
+									if (board[cur_x + k][cur_y - 1] == EMPTY) {
+										if (territory.add(new IntPair(cur_x + k, cur_y - 1)))
+											queue.add(new IntPair(cur_x + k, cur_y - 1));
+									} else {
+										territoryColor = adjustTerritoryColor(territoryColor, board[cur_x + k][cur_y - 1]);
+									}
+								}
+								if (cur_y + 1 < size) {
+									if (board[cur_x + k][cur_y + 1] == EMPTY) {
+										if (territory.add(new IntPair(cur_x + k, cur_y + 1)))
+											queue.add(new IntPair(cur_x + k, cur_y + 1));
+									} else {
+										territoryColor = adjustTerritoryColor(territoryColor, board[cur_x + k][cur_y + 1]);
+									}
+								}
+								k++;
+							} else {
+								break;
+							}
+						}
+						queue.remove(0);
+					}
+					
+					//mark territory
+					int territorySize = 0;
+					for(IntPair tile : territory){
+						territoryBoard[tile.x][tile.y] = territoryColor;
+						territorySize++;
+					}
+					
+					if (territoryColor == BLACK_TERRITORY){
+						blackScore += territorySize;
+					} else if (territoryColor == WHITE_TERRITORY){
+						whiteScore += territorySize;
+					}
+					
+				}
+			}
+		}
+		
+		return new IntPair(blackScore, whiteScore);
+	}
+
+	private int adjustTerritoryColor(int territoryColor, int stoneColor) {
+		if (territoryColor == EMPTY){
+			return stoneColorToTerritoryColor(stoneColor);
+		}
+		if (territoryColor == DISPUTED_TERRITORY){
+			return DISPUTED_TERRITORY;
+		}
+		if (territoryColor != stoneColorToTerritoryColor(stoneColor)){
+			return DISPUTED_TERRITORY;
+		}
+		return territoryColor;
+	}
+	
+	private int stoneColorToTerritoryColor(int stoneColor){
+		if(stoneColor == EMPTY){
+			return EMPTY;
+		}
+		return (stoneColor == BLACK) ? BLACK_TERRITORY : WHITE_TERRITORY;
+	}
+
+	@Override
+	public void removeDeadGroups() {
+		if (labeledBoard == null){
+			return;
+		}
+		for(int i=0; i<size; i++){
+			for(int j=0; j<size; j++){
+				if (labeledBoard[i][j] != 0){
+					if (groups.get(labeledBoard[i][j]) == GoGroupType.DEAD){
+						board[i][j] = EMPTY;
+					}
+				}
+			}
+		}
 	}
 
 }

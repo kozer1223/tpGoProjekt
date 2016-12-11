@@ -30,5 +30,7 @@ public interface GoBoard {
 	public boolean checkIfGroupIsLocked(int label);
 	public boolean applyGroupTypeChanges(Map<Integer, GoGroupType> groupTypeChanges);
 	public void resetGroupLabels();
+	public IntPair calculateTerritoryScore();
+	public void removeDeadGroups();
 
 }

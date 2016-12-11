@@ -26,6 +26,10 @@ public interface GoGame {
 	public int getGamePhase();
 	public boolean isStonePlacingPhase();
 	public boolean isGroupMarkingPhase();
+	public boolean isGameEnd();
+	
+	public double getPlayersScore(GoPlayer player);
+	public void setPlayersScore(GoPlayer player, double score);
 	
 	public Map<Integer, GoGroupType> getLabelsMap();
 	public void applyGroupTypeChanges(GoPlayer player, Map<Integer, GoGroupType> groupTypeChanges);

@@ -41,6 +41,12 @@ public class KoRuleTest {
 			
 		}
 
+		@Override
+		public void notifyAboutGameEnd(double playerScore, double opponentScore) {
+			// TODO Auto-generated method stub
+			
+		}
+
 	}
 
 	@Test

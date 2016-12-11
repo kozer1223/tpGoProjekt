@@ -14,5 +14,6 @@ public interface GoPlayer {
 	void notifyAboutTurn(GoMoveType opponentsMove);
 	void updateBoard();
 	void notifyAboutGamePhaseChange(int gamePhase);
+	void notifyAboutGameEnd(double playerScore, double opponentScore);
 
 }

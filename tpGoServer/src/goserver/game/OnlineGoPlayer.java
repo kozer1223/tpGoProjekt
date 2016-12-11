@@ -49,5 +49,10 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 		// TODO Auto-generated method stub
 		
 	}
+	@Override
+	public void notifyAboutGameEnd(double playerScore, double opponentScore) {
+		// TODO Auto-generated method stub
+		
+	}
 	
 }

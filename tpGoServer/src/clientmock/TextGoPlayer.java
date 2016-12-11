@@ -74,6 +74,10 @@ public class TextGoPlayer implements GoPlayer {
 		return game.getPlayersCapturedStones(this);
 	}
 	
+	public double getScore() {
+		return game.getPlayersScore(this);
+	}
+	
 	public int getGamePhase() {
 		return game.getGamePhase();
 	}
@@ -101,6 +105,12 @@ public class TextGoPlayer implements GoPlayer {
 		//if (gamePhase == 1){
 		//	TextGo.printMap(game.getLabelsMap());
 		//}
+	}
+
+	@Override
+	public void notifyAboutGameEnd(double playerScore, double opponentScore) {
+		// TODO Auto-generated method stub
+		System.out.println(playerId + " score: " + playerScore);
 	}
 
 }

@@ -14,14 +14,18 @@ import goserver.util.IntPair;
  *
  */
 public class DefaultGoGame implements GoGame {
+	
+	int MAX_GROUP_MARKING_PHASE_LENGTH = 6; // maksymalna liczba tur na ustalenie grup
 
 	private GoBoard board;
 	private GoPlayer[] players;
 	private GoRuleset ruleset;
 	private int boardSize;
 	private int[] capturedStones;
+	private double[] score;
 	private int consecutivePasses;
-	private int gamePhase; // 0 - stawianie kamieni, 1 - oznaczanie grup
+	private int gamePhase; // 0 - stawianie kamieni, 1 - oznaczanie grup, 2 - koniec gry
+	private int groupMarkingPhaseLength;
 
 	GoPlayer currentPlayer;
 
@@ -37,6 +41,7 @@ public class DefaultGoGame implements GoGame {
 		capturedStones = new int[2];
 		capturedStones[0] = 0;
 		capturedStones[1] = 0;
+		score = new double[2];
 
 		this.boardSize = boardSize;
 		board = new DefaultGoBoard(boardSize);
@@ -109,29 +114,44 @@ public class DefaultGoGame implements GoGame {
 	 */
 	public void applyGroupTypeChanges(GoPlayer player, Map<Integer, GoGroupType> groupTypeChanges) {
 		if (isPlayersTurn(player) && isGroupMarkingPhase()){
-			if(board.applyGroupTypeChanges(groupTypeChanges)){
-				currentPlayer.notifyAboutTurn(GoMoveType.GROUP_CHANGED);
-				
-				if (areAllGroupsLocked()){
-					// oblicz wynik, powiadom o wygranej/przegranej/remisie
-				}
-				
-			} else {
-				//consecutivePasses++;
-				//if (consecutivePasses >= 2){
-				//	setGamePhase(0);
-				//	board.resetGroupLabels();
-				//	currentPlayer.notifyAboutGamePhaseChange(getGamePhase());
-				//} else {
-				currentPlayer.notifyAboutTurn(GoMoveType.GROUP_NOCHANGE);
-				//}
-			}
+			groupMarkingPhaseLength++;
 			currentPlayer = getOpposingPlayer(currentPlayer);
+			if(board.applyGroupTypeChanges(groupTypeChanges)){
+				if (groupMarkingPhaseLength < MAX_GROUP_MARKING_PHASE_LENGTH){
+					currentPlayer.notifyAboutTurn(GoMoveType.GROUP_CHANGED);
+				} else {
+					setGamePhase(0);
+					board.resetGroupLabels();
+					currentPlayer.notifyAboutGamePhaseChange(getGamePhase());
+				}
+			} else {
+				currentPlayer.notifyAboutTurn(GoMoveType.GROUP_NOCHANGE);
+			}
+			
+			if (areAllGroupsLocked()){
+				// oblicz wynik, powiadom o wygranej/przegranej/remisie
+				endGame();
+			}
 		} else {
 			throw new IllegalArgumentException();
 		}
 	}
 	
+	protected void endGame() {
+		board.removeDeadGroups();
+		IntPair scores = board.calculateTerritoryScore();
+		score[0] = (double)(scores.x - capturedStones[1]);
+		score[1] = (double)(scores.y - capturedStones[0]);
+		ruleset.onGameEnd(this);
+		
+		setGamePhase(2);
+		
+		players[0].notifyAboutGameEnd(score[0], score[1]);
+		players[1].notifyAboutGameEnd(score[1], score[0]);
+		
+		currentPlayer = null;
+	}
+
 	protected boolean areAllGroupsLocked() {
 		for(int label : board.getAllGroupLabels()){
 			if (!board.checkIfGroupIsLocked(label)){
@@ -219,10 +239,11 @@ public class DefaultGoGame implements GoGame {
 	}
 	
 	protected void setGamePhase(int gamePhase) {
-		if (gamePhase != 0 && gamePhase != 1){
+		if (gamePhase != 0 && gamePhase != 1 && gamePhase != 2) {
 			throw new IllegalArgumentException();
 		}
 		consecutivePasses = 0;
+		groupMarkingPhaseLength = 0;
 		this.gamePhase = gamePhase;
 	}
 
@@ -242,6 +263,11 @@ public class DefaultGoGame implements GoGame {
 	}
 	
 	@Override
+	public boolean isGameEnd() {
+		return getGamePhase() == 2;
+	}
+	
+	@Override
 	public Map<Integer, GoGroupType> getLabelsMap() {
 		Map<Integer, GoGroupType> labelMap = new HashMap<Integer, GoGroupType>();
 		
@@ -250,6 +276,16 @@ public class DefaultGoGame implements GoGame {
 		}
 		
 		return labelMap;
+	}
+
+	@Override
+	public double getPlayersScore(GoPlayer player) {
+		return score[getPlayersNo(player)];
+	}
+
+	@Override
+	public void setPlayersScore(GoPlayer player, double score) {
+		this.score[getPlayersNo(player)] = score;
 	}
 
 }

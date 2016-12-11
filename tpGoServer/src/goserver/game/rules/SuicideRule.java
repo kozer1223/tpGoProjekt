@@ -40,4 +40,10 @@ public class SuicideRule implements GoRule {
 		return true;
 	}
 
+	@Override
+	public void onGameEnd(GoGame game) {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

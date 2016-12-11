@@ -27,6 +27,12 @@ public class GoRuleset implements GoRule {
 			rule.onGameStart(game);
 		}
 	}
+	
+	public void onGameEnd(GoGame game) {
+		for(GoRule rule : rules){
+			rule.onGameEnd(game);
+		}
+	}
 
 	public boolean validateMove(GoBoard board, int color, int x, int y) throws InvalidMoveException {
 		boolean isValid = true;
