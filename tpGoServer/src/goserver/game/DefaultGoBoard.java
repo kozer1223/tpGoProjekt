@@ -312,8 +312,8 @@ public class DefaultGoBoard implements GoBoard {
 							// different labels
 							labeledBoard[i][j] = Math.min(neighbors[0], neighbors[1]);
 							// store label equivalence
-							labels.get(neighbors[0]).add(neighbors[1]);
-							labels.get(neighbors[1]).add(neighbors[0]);
+							labels.get(neighbors[0]).addAll(labels.get(neighbors[1]));
+							labels.get(neighbors[1]).addAll(labels.get(neighbors[0]));
 						} else {
 							// same labels
 							labeledBoard[i][j] = neighbors[0];
