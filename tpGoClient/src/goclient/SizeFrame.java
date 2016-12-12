@@ -39,6 +39,9 @@ public class SizeFrame implements ActionListener {
 	
 	@Override
 	public void actionPerformed(ActionEvent e) {
+		frame.setVisible(false);
+		frame.setEnabled(false);
+		frame=null;
 		if(e.getSource()==button19){
 			GUI.getComunication().write("19");
 			BoardFrame nextFrame = new BoardFrame(19);
@@ -51,9 +54,6 @@ public class SizeFrame implements ActionListener {
 			GUI.getComunication().write("9");
 			BoardFrame nextFrame = new BoardFrame(9);
 		}
-		frame.setVisible(false);
-		frame.setEnabled(false);
-		frame=null;
 	}
 
 }

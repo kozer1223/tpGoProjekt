@@ -23,8 +23,10 @@ public class BoardFrame implements ActionListener {
 
 	private JFrame frame;
 	private int size;
-	
+	private String colour="no colour";
+	private Comunication comunication;
 	public BoardFrame(int size) {
+		comunication = GUI.getComunication();
 		this.size=size;
 		frame=new JFrame("Go");
 		frame.setLayout(new BorderLayout());
@@ -55,25 +57,30 @@ public class BoardFrame implements ActionListener {
 				button.setBorderPainted(false);
 				boardImage.add(button);
 				if(j==1) button.setName("a"+i);
-				if(j==2) button.setName("b"+i);
-				if(j==3) button.setName("c"+i);
-				if(j==4) button.setName("d"+i);
-				if(j==5) button.setName("e"+i);
-				if(j==6) button.setName("f"+i);
-				if(j==7) button.setName("g"+i);
-				if(j==8) button.setName("h"+i);
-				if(j==9) button.setName("i"+i);
-				if(j==10) button.setName("j"+i);
-				if(j==11) button.setName("k"+i);
-				if(j==12) button.setName("l"+i);
-				if(j==13) button.setName("m"+i);
-				if(j==14) button.setName("n"+i);
-				if(j==15) button.setName("o"+i);
-				if(j==16) button.setName("p"+i);
-				if(j==17) button.setName("q"+i);
-				if(j==18) button.setName("r"+i);
-				if(j==19) button.setName("s"+i);
+				else if(j==2) button.setName("b"+i);
+				else if(j==3) button.setName("c"+i);
+				else if(j==4) button.setName("d"+i);
+				else if(j==5) button.setName("e"+i);
+				else if(j==6) button.setName("f"+i);
+				else if(j==7) button.setName("g"+i);
+				else if(j==8) button.setName("h"+i);
+				else if(j==9) button.setName("i"+i);
+				else if(j==10) button.setName("j"+i);
+				else if(j==11) button.setName("k"+i);
+				else if(j==12) button.setName("l"+i);
+				else if(j==13) button.setName("m"+i);
+				else if(j==14) button.setName("n"+i);
+				else if(j==15) button.setName("o"+i);
+				else if(j==16) button.setName("p"+i);
+				else if(j==17) button.setName("q"+i);
+				else if(j==18) button.setName("r"+i);
+				else if(j==19) button.setName("s"+i);
 			}
+		}
+		colour=comunication.read();
+		System.out.println(colour);
+		if(colour=="white") {
+			frame.setEnabled(false);
 		}
 	}
 	
@@ -81,9 +88,9 @@ public class BoardFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String placeClicked = ((JButton) e.getSource()).getName();
 		System.out.println(placeClicked);
-		GUI.getComunication().write(placeClicked);
+		comunication.write(placeClicked);
 		frame.setEnabled(false);
-		String msg = GUI.getComunication().read();
+		String msg = comunication.read();
 		frame.setEnabled(true);
 	}
 

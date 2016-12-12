@@ -17,22 +17,18 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
-	
-	public OnlineGoPlayer(Socket socket) {
+	private GoGame game;
+	public OnlineGoPlayer(Socket socket,BufferedReader input,PrintWriter output) {
 		this.socket=socket;
-		try{
-			BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			PrintWriter output = new PrintWriter(socket.getOutputStream(),true);
-		}
-		catch(Exception e) {}
+		this.input=input;
+		this.output=output;
 	}
 	public void run() {
-		//TODO
+		
 	}
 	//@Override
 	public void setGame(GoGame game) {
-		// TODO Auto-generated method stub
-		
+		this.game=game;
 	}
 	//@Override
 	public void notifyAboutTurn(GoMoveType opponentsMove) {
