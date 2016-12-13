@@ -12,6 +12,8 @@ import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import goserver.game.DefaultGoGame;
+import goserver.game.DefaultGoRuleset;
 import goserver.game.OnlineGoPlayer;
 /**
  * @author Maciek
@@ -32,28 +34,34 @@ public class ServerGo {
 			PrintWriter output = new PrintWriter(socket.getOutputStream(),true);
 			String line=input.readLine();
 			if(line.compareTo("bot")==0) {
-				OnlineGoPlayer player = new OnlineGoPlayer(socket);
+				OnlineGoPlayer player = new OnlineGoPlayer(socket,input,output);
 				player.run();
 			}
 			else if(line.compareTo("player")==0) {
 				line=input.readLine();
 				if(line.compareTo("19")==0){
 					if(waitingPlayer19==null) {
-						waitingPlayer19=new OnlineGoPlayer(socket);
+						output.println("black");
+						waitingPlayer19=new OnlineGoPlayer(socket,input,output);
 					}
 					else {
-						OnlineGoPlayer player = new OnlineGoPlayer(socket);
+						output.println("white");
+						OnlineGoPlayer player = new OnlineGoPlayer(socket,input,output);
+						DefaultGoGame game = new DefaultGoGame (player, waitingPlayer19, 19, null);
 						player.run();
 						waitingPlayer19.run();
-						waitingPlayer19 = null;						
+						waitingPlayer19 = null;
 					}
 				}
 				else if(line.compareTo("13")==0) {
 					if(waitingPlayer13==null) {
-						waitingPlayer13=new OnlineGoPlayer(socket);
+						output.println("black");
+						waitingPlayer13=new OnlineGoPlayer(socket,input,output);
 					}
 					else {
-						OnlineGoPlayer player = new OnlineGoPlayer(socket);
+						output.println("white");
+						OnlineGoPlayer player = new OnlineGoPlayer(socket,input,output);
+						DefaultGoGame game = new DefaultGoGame (player, waitingPlayer13, 13, null);
 						player.run();
 						waitingPlayer13.run();
 						waitingPlayer13 = null;						
@@ -61,10 +69,13 @@ public class ServerGo {
 				}
 				else if(line.compareTo("9")==0) {
 					if(waitingPlayer9==null) {
-						waitingPlayer9=new OnlineGoPlayer(socket);
+						output.println("black");
+						waitingPlayer9=new OnlineGoPlayer(socket,input,output);
 					}
 					else {
-						OnlineGoPlayer player = new OnlineGoPlayer(socket);
+						output.println("white");
+						OnlineGoPlayer player = new OnlineGoPlayer(socket,input,output);
+						DefaultGoGame game = new DefaultGoGame (player, waitingPlayer9, 9, null);
 						player.run();
 						waitingPlayer9.run();
 						waitingPlayer9 = null;						
