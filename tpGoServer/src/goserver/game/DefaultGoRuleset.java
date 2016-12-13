@@ -2,6 +2,7 @@ package goserver.game;
 
 import goserver.game.rules.GoRuleset;
 import goserver.game.rules.KoRule;
+import goserver.game.rules.KomiRule;
 import goserver.game.rules.SuicideRule;
 
 public class DefaultGoRuleset {
@@ -13,6 +14,7 @@ public class DefaultGoRuleset {
 			defaultRulesetInstance = new GoRuleset();
 			defaultRulesetInstance.addRule(SuicideRule.getInstance());
 			defaultRulesetInstance.addRule(KoRule.getInstance());
+			defaultRulesetInstance.addRule(KomiRule.getInstance());
 		}
 		return defaultRulesetInstance;
 	}

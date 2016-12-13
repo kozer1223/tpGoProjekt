@@ -12,43 +12,10 @@ import goserver.game.InvalidMoveException;
 import goserver.game.rules.GoRuleset;
 import goserver.game.rules.KoRule;
 import goserver.game.rules.SuicideRule;
+import goserver.game.test.EmptyGoPlayer;
 
 public class KoRuleTest {
 	
-	class EmptyGoPlayer implements GoPlayer {
-
-		@Override
-		public void setGame(GoGame game) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void notifyAboutTurn(GoMoveType opponentsMove) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void updateBoard() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void notifyAboutGamePhaseChange(int gamePhase) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void notifyAboutGameEnd(double playerScore, double opponentScore) {
-			// TODO Auto-generated method stub
-			
-		}
-
-	}
-
 	@Test
 	public void testSingleton() {
 		assertNotEquals(KoRule.getInstance(), null);

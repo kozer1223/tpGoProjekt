@@ -15,7 +15,7 @@ import goserver.util.IntPair;
  */
 public class DefaultGoGame implements GoGame {
 	
-	int MAX_GROUP_MARKING_PHASE_LENGTH = 6; // maksymalna liczba tur na ustalenie grup
+	public final static int MAX_GROUP_MARKING_PHASE_LENGTH = 6; // maksymalna liczba tur na ustalenie grup
 
 	private GoBoard board;
 	private GoPlayer[] players;
