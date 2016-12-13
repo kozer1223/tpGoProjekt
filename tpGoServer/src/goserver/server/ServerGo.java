@@ -14,6 +14,7 @@ import java.net.Socket;
 
 import goserver.game.DefaultGoGame;
 import goserver.game.DefaultGoRuleset;
+import goserver.game.GoGame;
 import goserver.game.OnlineGoPlayer;
 /**
  * @author Maciek
@@ -47,7 +48,7 @@ public class ServerGo {
 					else {
 						output.println("white");
 						OnlineGoPlayer player = new OnlineGoPlayer(socket,input,output);
-						DefaultGoGame game = new DefaultGoGame (player, waitingPlayer19, 19, null);
+						GoGame game = GoGameFactory.getInstance().createDefaultGoGameWithTwoPlayers(waitingPlayer19, player, 19);
 						player.run();
 						waitingPlayer19.run();
 						waitingPlayer19 = null;
@@ -61,7 +62,7 @@ public class ServerGo {
 					else {
 						output.println("white");
 						OnlineGoPlayer player = new OnlineGoPlayer(socket,input,output);
-						DefaultGoGame game = new DefaultGoGame (player, waitingPlayer13, 13, null);
+						GoGame game = GoGameFactory.getInstance().createDefaultGoGameWithTwoPlayers(waitingPlayer19, player, 13);
 						player.run();
 						waitingPlayer13.run();
 						waitingPlayer13 = null;						
@@ -75,7 +76,7 @@ public class ServerGo {
 					else {
 						output.println("white");
 						OnlineGoPlayer player = new OnlineGoPlayer(socket,input,output);
-						DefaultGoGame game = new DefaultGoGame (player, waitingPlayer9, 9, null);
+						GoGame game = GoGameFactory.getInstance().createDefaultGoGameWithTwoPlayers(waitingPlayer19, player, 9);
 						player.run();
 						waitingPlayer9.run();
 						waitingPlayer9 = null;						
@@ -85,6 +86,7 @@ public class ServerGo {
 			
 		}
 		} catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
