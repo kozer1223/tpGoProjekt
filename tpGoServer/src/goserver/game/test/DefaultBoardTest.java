@@ -200,5 +200,40 @@ public class DefaultBoardTest {
 		int[] labels = board.getAllGroupLabels();
 		assertEquals(2, labels.length);
 	}
+	
+	@Test
+	public void testLabelZigzagShapeSingleLabel() throws InvalidMoveException {
+		int size = 9;
+		GoBoard board = new DefaultGoBoard(size);
+		
+		/*
+		 *   0 1 2 3 4 5 6 7 8
+		 * 0         X X X
+		 * 1         X
+		 * 2     X X X
+		 * 3     X X
+		 * 4   X X
+		 * 5 X X
+		 * 6 
+		 * 7
+		 * 8
+		 */
+		board.placeStone(DefaultGoBoard.BLACK, 6, 0);	
+		board.placeStone(DefaultGoBoard.BLACK, 5, 0);
+		board.placeStone(DefaultGoBoard.BLACK, 4, 0);
+		board.placeStone(DefaultGoBoard.BLACK, 4, 1);
+		board.placeStone(DefaultGoBoard.BLACK, 4, 2);
+		board.placeStone(DefaultGoBoard.BLACK, 3, 2);
+		board.placeStone(DefaultGoBoard.BLACK, 3, 3);
+		board.placeStone(DefaultGoBoard.BLACK, 2, 2);
+		board.placeStone(DefaultGoBoard.BLACK, 2, 3);
+		board.placeStone(DefaultGoBoard.BLACK, 2, 4);
+		board.placeStone(DefaultGoBoard.BLACK, 1, 4);
+		board.placeStone(DefaultGoBoard.BLACK, 1, 5);
+		board.placeStone(DefaultGoBoard.BLACK, 0, 5);
+		
+		int[] labels = board.getAllGroupLabels();
+		assertEquals(1, labels.length);
+	}
 
 }

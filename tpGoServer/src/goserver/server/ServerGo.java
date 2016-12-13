@@ -15,7 +15,6 @@ import java.net.Socket;
 import goserver.game.DefaultGoGame;
 import goserver.game.DefaultGoRuleset;
 import goserver.game.GoGame;
-import goserver.game.OnlineGoPlayer;
 /**
  * @author Maciek
  *
