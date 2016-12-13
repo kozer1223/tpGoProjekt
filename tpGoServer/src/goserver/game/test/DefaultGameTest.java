@@ -14,40 +14,6 @@ import goserver.util.MatrixUtil;
 
 public class DefaultGameTest {
 
-	class EmptyGoPlayer implements GoPlayer {
-
-		@Override
-		public void setGame(GoGame game) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void notifyAboutTurn(GoMoveType opponentsMove) {
-			// TODO Auto-generated method stub
-
-		}
-
-		@Override
-		public void updateBoard() {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void notifyAboutGamePhaseChange(int gamePhase) {
-			// TODO Auto-generated method stub
-			
-		}
-
-		@Override
-		public void notifyAboutGameEnd(double playerScore, double opponentScore) {
-			// TODO Auto-generated method stub
-			
-		}
-
-	}
-
 	@Test
 	public void testCreateEmptyBoard() {
 		GoPlayer player1 = new EmptyGoPlayer();

@@ -8,9 +8,6 @@ public class DefaultGoRuleset {
 
 	private static GoRuleset defaultRulesetInstance;
 
-	private DefaultGoRuleset() {
-	};
-
 	public synchronized static GoRuleset getDefaultRuleset() {
 		if (defaultRulesetInstance == null) {
 			defaultRulesetInstance = new GoRuleset();

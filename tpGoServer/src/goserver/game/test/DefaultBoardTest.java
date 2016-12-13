@@ -172,5 +172,33 @@ public class DefaultBoardTest {
 		assertEquals(4, captured);
 		assertEquals(DefaultGoBoard.EMPTY, board.getBoard()[0][0]);
 	}
+	
+	@Test
+	public void testBoardLabelling() throws InvalidMoveException {
+		int size = 9;
+		GoBoard board = new DefaultGoBoard(size);
+		board.placeStone(DefaultGoBoard.BLACK, 0, 0);	
+		board.placeStone(DefaultGoBoard.WHITE, 1, 0);	
+		board.placeStone(DefaultGoBoard.BLACK, 0, 1);	
+		board.placeStone(DefaultGoBoard.WHITE, 1, 1);	
+		
+		int[][] labeledBoard = board.getBoardWithLabeledGroups();
+		assertNotEquals(labeledBoard[0][0], labeledBoard[1][0]);
+		assertNotEquals(labeledBoard[0][0], labeledBoard[2][0]);
+		assertNotEquals(labeledBoard[1][0], labeledBoard[2][0]);
+	}
+	
+	@Test
+	public void testGetAllLabels() throws InvalidMoveException {
+		int size = 9;
+		GoBoard board = new DefaultGoBoard(size);
+		board.placeStone(DefaultGoBoard.BLACK, 0, 0);	
+		board.placeStone(DefaultGoBoard.WHITE, 1, 0);	
+		board.placeStone(DefaultGoBoard.BLACK, 0, 1);	
+		board.placeStone(DefaultGoBoard.WHITE, 1, 1);	
+		
+		int[] labels = board.getAllGroupLabels();
+		assertEquals(2, labels.length);
+	}
 
 }
