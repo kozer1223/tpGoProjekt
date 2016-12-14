@@ -5,15 +5,15 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
-public class Comunication {
+public class Communication {
 
 	private Socket socket;
 	private BufferedReader input;
 	private PrintWriter output;
 	
-	public Comunication () {
+	public Communication () {
 		try {
-			socket =  new Socket("localhost",8888);
+			socket =  new Socket("localhost",ClientConfig.SERVER_SOCKET);
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			output = new PrintWriter(socket.getOutputStream(),true);
 		}

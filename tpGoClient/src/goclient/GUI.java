@@ -21,14 +21,14 @@ import javax.swing.JRadioButton;
  */
 public class GUI {
 	
-	private static Comunication comunication;
+	private static Communication comunication;
 	
 	public static void main(String[] args) {
-		comunication = new Comunication();
+		comunication = new Communication();
 		OpponentFrame frame = new OpponentFrame();
 	}
 		
-	public static Comunication getComunication() {
+	public static Communication getCommunication() {
 		return comunication;
 	}
 	

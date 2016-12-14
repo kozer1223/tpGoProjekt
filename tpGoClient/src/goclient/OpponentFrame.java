@@ -33,19 +33,21 @@ public class OpponentFrame implements ActionListener {
 		buttonPlayer.addActionListener(this);
 		buttonBot.addActionListener(this);
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (e.getSource()==buttonPlayer) {
-			GUI.getComunication().write("player");
+		int pick = -1;
+		if (e.getSource() == buttonPlayer) {
+			pick = 0;
+		} else if (e.getSource() == buttonBot) {
+			pick = 1;
 		}
-		else if (e.getSource()==buttonBot) {
-			GUI.getComunication().write("bot");
+		if (pick != -1) {
+			frame.setVisible(false);
+			frame.setEnabled(false);
+			frame = null;
+			SizeFrame nextFrame = new SizeFrame(pick);
 		}
-		frame.setVisible(false);
-		frame.setEnabled(false);
-		frame=null;
-		SizeFrame nextFrame = new SizeFrame();
 	}
 
 }

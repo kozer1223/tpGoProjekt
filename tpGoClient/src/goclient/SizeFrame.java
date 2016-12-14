@@ -15,13 +15,15 @@ import javax.swing.JFrame;
  *
  */
 public class SizeFrame implements ActionListener {
-	
+
 	private JFrame frame;
 	private JButton button19;
 	private JButton button13;
 	private JButton button9;
-	
-	public SizeFrame() {
+
+	private int opponentPick; // 0 - player, 1 - bot
+
+	public SizeFrame(int opponentPick) {
 		frame = new JFrame("GO");
 		frame.setLayout(new FlowLayout());
 		frame.setVisible(true);
@@ -35,24 +37,29 @@ public class SizeFrame implements ActionListener {
 		button19.addActionListener(this);
 		button13.addActionListener(this);
 		button9.addActionListener(this);
+		this.opponentPick = opponentPick;
 	}
-	
+
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		frame.setVisible(false);
-		frame.setEnabled(false);
-		frame=null;
-		if(e.getSource()==button19){
-			GUI.getComunication().write("19");
-			BoardFrame nextFrame = new BoardFrame(19);
+		int size = -1;
+		if (e.getSource() == button19) {
+			size = 19;
+		} else if (e.getSource() == button13) {
+			size = 13;
+		} else if (e.getSource() == button9) {
+			size = 9;
 		}
-		else if(e.getSource()==button13){
-			GUI.getComunication().write("13");
-			BoardFrame nextFrame = new BoardFrame(13);
-		}
-		else if(e.getSource()==button9){
-			GUI.getComunication().write("9");
-			BoardFrame nextFrame = new BoardFrame(9);
+		if (size != -1) {
+			frame.setVisible(false);
+			frame.setEnabled(false);
+			frame = null;
+			if (opponentPick == 0) {
+				ClientRequestSender.getInstance().requestGameWithPlayer(size);
+			} else {
+				ClientRequestSender.getInstance().requestGameWithBot(size);
+			}
+			BoardFrame nextFrame = new BoardFrame(size);
 		}
 	}
 

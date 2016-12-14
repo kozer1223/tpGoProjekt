@@ -24,9 +24,9 @@ public class BoardFrame implements ActionListener {
 	private JFrame frame;
 	private int size;
 	private String colour="no colour";
-	private Comunication comunication;
+	private Communication communication;
 	public BoardFrame(int size) {
-		comunication = GUI.getComunication();
+		communication = GUI.getCommunication();
 		this.size=size;
 		frame=new JFrame("Go");
 		frame.setLayout(new BorderLayout());
@@ -77,9 +77,9 @@ public class BoardFrame implements ActionListener {
 				else if(j==19) button.setName("s"+i);
 			}
 		}
-		colour=comunication.read();
+		colour=communication.read();
 		System.out.println(colour);
-		if(colour=="white") {
+		if(colour==ServerClientProtocol.getInstance().WHITE) {
 			frame.setEnabled(false);
 		}
 	}
@@ -88,9 +88,9 @@ public class BoardFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String placeClicked = ((JButton) e.getSource()).getName();
 		System.out.println(placeClicked);
-		comunication.write(placeClicked);
+		communication.write(placeClicked);
 		frame.setEnabled(false);
-		String msg = comunication.read();
+		String msg = communication.read();
 		frame.setEnabled(true);
 	}
 
