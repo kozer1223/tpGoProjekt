@@ -6,6 +6,9 @@ public class ServerRequestSender {
 
 	private static ServerRequestSender instance;
 	private ServerClientProtocol protocol;
+	
+	public static final int BLACK = 1;
+	public static final int WHITE = 2;
 
 	private ServerRequestSender() {
 		protocol = ServerClientProtocol.getInstance();
@@ -19,10 +22,9 @@ public class ServerRequestSender {
 	}
 	
 	public void assignColorToClient(int color, PrintWriter output){
-		// 1 - black, 2 - white
-		if (color == 1 || color == 2){
+		if (color == BLACK || color == WHITE){
 			StringBuilder command = new StringBuilder(protocol.ASSIGN_COLOR + " ");
-			command.append( ( color == 1 ? protocol.BLACK : protocol.WHITE ) );
+			command.append( ( color == BLACK ? protocol.BLACK : protocol.WHITE ) );
 			output.println(command.toString());
 		} else {
 			throw new IllegalArgumentException();

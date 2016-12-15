@@ -46,7 +46,7 @@ public class ServerGo {
 
 				if ((size = parser.parseGameWithBotRequest(line)) > 0) {
 					OnlineGoPlayer player = new OnlineGoPlayer(socket, input, output);
-					ServerRequestSender.getInstance().assignColorToClient(1, output);
+					ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.BLACK, output);
 					GoGame game = GoGameFactory.getInstance().createDefaultGoGameWithBot(player, size);
 					System.out.println("Player playing with bot on size " + size);
 					player.run();
@@ -54,7 +54,7 @@ public class ServerGo {
 				if ((size = parser.parseGameWithPlayerRequest(line)) > 0) {
 					OnlineGoPlayer player = new OnlineGoPlayer(socket, input, output);
 					if (waitingPlayers.containsKey(size) && waitingPlayers.get(size) != null) {
-						ServerRequestSender.getInstance().assignColorToClient(2, output);
+						ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.WHITE, output);
 						GoGame game = GoGameFactory.getInstance()
 								.createDefaultGoGameWithTwoPlayers(waitingPlayers.get(size), player, size);
 						System.out.println("Paired 2 players for size " + size);
@@ -63,7 +63,7 @@ public class ServerGo {
 						waitingPlayers.remove(size);
 					} else {
 						waitingPlayers.put(size, player);
-						ServerRequestSender.getInstance().assignColorToClient(1, output);
+						ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.BLACK, output);
 						System.out.println("Player waiting for size " + size);
 					}
 				}
