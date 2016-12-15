@@ -60,6 +60,10 @@ public class ServerClientProtocol {
 	// CAPTURED [BLACK's captured stones] [WHITE's captured stones]
 	public final String SEND_CAPTURED_STONES = "CAPTURED";
 	
+	// wyslanie wiadomosci (w formie tekstu)
+	// MESSAGE [message (string)]
+	public final String SEND_MESSAGE = "MESSAGE";
+	
 	// misc.
 	
 	public final String PLAYER = "PLAYER";
