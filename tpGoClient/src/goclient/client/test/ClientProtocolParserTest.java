@@ -41,5 +41,10 @@ public class ClientProtocolParserTest {
 	public void testParseBeginGame() {
 		assertTrue(instance.parseBeginGame(protocol.GAME_BEGIN));
 	}
+	
+	@Test
+	public void testParseBeginGameWrongInput() {
+		assertFalse(instance.parseBeginGame("aaaa"));
+	}
 
 }

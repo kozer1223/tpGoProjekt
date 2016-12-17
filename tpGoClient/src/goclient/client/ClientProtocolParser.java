@@ -66,7 +66,6 @@ public class ClientProtocolParser {
 			String boardData = scanner.next(protocol.SEND_BOARD);
 			int i = 0, j = 0;
 			for(int t=0; t<boardData.length(); t++){
-				//boardData.charAt(index);
 				board[i][j] = boardData.charAt(t) - '0';
 				i++;
 				if(i >= size){
@@ -106,7 +105,6 @@ public class ClientProtocolParser {
 			scanner.next(protocol.SEND_LABELED_BOARD);
 			int i = 0, j = 0;
 			while(scanner.hasNext()){
-				//boardData.charAt(index);
 				board[i][j] = scanner.nextInt();
 				i++;
 				if(i >= size){

@@ -15,13 +15,9 @@ public class SpyReaderWriter implements ReaderWriter {
 		resultString = message;
 	}
 	
-	public String getString(){
-		return resultString;
-	}
-
 	@Override
 	public String read() {
-		return null;
+		return resultString;
 	}
 
 }
