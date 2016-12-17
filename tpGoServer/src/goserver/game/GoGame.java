@@ -17,6 +17,7 @@ public interface GoGame {
 	public GoRuleset getRuleset();
 	public void setRuleset(GoRuleset ruleset);
 	public GoBoard getBoard();
+	public GoPlayer getOpposingPlayer(GoPlayer player);
 	
 	public void makeMove(GoPlayer player, int x, int y) throws InvalidMoveException;
 	public void passTurn(GoPlayer player);

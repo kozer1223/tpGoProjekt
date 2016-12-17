@@ -88,7 +88,7 @@ public class ServerRequestSenderTest {
 				              {1, 1, 0, 2},
 				              {2, 1, 1, 2},
 				              {0, 2, 0, 1}};
-		String stringBoardData = "0000110221120201";
+		String stringBoardData = "0 0 0 0 1 1 0 2 2 1 1 2 0 2 0 1";
 		instance.sendLabeledBoardData(boardData, new PrintWriter(writer));
 		assertTrue(writer.toString().startsWith(protocol.SEND_LABELED_BOARD + " " + stringBoardData));
 	}
@@ -116,9 +116,10 @@ public class ServerRequestSenderTest {
 	@Test
 	public void testSendCapturedStones() {
 		StringWriter writer = new StringWriter();
-		int stones = 5;
-		instance.sendCapturedStones(stones, new PrintWriter(writer));
-		assertTrue(writer.toString().startsWith(protocol.SEND_CAPTURED_STONES + " " + stones));
+		int blackStones = 5;
+		int whiteStones = 3;
+		instance.sendCapturedStones(blackStones, whiteStones, new PrintWriter(writer));
+		assertTrue(writer.toString().startsWith(protocol.SEND_CAPTURED_STONES + " " + blackStones + " " + whiteStones));
 	}
 	
 	@Test

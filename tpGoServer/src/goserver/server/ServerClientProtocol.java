@@ -57,7 +57,7 @@ public class ServerClientProtocol {
 	public final String SEND_PHASE = "GAME_PHASE";
 	
 	// wyslanie planszy z oznaczeniami grup
-	// LABEL_BOARD 0010030402022...
+	// LABEL_BOARD 0 0 1 0 0 3 0 4 0 2 0 2 2 10 ...
 	public final String SEND_LABELED_BOARD = "LABEL_BOARD";
 	
 	// wyslanie stanu grup

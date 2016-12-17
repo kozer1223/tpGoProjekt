@@ -55,9 +55,9 @@ public class SizeFrame implements ActionListener {
 			frame.setEnabled(false);
 			frame = null;
 			if (opponentPick == 0) {
-				ClientRequestSender.getInstance().requestGameWithPlayer(size);
+				ClientRequestSender.getInstance().requestGameWithPlayer(size, GUI.getCommunication());
 			} else {
-				ClientRequestSender.getInstance().requestGameWithBot(size);
+				ClientRequestSender.getInstance().requestGameWithBot(size, GUI.getCommunication());
 			}
 			BoardFrame nextFrame = new BoardFrame(size);
 		}

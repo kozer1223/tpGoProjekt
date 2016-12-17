@@ -3,8 +3,14 @@
  */
 package goclient.client;
 
+import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Map;
 import java.util.Scanner;
+
+import goclient.client.GoGroupType;
+import goclient.util.DoublePair;
+import goclient.util.IntPair;
 
 /**
  * @author Kacper
@@ -30,9 +36,163 @@ public class ClientProtocolParser {
 		Scanner scanner = new Scanner(line);
 		
 		try {
-			return scanner.next(protocol.ASSIGN_COLOR);
+			scanner.next(protocol.ASSIGN_COLOR);
+			String color = scanner.next();
+			scanner.close();
+			return color;
 		} catch (InputMismatchException e){
+			scanner.close();
 			return "";
+		}
+	}
+	
+	public boolean parseBeginGame(String line){
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.GAME_BEGIN);
+			scanner.close();
+			return true;
+		} catch (InputMismatchException e){
+			return false;
+		}
+	}
+	
+	public int[][] parseBoard(String line, int size){
+		Scanner scanner = new Scanner(line);
+		int[][] board = new int[size][size];
+		
+		try {
+			String boardData = scanner.next(protocol.SEND_BOARD);
+			int i = 0, j = 0;
+			for(int t=0; t<boardData.length(); t++){
+				//boardData.charAt(index);
+				board[i][j] = boardData.charAt(t) - '0';
+				i++;
+				if(i >= size){
+					i = 0;
+					j++;
+				}
+				if (j >= size){
+					break;
+				}
+			}
+			scanner.close();
+			return board;
+		} catch (InputMismatchException e){
+			return null;
+		}
+	}
+	
+	public int parsePhase(String line){
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.SEND_PHASE);
+			int phase = scanner.nextInt();
+			scanner.close();
+			return phase;
+		} catch (InputMismatchException e){
+			scanner.close();
+			return -1;
+		}
+	}
+	
+	public int[][] parseLabeledBoard(String line, int size){
+		Scanner scanner = new Scanner(line);
+		int[][] board = new int[size][size];
+		
+		try {
+			scanner.next(protocol.SEND_LABELED_BOARD);
+			int i = 0, j = 0;
+			while(scanner.hasNext()){
+				//boardData.charAt(index);
+				board[i][j] = scanner.nextInt();
+				i++;
+				if(i >= size){
+					i = 0;
+					j++;
+				}
+				if (j >= size){
+					break;
+				}
+			}
+			scanner.close();
+			return board;
+		} catch (InputMismatchException e){
+			return null;
+		}
+	}
+	
+	public Map<Integer, GoGroupType> parseGroupState(String line) {
+		Scanner scanner = new Scanner(line);
+		Map<Integer, GoGroupType> changes = new HashMap<Integer, GoGroupType>();
+		
+		try {
+			scanner.next(protocol.SEND_GROUP_STATE);
+			while (scanner.hasNext()){
+				int label = scanner.nextInt();
+				String token = scanner.next();
+				if (token.equals(protocol.ALIVE)){
+					changes.put(label, GoGroupType.ALIVE);
+				} else if (token.equals(protocol.DEAD)){
+					changes.put(label, GoGroupType.DEAD);
+				} else {
+					scanner.close();
+					return null;
+				}
+			}
+			scanner.close();
+			return changes;
+		} catch (InputMismatchException e){
+			scanner.close();
+			return null;
+		}
+	}
+	
+	public DoublePair parseScore(String line){
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.SEND_SCORE);
+			double blackScore, whiteScore;
+			blackScore = scanner.nextDouble();
+			whiteScore = scanner.nextDouble();
+			scanner.close();
+			return new DoublePair(blackScore, whiteScore);
+		} catch (InputMismatchException e){
+			scanner.close();
+			return null;
+		}
+	}
+	
+	public IntPair parseCapturedStones(String line){
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.SEND_CAPTURED_STONES);
+			int blackStones, whiteStones;
+			blackStones = scanner.nextInt();
+			whiteStones = scanner.nextInt();
+			scanner.close();
+			return new IntPair(blackStones, whiteStones);
+		} catch (InputMismatchException e){
+			scanner.close();
+			return null;
+		}
+	}
+	
+	public String parseMessage(String line){
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.SEND_MESSAGE);
+			String message = scanner.next(); 
+			scanner.close();
+			return message;
+		} catch (InputMismatchException e){
+			scanner.close();
+			return null;
 		}
 	}
 

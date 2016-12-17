@@ -64,7 +64,7 @@ public class ServerRequestSender {
 		StringBuilder command = new StringBuilder(protocol.SEND_LABELED_BOARD + " ");
 		for(int i=0; i<board.length; i++){
 			for(int j=0; j<board[0].length; j++){
-				command.append(board[i][j]);
+				command.append(board[i][j] + " ");
 			}
 		}
 		output.println(command.toString());
@@ -86,9 +86,10 @@ public class ServerRequestSender {
 		output.println(command.toString());
 	}
 	
-	public void sendCapturedStones(int stones, PrintWriter output){
+	public void sendCapturedStones(int blackStones, int whiteStones, PrintWriter output){
 		StringBuilder command = new StringBuilder(protocol.SEND_CAPTURED_STONES + " ");
-		command.append(stones);
+		command.append(blackStones + " ");
+		command.append(whiteStones);
 		output.println(command.toString());
 	}
 	

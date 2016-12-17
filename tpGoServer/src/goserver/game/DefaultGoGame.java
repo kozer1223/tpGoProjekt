@@ -206,7 +206,7 @@ public class DefaultGoGame implements GoGame {
 		return ruleset;
 	}
 
-	protected GoPlayer getOpposingPlayer(GoPlayer player) {
+	public GoPlayer getOpposingPlayer(GoPlayer player) {
 		return players[1 - getPlayersNo(player)];
 	}
 
