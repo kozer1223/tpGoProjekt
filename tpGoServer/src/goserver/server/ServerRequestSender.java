@@ -1,6 +1,9 @@
 package goserver.server;
 
 import java.io.PrintWriter;
+import java.util.Map;
+
+import goserver.game.GoGroupType;
 
 public class ServerRequestSender {
 
@@ -30,5 +33,68 @@ public class ServerRequestSender {
 			throw new IllegalArgumentException();
 		}
 	}
-
+	
+	public void sendGameBegin(PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.GAME_BEGIN);
+		output.println(command.toString());
+	}
+	
+	public void sendBoardData(int[][] board, PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.SEND_BOARD + " ");
+		for(int i=0; i<board.length; i++){
+			for(int j=0; j<board[0].length; j++){
+				command.append(board[i][j]);
+			}
+		}
+		output.println(command.toString());
+	}
+	
+	public void sendMoveAccepted(PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.MOVE_ACCEPTED);
+		output.println(command.toString());
+	}
+	
+	public void sendGamePhase(int phase, PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.SEND_PHASE + " ");
+		command.append(phase);
+		output.println(command.toString());
+	}
+	
+	public void sendLabeledBoardData(int[][] board, PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.SEND_LABELED_BOARD + " ");
+		for(int i=0; i<board.length; i++){
+			for(int j=0; j<board[0].length; j++){
+				command.append(board[i][j]);
+			}
+		}
+		output.println(command.toString());
+	}
+	
+	public void sendGroupStateData(Map<Integer, GoGroupType> labels, PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.SEND_GROUP_STATE + " ");
+		for(int label : labels.keySet()){
+			command.append(label + " ");
+			command.append( (labels.get(label) == GoGroupType.ALIVE ? protocol.ALIVE : protocol.DEAD) + " ");
+		}
+		output.println(command.toString());
+	}
+	
+	public void sendGameScore(double blackScore, double whiteScore, PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.SEND_SCORE + " ");
+		command.append(blackScore + " ");
+		command.append(whiteScore);
+		output.println(command.toString());
+	}
+	
+	public void sendCapturedStones(int stones, PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.SEND_CAPTURED_STONES + " ");
+		command.append(stones);
+		output.println(command.toString());
+	}
+	
+	public void sendMessage(String message, PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.SEND_MESSAGE + " ");
+		command.append(message);
+		output.println(command.toString());
+	}
 }

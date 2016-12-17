@@ -23,15 +23,44 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	private BufferedReader input;
 	private PrintWriter output;
 	private GoGame game;
+	private ServerProtocolParser parser;
+	private ServerRequestSender sender;
 
 	public OnlineGoPlayer(Socket socket, BufferedReader input, PrintWriter output) {
 		this.socket = socket;
 		this.input = input;
 		this.output = output;
+		parser = ServerProtocolParser.getInstance();
+		sender = ServerRequestSender.getInstance();
+	}
+	
+	private void sendTurnData(){
+		if (game != null){
+			if (game.isStonePlacingPhase()){
+				sender.sendBoardData(game.getBoard().getBoard(), output);
+				sender.sendCapturedStones(game.getPlayersCapturedStones(this), output);
+			} else {
+				sender.sendLabeledBoardData(game.getBoard().getBoardWithLabeledGroups(), output);
+				sender.sendGroupStateData(game.getLabelsMap(), output);
+			}
+		}
 	}
 
 	public void run() {
-
+		if (game != null){
+			sender.sendGameBegin(output);
+			sendTurnData();
+			while(true){
+				try {
+					if(input.ready()){
+						
+					}
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
 	}
 
 	// @Override
@@ -48,7 +77,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	// @Override
 	public void updateBoard() {
 		// TODO Auto-generated method stub
-
+		sendTurnData();
 	}
 
 	@Override

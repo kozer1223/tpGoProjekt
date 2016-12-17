@@ -40,9 +40,21 @@ public class ServerClientProtocol {
 	// COLOR [BLACK|WHITE]
 	public final String ASSIGN_COLOR = "COLOR";
 	
+	// informacja o rozpoczeciu gry
+	// GAME_BEGIN
+	public final String GAME_BEGIN = "BEGIN";
+	
 	// wyslanie stanu planszy
 	// BOARD 0001012020120210012...
 	public final String SEND_BOARD = "BOARD";
+	
+	// wyslanie informacji o zaakcpetowanym ruchu
+	// ACCEPTED
+	public final String MOVE_ACCEPTED = "ACCEPTED";
+	
+	// informacja o zmianie fazy gry
+	// GAME_PHASE [0|1]
+	public final String SEND_PHASE = "GAME_PHASE";
 	
 	// wyslanie planszy z oznaczeniami grup
 	// LABEL_BOARD 0010030402022...
