@@ -1,7 +1,7 @@
 /**
  * 
  */
-package goclient;
+package goclient.client;
 
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -21,14 +21,14 @@ import javax.swing.JRadioButton;
  */
 public class GUI {
 	
-	private static Communication comunication;
+	private static ReaderWriter comunication;
 	
 	public static void main(String[] args) {
 		comunication = new Communication();
 		OpponentFrame frame = new OpponentFrame();
 	}
 		
-	public static Communication getCommunication() {
+	public static ReaderWriter getCommunication() {
 		return comunication;
 	}
 	

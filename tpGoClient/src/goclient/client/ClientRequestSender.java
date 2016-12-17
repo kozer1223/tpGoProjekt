@@ -1,4 +1,4 @@
-package goclient;
+package goclient.client;
 
 /**
  * @author Kacper
@@ -7,7 +7,7 @@ public class ClientRequestSender {
 
 	private static ClientRequestSender instance;
 	private ServerClientProtocol protocol;
-	private Communication communication;
+	private ReaderWriter communication;
 
 	private ClientRequestSender() {
 		protocol = ServerClientProtocol.getInstance();
@@ -26,6 +26,10 @@ public class ClientRequestSender {
 	}
 	
 	public void requestGameWithBot(int size){
+		communication.write(protocol.REQUEST_GAME + " " + protocol.BOT + " " + + size);
+	}
+	
+	public void sendMove(int size){
 		communication.write(protocol.REQUEST_GAME + " " + protocol.BOT + " " + + size);
 	}
 

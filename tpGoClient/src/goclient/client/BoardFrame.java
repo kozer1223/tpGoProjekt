@@ -1,7 +1,7 @@
 /**
  * 
  */
-package goclient;
+package goclient.client;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -24,7 +24,7 @@ public class BoardFrame implements ActionListener {
 	private JFrame frame;
 	private int size;
 	private String colour="no colour";
-	private Communication communication;
+	private ReaderWriter communication;
 	public BoardFrame(int size) {
 		communication = GUI.getCommunication();
 		this.size=size;

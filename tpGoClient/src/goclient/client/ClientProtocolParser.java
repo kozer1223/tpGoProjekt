@@ -1,7 +1,7 @@
 /**
  * 
  */
-package goclient;
+package goclient.client;
 
 import java.util.InputMismatchException;
 import java.util.Scanner;

@@ -1,4 +1,4 @@
-package goclient;
+package goclient.client;
 
 /**
  * @author Kacper
