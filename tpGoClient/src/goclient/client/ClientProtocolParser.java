@@ -5,6 +5,7 @@ package goclient.client;
 
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
 
@@ -66,16 +67,17 @@ public class ClientProtocolParser {
 		int[][] board = new int[size][size];
 		
 		try {
-			String boardData = scanner.next(protocol.SEND_BOARD);
+			scanner.next(protocol.SEND_BOARD);
+			String boardData = scanner.next();
 			int i = 0, j = 0;
 			for(int t=0; t<boardData.length(); t++){
 				board[i][j] = boardData.charAt(t) - '0';
-				i++;
-				if(i >= size){
-					i = 0;
-					j++;
+				j++;
+				if(j >= size){
+					j = 0;
+					i++;
 				}
-				if (j >= size){
+				if (i >= size){
 					break;
 				}
 			}
@@ -109,12 +111,12 @@ public class ClientProtocolParser {
 			int i = 0, j = 0;
 			while(scanner.hasNext()){
 				board[i][j] = scanner.nextInt();
-				i++;
-				if(i >= size){
-					i = 0;
-					j++;
+				j++;
+				if(j >= size){
+					j = 0;
+					i++;
 				}
-				if (j >= size){
+				if (i >= size){
 					break;
 				}
 			}
@@ -153,6 +155,7 @@ public class ClientProtocolParser {
 	
 	public DoublePair parseScore(String line){
 		Scanner scanner = new Scanner(line);
+		scanner.useLocale(Locale.US); //kropka jako separator
 		
 		try {
 			scanner.next(protocol.SEND_SCORE);
@@ -204,9 +207,9 @@ public class ClientProtocolParser {
 			scanner.next(protocol.LAST_MOVE);
 			String turn = scanner.next();
 			scanner.close();
-			if(turn == protocol.MOVE){
+			if(turn.startsWith(protocol.MOVE)){
 				return MOVE;
-			} else if (turn == protocol.PASS){
+			} else if (turn.startsWith(protocol.PASS)){
 				return PASS;
 			} else {
 				return -1;
