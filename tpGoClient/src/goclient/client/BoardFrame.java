@@ -30,7 +30,7 @@ public class BoardFrame implements ActionListener {
 		this.size=size;
 		frame=new JFrame("Go");
 		frame.setLayout(new BorderLayout());
-		frame.setVisible(true);
+		frame.setVisible(false);
 		frame.setResizable(false);
 		JLabel boardImage=null;
 		if(size==19) {
@@ -59,15 +59,20 @@ public class BoardFrame implements ActionListener {
 				button.setName(i + " " + j);
 			}
 		}
+		JFrame waitingFrame =new JFrame("Please Wait");
+		waitingFrame.setVisible(true);
+		waitingFrame.setBounds(800,300,200, 20);
 		System.out.println("waiting for input");
 		colour = null;
 		while(colour == null){
 			colour=communication.read();
 		}
 		System.out.println(colour);
-		if(ClientProtocolParser.getInstance().parseColor(colour)==ServerClientProtocol.getInstance().WHITE) {
-			//frame.setEnabled(false);
-		}
+		frame.setVisible(true);
+		waitingFrame.setVisible(false);
+		waitingFrame=null;
+		ReadingThread thread = new ReadingThread();
+		//thread.start();
 		
 		//wait for game start info
 	}
