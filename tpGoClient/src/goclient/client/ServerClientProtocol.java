@@ -73,8 +73,8 @@ public class ServerClientProtocol {
 	public final String SEND_MESSAGE = "MESSAGE";
 	
 	// wyslanie wiadomosci o turze
-	// TURN [YOU|OPPONENT]
-	public final String INFORM_TURN = "TURN";
+	// LAST_MOVE [MOVE|PASS]
+	public final String LAST_MOVE = "LAST_MOVE";
 	
 	// misc.
 	
@@ -87,7 +87,8 @@ public class ServerClientProtocol {
 	public final String ALIVE = "A";
 	public final String DEAD = "D";
 	
-	public final String SELF = "YOU";
-	public final String OPPONENT = "OPPONENT";
+	public final String MOVE = "MOVE";
+	public final String PASS = "PASS";
+
 
 }

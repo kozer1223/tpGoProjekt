@@ -56,7 +56,8 @@ public class BoardFrame implements ActionListener {
 				button.setContentAreaFilled(false);
 				button.setBorderPainted(false);
 				boardImage.add(button);
-				if(j==1) button.setName("a"+i);
+				button.setName(i + " " + j);
+				/*if(j==1) button.setName("a"+i);
 				else if(j==2) button.setName("b"+i);
 				else if(j==3) button.setName("c"+i);
 				else if(j==4) button.setName("d"+i);
@@ -74,14 +75,20 @@ public class BoardFrame implements ActionListener {
 				else if(j==16) button.setName("p"+i);
 				else if(j==17) button.setName("q"+i);
 				else if(j==18) button.setName("r"+i);
-				else if(j==19) button.setName("s"+i);
+				else if(j==19) button.setName("s"+i);*/
 			}
 		}
-		colour=communication.read();
+		System.out.println("waiting for input");
+		colour = null;
+		while(colour == null){
+			colour=communication.read();
+		}
 		System.out.println(colour);
 		if(colour==ServerClientProtocol.getInstance().WHITE) {
 			frame.setEnabled(false);
 		}
+		
+		//wait for game start info
 	}
 	
 	@Override

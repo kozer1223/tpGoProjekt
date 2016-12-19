@@ -118,11 +118,15 @@ public class DefaultGoGame implements GoGame {
 			currentPlayer = getOpposingPlayer(currentPlayer);
 			if(board.applyGroupTypeChanges(groupTypeChanges)){
 				if (groupMarkingPhaseLength < MAX_GROUP_MARKING_PHASE_LENGTH){
+					players[0].updateBoard();
+					players[1].updateBoard();
 					currentPlayer.notifyAboutTurn(GoMoveType.GROUP_CHANGED);
 				} else {
 					setGamePhase(0);
 					board.resetGroupLabels();
 					currentPlayer.notifyAboutGamePhaseChange(getGamePhase());
+					players[0].updateBoard();
+					players[1].updateBoard();
 				}
 			} else {
 				currentPlayer.notifyAboutTurn(GoMoveType.GROUP_NOCHANGE);

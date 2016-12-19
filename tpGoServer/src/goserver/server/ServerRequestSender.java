@@ -13,8 +13,8 @@ public class ServerRequestSender {
 	public static final int BLACK = 1;
 	public static final int WHITE = 2;
 	
-	public static final int SELF = 3;
-	public static final int OPPONENT = 4;
+	public static final int MOVE = 3;
+	public static final int PASS = 4;
 
 	private ServerRequestSender() {
 		protocol = ServerClientProtocol.getInstance();
@@ -31,6 +31,7 @@ public class ServerRequestSender {
 		if (color == BLACK || color == WHITE){
 			StringBuilder command = new StringBuilder(protocol.ASSIGN_COLOR + " ");
 			command.append( ( color == BLACK ? protocol.BLACK : protocol.WHITE ) );
+			System.out.println(command.toString());
 			output.println(command.toString());
 		} else {
 			throw new IllegalArgumentException();
@@ -102,10 +103,10 @@ public class ServerRequestSender {
 		output.println(command.toString());
 	}
 	
-	public void sendTurnInfo(int turnInfo, PrintWriter output){
-		if (turnInfo == SELF || turnInfo == OPPONENT){
-			StringBuilder command = new StringBuilder(protocol.INFORM_TURN + " ");
-			command.append( ( turnInfo == SELF ? protocol.SELF : protocol.OPPONENT ) );
+	public void sendLastTurnInfo(int turnInfo, PrintWriter output){
+		if (turnInfo == MOVE || turnInfo == PASS){
+			StringBuilder command = new StringBuilder(protocol.LAST_MOVE + " ");
+			command.append( ( turnInfo == MOVE ? protocol.MOVE : protocol.PASS ) );
 			output.println(command.toString());
 		} else {
 			throw new IllegalArgumentException();

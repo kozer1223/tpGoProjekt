@@ -18,6 +18,7 @@ public class Communication implements ReaderWriter {
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			output = new PrintWriter(socket.getOutputStream(), true);
 		} catch (Exception e) {
+			System.out.println("something went wrong");
 		}
 	}
 
@@ -36,8 +37,14 @@ public class Communication implements ReaderWriter {
 	public String read() {
 		String line = null;
 		try {
-			line = input.readLine();
+			if(input.ready()){
+				line = input.readLine();
+				System.out.println("read "+ line);
+			}
+
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			System.out.println(e.getMessage());
 		}
 		return line;
 	}

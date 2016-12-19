@@ -46,24 +46,24 @@ public class ServerGo {
 
 				if ((size = parser.parseGameWithBotRequest(line)) > 0) {
 					OnlineGoPlayer player = new OnlineGoPlayer(socket, input, output);
-					ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.BLACK, output);
+					//ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.BLACK, output);
 					GoGame game = GoGameFactory.getInstance().createDefaultGoGameWithBot(player, size);
 					System.out.println("Player playing with bot on size " + size);
-					player.run();
+					player.start();
 				}
 				if ((size = parser.parseGameWithPlayerRequest(line)) > 0) {
 					OnlineGoPlayer player = new OnlineGoPlayer(socket, input, output);
 					if (waitingPlayers.containsKey(size) && waitingPlayers.get(size) != null) {
-						ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.WHITE, output);
+						//ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.WHITE, output);
 						GoGame game = GoGameFactory.getInstance()
 								.createDefaultGoGameWithTwoPlayers(waitingPlayers.get(size), player, size);
 						System.out.println("Paired 2 players for size " + size);
-						player.run();
-						waitingPlayers.get(size).run();
+						waitingPlayers.get(size).start();
+						player.start();
 						waitingPlayers.remove(size);
 					} else {
 						waitingPlayers.put(size, player);
-						ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.BLACK, output);
+						//ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.BLACK, output);
 						System.out.println("Player waiting for size " + size);
 					}
 				}

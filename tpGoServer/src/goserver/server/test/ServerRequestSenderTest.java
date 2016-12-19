@@ -133,15 +133,15 @@ public class ServerRequestSenderTest {
 	@Test
 	public void testInformTurnSelf() {
 		StringWriter writer = new StringWriter();
-		instance.sendTurnInfo(ServerRequestSender.SELF, new PrintWriter(writer));
-		assertTrue(writer.toString().startsWith(protocol.INFORM_TURN + " " + protocol.SELF));
+		instance.sendLastTurnInfo(ServerRequestSender.MOVE, new PrintWriter(writer));
+		assertTrue(writer.toString().startsWith(protocol.LAST_MOVE + " " + protocol.MOVE));
 	}
 
 	@Test
 	public void testInformTurnOpponent() {
 		StringWriter writer = new StringWriter();
-		instance.sendTurnInfo(ServerRequestSender.OPPONENT, new PrintWriter(writer));
-		assertTrue(writer.toString().startsWith(protocol.INFORM_TURN + " " + protocol.OPPONENT));
+		instance.sendLastTurnInfo(ServerRequestSender.PASS, new PrintWriter(writer));
+		assertTrue(writer.toString().startsWith(protocol.LAST_MOVE + " " + protocol.PASS));
 	}
 	
 }

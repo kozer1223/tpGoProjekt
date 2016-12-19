@@ -21,8 +21,8 @@ public class ClientProtocolParser {
 
 	private ServerClientProtocol protocol;
 	
-	public static final int SELF = 3;
-	public static final int OPPONENT = 4;
+	public static final int MOVE = 3;
+	public static final int PASS = 4;
 
 	private ClientProtocolParser() {
 		protocol = ServerClientProtocol.getInstance();
@@ -197,14 +197,20 @@ public class ClientProtocolParser {
 		}
 	}
 	
-	public int parseTurnInform(String line){
+	public int parseLastTurnInform(String line){
 		Scanner scanner = new Scanner(line);
 		
 		try {
-			scanner.next(protocol.ASSIGN_COLOR);
+			scanner.next(protocol.LAST_MOVE);
 			String turn = scanner.next();
 			scanner.close();
-			return 3; //TODO
+			if(turn == protocol.MOVE){
+				return MOVE;
+			} else if (turn == protocol.PASS){
+				return PASS;
+			} else {
+				return -1;
+			}
 		} catch (InputMismatchException e){
 			scanner.close();
 			return -1;
