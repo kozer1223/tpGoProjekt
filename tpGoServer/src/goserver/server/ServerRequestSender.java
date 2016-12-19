@@ -12,6 +12,9 @@ public class ServerRequestSender {
 	
 	public static final int BLACK = 1;
 	public static final int WHITE = 2;
+	
+	public static final int SELF = 3;
+	public static final int OPPONENT = 4;
 
 	private ServerRequestSender() {
 		protocol = ServerClientProtocol.getInstance();
@@ -97,5 +100,15 @@ public class ServerRequestSender {
 		StringBuilder command = new StringBuilder(protocol.SEND_MESSAGE + " ");
 		command.append(message);
 		output.println(command.toString());
+	}
+	
+	public void sendTurnInfo(int turnInfo, PrintWriter output){
+		if (turnInfo == SELF || turnInfo == OPPONENT){
+			StringBuilder command = new StringBuilder(protocol.INFORM_TURN + " ");
+			command.append( ( turnInfo == SELF ? protocol.SELF : protocol.OPPONENT ) );
+			output.println(command.toString());
+		} else {
+			throw new IllegalArgumentException();
+		}
 	}
 }

@@ -130,4 +130,18 @@ public class ServerRequestSenderTest {
 		assertTrue(writer.toString().startsWith(protocol.SEND_MESSAGE + " " + message));
 	}
 	
+	@Test
+	public void testInformTurnSelf() {
+		StringWriter writer = new StringWriter();
+		instance.sendTurnInfo(ServerRequestSender.SELF, new PrintWriter(writer));
+		assertTrue(writer.toString().startsWith(protocol.INFORM_TURN + " " + protocol.SELF));
+	}
+
+	@Test
+	public void testInformTurnOpponent() {
+		StringWriter writer = new StringWriter();
+		instance.sendTurnInfo(ServerRequestSender.OPPONENT, new PrintWriter(writer));
+		assertTrue(writer.toString().startsWith(protocol.INFORM_TURN + " " + protocol.OPPONENT));
+	}
+	
 }

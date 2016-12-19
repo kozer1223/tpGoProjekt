@@ -20,6 +20,9 @@ public class ClientProtocolParser {
 	public static ClientProtocolParser instance;
 
 	private ServerClientProtocol protocol;
+	
+	public static final int SELF = 3;
+	public static final int OPPONENT = 4;
 
 	private ClientProtocolParser() {
 		protocol = ServerClientProtocol.getInstance();
@@ -191,6 +194,20 @@ public class ClientProtocolParser {
 		} catch (InputMismatchException e){
 			scanner.close();
 			return null;
+		}
+	}
+	
+	public int parseTurnInform(String line){
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.ASSIGN_COLOR);
+			String turn = scanner.next();
+			scanner.close();
+			return 3; //TODO
+		} catch (InputMismatchException e){
+			scanner.close();
+			return -1;
 		}
 	}
 

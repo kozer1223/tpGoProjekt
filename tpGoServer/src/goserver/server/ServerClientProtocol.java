@@ -76,6 +76,10 @@ public class ServerClientProtocol {
 	// MESSAGE [message (string)]
 	public final String SEND_MESSAGE = "MESSAGE";
 	
+	// wyslanie wiadomosci o turze
+	// TURN [YOU|OPPONENT]
+	public final String INFORM_TURN = "TURN";
+	
 	// misc.
 	
 	public final String PLAYER = "PLAYER";
@@ -86,5 +90,8 @@ public class ServerClientProtocol {
 	
 	public final String ALIVE = "A";
 	public final String DEAD = "D";
+	
+	public final String SELF = "YOU";
+	public final String OPPONENT = "OPPONENT";
 
 }
