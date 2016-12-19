@@ -71,29 +71,38 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 			sendTurnData();
 			while(true){
 				try {
-					if(input.ready() && game.isPlayersTurn(this)){
-						String line = input.readLine();
-						
+					// if(game.isPlayersTurn(this)){
+					String line = input.readLine();
+					if (line != null) {
+						System.out.println("[PLAYER]>" + line);
+
 						IntPair move;
 						Map<Integer, GoGroupType> changes;
-						if((move = parser.parseMove(line)) != null){
-							try {
-								game.makeMove(this, move.x, move.y);
+						try {
+							if ((move = parser.parseMove(line)) != null) {
+								try {
+									game.makeMove(this, move.x, move.y);
+									sender.sendMoveAccepted(output);
+								} catch (InvalidMoveException e) {
+									sender.sendMessage(e.getMessage(), output);
+								}
+							} else if (parser.parsePassTurn(line)) {
+								game.passTurn(this);
 								sender.sendMoveAccepted(output);
-							} catch (InvalidMoveException e) {
-								sender.sendMessage(e.getMessage(), output);
+							} else if ((changes = parser.parseGroupStateChange(line)) != null) {
+								game.applyGroupTypeChanges(this, changes);
+								sender.sendMoveAccepted(output);
 							}
-						} else if (parser.parsePassTurn(line)){
-							game.passTurn(this);
-							sender.sendMoveAccepted(output);
-						} else if ((changes = parser.parseGroupStateChange(line)) != null){
-							game.applyGroupTypeChanges(this, changes);
-							sender.sendMoveAccepted(output);
+						} catch (IllegalArgumentException e) {
+
 						}
+
 					}
+					// }
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+					break;
 				}
 			}
 		}

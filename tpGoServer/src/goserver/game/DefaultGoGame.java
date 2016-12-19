@@ -99,7 +99,14 @@ public class DefaultGoGame implements GoGame {
 			if (consecutivePasses >= 2){
 				setGamePhase(1);
 				board.getAllGroupLabels();
-				currentPlayer.notifyAboutGamePhaseChange(getGamePhase());
+				
+				players[0].notifyAboutGamePhaseChange(getGamePhase());
+				players[1].notifyAboutGamePhaseChange(getGamePhase());
+				
+				players[0].updateBoard();
+				players[1].updateBoard();
+				
+				currentPlayer.notifyAboutTurn(GoMoveType.PASS);
 			} else {
 				currentPlayer.notifyAboutTurn(GoMoveType.PASS);
 			}

@@ -17,7 +17,14 @@ public class SpyReaderWriter implements ReaderWriter {
 	
 	@Override
 	public String read() {
-		return resultString;
+		String str = resultString;
+		resultString = null;
+		return str;
+	}
+
+	@Override
+	public boolean isReadReady() {
+		return (resultString == null);
 	}
 
 }

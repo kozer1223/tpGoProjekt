@@ -45,7 +45,7 @@ public class ServerProtocolParser {
 			scanner.next(protocol.REQUEST_GAME);
 			scanner.next(protocol.PLAYER);
 			return scanner.nextInt();
-		} catch (InputMismatchException e){
+		} catch (NoSuchElementException e){
 			return -1;
 		}
 	}
@@ -65,7 +65,7 @@ public class ServerProtocolParser {
 			int result = scanner.nextInt();
 			scanner.close();
 			return result;
-		} catch (InputMismatchException e){
+		} catch (NoSuchElementException e){
 			scanner.close();
 			return -1;
 		}
@@ -93,7 +93,7 @@ public class ServerProtocolParser {
 			scanner.next(protocol.PASS_TURN);
 			scanner.close();
 			return true;
-		} catch (InputMismatchException e){
+		} catch (NoSuchElementException e){
 			scanner.close();
 			return false;
 		}
@@ -119,7 +119,7 @@ public class ServerProtocolParser {
 			}
 			scanner.close();
 			return changes;
-		} catch (InputMismatchException e){
+		} catch (NoSuchElementException e){
 			scanner.close();
 			return null;
 		}

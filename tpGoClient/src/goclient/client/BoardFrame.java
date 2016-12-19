@@ -47,10 +47,10 @@ public class BoardFrame implements ActionListener {
 		}
 		frame.add(boardImage);
 		boardImage.setLayout(null);
-		for (int i=1;i<=size;i++) {
-			for(int j=1;j<=size;j++) {
+		for (int i=0;i<size;i++) {
+			for(int j=0;j<size;j++) {
 				JButton button = new JButton();
-				button.setBounds(29*i-29, 29*j-24, 29, 29);
+				button.setBounds(29*(i+1)-29, 29*(j+1)-24, 29, 29);
 				button.addActionListener(this);
 				button.setOpaque(false);
 				button.setContentAreaFilled(false);
@@ -84,7 +84,7 @@ public class BoardFrame implements ActionListener {
 			colour=communication.read();
 		}
 		System.out.println(colour);
-		if(colour==ServerClientProtocol.getInstance().WHITE) {
+		if(ClientProtocolParser.getInstance().parseColor(colour)==ServerClientProtocol.getInstance().WHITE) {
 			frame.setEnabled(false);
 		}
 		

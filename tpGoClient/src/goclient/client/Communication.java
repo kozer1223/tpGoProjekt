@@ -39,7 +39,6 @@ public class Communication implements ReaderWriter {
 		try {
 			if(input.ready()){
 				line = input.readLine();
-				System.out.println("read "+ line);
 			}
 
 		} catch (IOException e) {
@@ -47,5 +46,19 @@ public class Communication implements ReaderWriter {
 			System.out.println(e.getMessage());
 		}
 		return line;
+	}
+	
+	/* (non-Javadoc)
+	 * @see goclient.ReaderWriter#read()
+	 */
+	@Override
+	public boolean isReadReady(){
+		try {
+			return input.ready();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			return false;
+		}
 	}
 }
