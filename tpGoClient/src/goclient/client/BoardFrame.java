@@ -57,25 +57,6 @@ public class BoardFrame implements ActionListener {
 				button.setBorderPainted(false);
 				boardImage.add(button);
 				button.setName(i + " " + j);
-				/*if(j==1) button.setName("a"+i);
-				else if(j==2) button.setName("b"+i);
-				else if(j==3) button.setName("c"+i);
-				else if(j==4) button.setName("d"+i);
-				else if(j==5) button.setName("e"+i);
-				else if(j==6) button.setName("f"+i);
-				else if(j==7) button.setName("g"+i);
-				else if(j==8) button.setName("h"+i);
-				else if(j==9) button.setName("i"+i);
-				else if(j==10) button.setName("j"+i);
-				else if(j==11) button.setName("k"+i);
-				else if(j==12) button.setName("l"+i);
-				else if(j==13) button.setName("m"+i);
-				else if(j==14) button.setName("n"+i);
-				else if(j==15) button.setName("o"+i);
-				else if(j==16) button.setName("p"+i);
-				else if(j==17) button.setName("q"+i);
-				else if(j==18) button.setName("r"+i);
-				else if(j==19) button.setName("s"+i);*/
 			}
 		}
 		System.out.println("waiting for input");
@@ -85,7 +66,7 @@ public class BoardFrame implements ActionListener {
 		}
 		System.out.println(colour);
 		if(ClientProtocolParser.getInstance().parseColor(colour)==ServerClientProtocol.getInstance().WHITE) {
-			frame.setEnabled(false);
+			//frame.setEnabled(false);
 		}
 		
 		//wait for game start info
@@ -95,10 +76,10 @@ public class BoardFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		String placeClicked = ((JButton) e.getSource()).getName();
 		System.out.println(placeClicked);
-		communication.write(placeClicked);
-		frame.setEnabled(false);
-		String msg = communication.read();
-		frame.setEnabled(true);
+		//communication.write(placeClicked);
+		//frame.setEnabled(false);
+		//String msg = communication.read();
+		//frame.setEnabled(true);
 	}
 
 }

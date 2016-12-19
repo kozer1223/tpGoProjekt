@@ -66,17 +66,25 @@ public class DefaultGoGame implements GoGame {
 			int playerNo = getPlayersNo(player);
 
 			// throws exception
+			if (x < 0 || x >= board.getSize() || y < 0 || y >= board.getSize() ){
+				throw new InvalidMoveException("Invalid move");
+			}
+			
 			if (ruleset.validateMove(board, getPlayersColor(playerNo), x, y)) {
-				IntPair placeResult = board.placeStone(getPlayersColor(playerNo), x, y);
-				capturedStones[playerNo] += placeResult.x;
-				capturedStones[1 - playerNo] += placeResult.y;
+				try {
+					IntPair placeResult = board.placeStone(getPlayersColor(playerNo), x, y);
+					capturedStones[playerNo] += placeResult.x;
+					capturedStones[1 - playerNo] += placeResult.y;
 
-				players[0].updateBoard();
-				players[1].updateBoard();
-				
-				consecutivePasses = 0;
-				currentPlayer = getOpposingPlayer(currentPlayer);
-				currentPlayer.notifyAboutTurn(GoMoveType.MOVE);
+					players[0].updateBoard();
+					players[1].updateBoard();
+					
+					consecutivePasses = 0;
+					currentPlayer = getOpposingPlayer(currentPlayer);
+					currentPlayer.notifyAboutTurn(GoMoveType.MOVE);
+				} catch (IllegalArgumentException e){
+					throw new InvalidMoveException("Invalid move");
+				}
 			} else {
 				throw new InvalidMoveException("Invalid move");
 			}

@@ -30,7 +30,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	private ServerProtocolParser parser;
 	private ServerRequestSender sender;
 	private int color;
-	
+
 	private static final int BLACK = 1;
 	private static final int WHITE = 2;
 
@@ -41,16 +41,17 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 		parser = ServerProtocolParser.getInstance();
 		sender = ServerRequestSender.getInstance();
 	}
-	
-	protected GoPlayer getOpposingPlayer(){
+
+	protected GoPlayer getOpposingPlayer() {
 		return game.getOpposingPlayer(this);
 	}
-	
-	private void sendTurnData(){
-		if (game != null){
-			if (game.isStonePlacingPhase()){
+
+	private void sendTurnData() {
+		if (game != null) {
+			if (game.isStonePlacingPhase()) {
 				sender.sendBoardData(game.getBoard().getBoard(), output);
-				sender.sendCapturedStones(game.getPlayersCapturedStones(this), game.getPlayersCapturedStones(getOpposingPlayer()), output);
+				sender.sendCapturedStones(game.getPlayersCapturedStones(this),
+						game.getPlayersCapturedStones(getOpposingPlayer()), output);
 			} else {
 				sender.sendLabeledBoardData(game.getBoard().getBoardWithLabeledGroups(), output);
 				sender.sendGroupStateData(game.getLabelsMap(), output);
@@ -59,8 +60,8 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	}
 
 	public void run() {
-		if (game != null){
-			if(game.getPlayer1() == this){
+		if (game != null) {
+			if (game.getPlayer1() == this) {
 				color = BLACK;
 				sender.assignColorToClient(ServerRequestSender.BLACK, output);
 			} else {
@@ -69,36 +70,36 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 			}
 			sender.sendGameBegin(output);
 			sendTurnData();
-			while(true){
+			while (true) {
 				try {
-					// if(game.isPlayersTurn(this)){
-					String line = input.readLine();
-					if (line != null) {
-						System.out.println("[PLAYER]>" + line);
+					if (game.isPlayersTurn(this)) {
+						String line = input.readLine();
+						if (line != null) {
+							System.out.println("[PLAYER]>" + line);
 
-						IntPair move;
-						Map<Integer, GoGroupType> changes;
-						try {
-							if ((move = parser.parseMove(line)) != null) {
-								try {
-									game.makeMove(this, move.x, move.y);
+							IntPair move;
+							Map<Integer, GoGroupType> changes;
+							try {
+								if ((move = parser.parseMove(line)) != null) {
+									try {
+										game.makeMove(this, move.x, move.y);
+										sender.sendMoveAccepted(output);
+									} catch (InvalidMoveException e) {
+										sender.sendMessage(e.getMessage(), output);
+									}
+								} else if (parser.parsePassTurn(line)) {
+									game.passTurn(this);
 									sender.sendMoveAccepted(output);
-								} catch (InvalidMoveException e) {
-									sender.sendMessage(e.getMessage(), output);
+								} else if ((changes = parser.parseGroupStateChange(line)) != null) {
+									game.applyGroupTypeChanges(this, changes);
+									sender.sendMoveAccepted(output);
 								}
-							} else if (parser.parsePassTurn(line)) {
-								game.passTurn(this);
-								sender.sendMoveAccepted(output);
-							} else if ((changes = parser.parseGroupStateChange(line)) != null) {
-								game.applyGroupTypeChanges(this, changes);
-								sender.sendMoveAccepted(output);
+							} catch (IllegalArgumentException e) {
+
 							}
-						} catch (IllegalArgumentException e) {
 
 						}
-
 					}
-					// }
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -117,17 +118,17 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	public void notifyAboutTurn(GoMoveType opponentsMove) {
 		// TODO Auto-generated method stub
 		int turnInfo;
-		if (!(opponentsMove == GoMoveType.FIRST)){
-			if (opponentsMove == GoMoveType.MOVE || opponentsMove == GoMoveType.GROUP_CHANGED){
+		if (!(opponentsMove == GoMoveType.FIRST)) {
+			if (opponentsMove == GoMoveType.MOVE || opponentsMove == GoMoveType.GROUP_CHANGED) {
 				turnInfo = ServerRequestSender.MOVE;
-			} else if (opponentsMove == GoMoveType.PASS || opponentsMove == GoMoveType.GROUP_NOCHANGE){
+			} else if (opponentsMove == GoMoveType.PASS || opponentsMove == GoMoveType.GROUP_NOCHANGE) {
 				turnInfo = ServerRequestSender.PASS;
 			} else {
 				turnInfo = ServerRequestSender.PASS; // nieokreslony przypadek
 			}
 			sender.sendLastTurnInfo(turnInfo, output);
 		}
-		
+
 	}
 
 	// @Override
@@ -145,7 +146,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	@Override
 	public void notifyAboutGameEnd(double playerScore, double opponentScore) {
 		// TODO Auto-generated method stub
-		if (color == BLACK){
+		if (color == BLACK) {
 			sender.sendGameScore(playerScore, opponentScore, output);
 		} else {
 			sender.sendGameScore(opponentScore, playerScore, output);
