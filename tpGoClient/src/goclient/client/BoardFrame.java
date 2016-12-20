@@ -71,18 +71,6 @@ public class BoardFrame implements ActionListener {
 		// canvas.add(boardImage);
 		frame.add(canvas);
 		canvas.setLayout(null);
-		for (int i = 0; i < size; i++) {
-			for (int j = 0; j < size; j++) {
-				JButton button = new JButton();
-				button.setBounds(29 * i , 29 * j, 29, 29);
-				button.addActionListener(this);
-				button.setOpaque(false);
-				button.setContentAreaFilled(false);
-				button.setBorderPainted(false);
-				canvas.add(button);
-				button.setName(i + " " + j);
-			}
-		}
 		JFrame waitingFrame = new JFrame("Please Wait");
 		waitingFrame.setVisible(true);
 		waitingFrame.setBounds(800, 300, 200, 20);
@@ -102,7 +90,7 @@ public class BoardFrame implements ActionListener {
 		// wait for game start info
 	}
 
-	private class BoardCanvas extends JPanel {
+	private class BoardCanvas extends JPanel implements ActionListener{
 
 		BufferedImage img;
 		int size;
@@ -111,6 +99,19 @@ public class BoardFrame implements ActionListener {
 			super();
 			this.size = size;
 			this.img = img;
+			for (int i = 0; i < size; i++) {
+				for (int j = 0; j < size; j++) {
+					MyButton button = new MyButton();
+					button.setBounds(29 * i , 29 * j, 29, 29);
+					button.addActionListener(this);
+					button.setOpaque(false);
+					button.setContentAreaFilled(false);
+					button.setBorderPainted(false);
+					button.setX(i);
+					button.setY(j);
+					this.add(button);
+				}
+			}
 		}
 
 		@Override
@@ -125,6 +126,31 @@ public class BoardFrame implements ActionListener {
 						g2.fill(stones[i][j]);
 					}
 				}
+			}
+		}
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			MyButton button = (MyButton) e.getSource();
+			int x=button.getX();
+			int y=button.getY();
+			System.out.println(x+" "+y);
+			ClientRequestSender.getInstance().sendMove(x, y, communication);
+		}
+		private class MyButton extends JButton {
+			private int x;
+			private int y;
+			public void setX(int x){
+				this.x=x;
+			}
+			public void setY(int y){
+				this.y=y;
+			}
+			public int getY(){
+				return y;
+			}
+			public int getX(){
+				return x;
 			}
 		}
 
@@ -157,17 +183,7 @@ public class BoardFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		// to trzeba zrobic bardziej ogarniecie
-		String placeClicked = ((JButton) e.getSource()).getName();
-		System.out.println(placeClicked);
-		Scanner scanner = new Scanner(placeClicked);
-		int x = scanner.nextInt();
-		int y = scanner.nextInt();
-		ClientRequestSender.getInstance().sendMove(x, y, communication);
-		// communication.write(placeClicked);
-		// frame.setEnabled(false);
-		// String msg = communication.read();
-		// frame.setEnabled(true);
+		
 	}
 
 }
