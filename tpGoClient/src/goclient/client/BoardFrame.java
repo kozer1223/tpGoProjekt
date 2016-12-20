@@ -53,13 +53,13 @@ public class BoardFrame implements ActionListener {
 		try {
 			if (size == 19) {
 				frame.setBounds(100, 0, 570, 600);
-				img = ImageIO.read(new File("resources\\go.jpg"));
+				img = ImageIO.read(new File("resources/go.jpg"));
 			} else if (size == 13) {
 				frame.setBounds(100, 0, 395, 430);
-				img = ImageIO.read(new File("resources\\go13.png"));
+				img = ImageIO.read(new File("resources/go13.png"));
 			} else if (size == 9) {
 				frame.setBounds(100, 0, 270, 310);
-				img = ImageIO.read(new File("resources\\go9.png"));
+				img = ImageIO.read(new File("resources/go9.png"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
