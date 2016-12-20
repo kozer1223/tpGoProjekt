@@ -9,6 +9,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 
 import goserver.game.GoGame;
@@ -88,7 +89,12 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 										sender.sendMessage(e.getMessage(), output);
 									}
 								} else if (parser.parsePassTurn(line)) {
-									game.passTurn(this);
+									if (game.isStonePlacingPhase()){
+										game.passTurn(this);
+									} else {
+										//pas jako zgodzenie sie z propozycja grup
+										game.applyGroupTypeChanges(this, new HashMap<Integer, GoGroupType>());
+									}
 									sender.sendMoveAccepted(output);
 								} else if ((changes = parser.parseGroupStateChange(line)) != null) {
 									game.applyGroupTypeChanges(this, changes);

@@ -135,7 +135,13 @@ public class DefaultGoGame implements GoGame {
 				if (groupMarkingPhaseLength < MAX_GROUP_MARKING_PHASE_LENGTH){
 					players[0].updateBoard();
 					players[1].updateBoard();
-					currentPlayer.notifyAboutTurn(GoMoveType.GROUP_CHANGED);
+					
+					if (areAllGroupsLocked()){
+						// oblicz wynik, powiadom o wygranej/przegranej/remisie
+						endGame();
+					} else {
+						currentPlayer.notifyAboutTurn(GoMoveType.GROUP_CHANGED);
+					}
 				} else {
 					setGamePhase(0);
 					board.resetGroupLabels();
@@ -144,12 +150,12 @@ public class DefaultGoGame implements GoGame {
 					players[1].updateBoard();
 				}
 			} else {
-				currentPlayer.notifyAboutTurn(GoMoveType.GROUP_NOCHANGE);
-			}
-			
-			if (areAllGroupsLocked()){
-				// oblicz wynik, powiadom o wygranej/przegranej/remisie
-				endGame();
+				if (areAllGroupsLocked()){
+					// oblicz wynik, powiadom o wygranej/przegranej/remisie
+					endGame();
+				} else {
+					currentPlayer.notifyAboutTurn(GoMoveType.GROUP_NOCHANGE);
+				}
 			}
 		} else {
 			throw new IllegalArgumentException();
