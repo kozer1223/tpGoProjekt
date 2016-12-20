@@ -163,18 +163,20 @@ public class DefaultGoGame implements GoGame {
 	}
 	
 	protected void endGame() {
-		board.removeDeadGroups();
-		IntPair scores = board.calculateTerritoryScore();
-		score[0] = (double)(scores.x - capturedStones[1]);
-		score[1] = (double)(scores.y - capturedStones[0]);
-		ruleset.onGameEnd(this);
-		
-		setGamePhase(2);
-		
-		players[0].notifyAboutGameEnd(score[0], score[1]);
-		players[1].notifyAboutGameEnd(score[1], score[0]);
-		
-		currentPlayer = null;
+		if (!isGameEnd()) {
+			board.removeDeadGroups();
+			IntPair scores = board.calculateTerritoryScore();
+			score[0] = (double) (scores.x - capturedStones[1]);
+			score[1] = (double) (scores.y - capturedStones[0]);
+			ruleset.onGameEnd(this);
+
+			setGamePhase(2);
+
+			players[0].notifyAboutGameEnd(score[0], score[1]);
+			players[1].notifyAboutGameEnd(score[1], score[0]);
+
+			currentPlayer = null;
+		}
 	}
 
 	protected boolean areAllGroupsLocked() {
@@ -315,16 +317,18 @@ public class DefaultGoGame implements GoGame {
 
 	@Override
 	public void leaveGame(GoPlayer player) {
-		int playerNo = getPlayersNo(player);
-		score[1 - playerNo] = board.getSize() * board.getSize();
-		score[playerNo] = 0;
-		
-		setGamePhase(2);
-		
-		System.out.println("Notifying player " + (1-playerNo));
-		players[1-playerNo].notifyAboutGameEnd(score[1 - playerNo], score[playerNo]);
-		
-		currentPlayer = null;
+		if (!isGameEnd()) {
+			int playerNo = getPlayersNo(player);
+			score[1 - playerNo] = board.getSize() * board.getSize();
+			score[playerNo] = 0;
+
+			setGamePhase(2);
+
+			System.out.println("Notifying player " + (1 - playerNo));
+			players[1 - playerNo].notifyAboutGameEnd(score[1 - playerNo], score[playerNo]);
+
+			currentPlayer = null;
+		}
 	}
 
 }

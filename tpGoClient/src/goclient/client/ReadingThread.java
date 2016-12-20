@@ -21,7 +21,6 @@ public class ReadingThread extends Thread {
 		ReaderWriter communication = GUI.getCommunication();
 		ClientProtocolParser parser = ClientProtocolParser.getInstance();
 		while (true) {
-			// if (communication.isReadReady()) {
 			String line = communication.read();
 			if (line != null) {
 				System.out.println("[SERVER]> " + line);
@@ -30,7 +29,6 @@ public class ReadingThread extends Thread {
 					frame.drawBoard(parser.parseBoard(line, size));
 				}
 			}
-			// }
 		}
 	}
 }

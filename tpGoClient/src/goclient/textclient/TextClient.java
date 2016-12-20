@@ -16,16 +16,11 @@ public class TextClient {
 		t.start();
 		
 		while(true){
-			//if (communication.isReadReady()){
 			String line = communication.read();
 			if(line != null){
 				System.out.println(line);
 			}
 				
-			//} else {
-
-			//}
-			//System.out.println("waiting");
 		}
 	}
 

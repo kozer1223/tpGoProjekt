@@ -4,6 +4,5 @@ public interface ReaderWriter {
 
 	void write(String message);
 	String read();
-	//boolean isReadReady();
 
 }
