@@ -219,5 +219,30 @@ public class ClientProtocolParser {
 			return -1;
 		}
 	}
-
+	
+	public boolean parseRematchAccepted(String line){
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.REMATCH_ACCEPTED);
+			scanner.close();
+			return true;
+		} catch (InputMismatchException e){
+			return false;
+		}
+	}
+	
+	public boolean parseRematchDenied(String line){
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.REMATCH_DENIED);
+			scanner.close();
+			return true;
+		} catch (InputMismatchException e){
+			return false;
+		}
+	}
+	
+	
 }

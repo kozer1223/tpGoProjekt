@@ -36,5 +36,7 @@ public interface GoGame {
 	public void applyGroupTypeChanges(GoPlayer player, Map<Integer, GoGroupType> groupTypeChanges);
 	
 	public void leaveGame(GoPlayer player);
+	public void requestRematch(GoPlayer player);
+	public void denyRematch(GoPlayer player);
 	
 }

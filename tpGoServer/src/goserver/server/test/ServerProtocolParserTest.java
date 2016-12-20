@@ -93,5 +93,16 @@ public class ServerProtocolParserTest {
 		ServerRequestSender.getInstance().sendGroupStateData(labels, new PrintWriter(writer));
 		assertEquals(labels, instance.parseGroupStateChange(writer.toString().replace(protocol.SEND_GROUP_STATE, protocol.CHANGE_GROUP_STATE)));
 	}
+	
+	
+	@Test
+	public void testParseRematch() {
+		assertTrue(instance.parseRematchRequest(protocol.REQUEST_REMATCH));
+	}
+	
+	@Test
+	public void testParseRematchWrongInput() {
+		assertFalse(instance.parseRematchRequest(protocol.SEND_MOVE));
+	}
 
 }

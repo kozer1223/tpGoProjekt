@@ -34,6 +34,10 @@ public class ServerClientProtocol {
 	// CHANGE_STATE [x1] [A|D] [x2] [A|D] ...
 	public final String CHANGE_GROUP_STATE = "CHANGE_STATE";
 	
+	// prosba o rewanz
+	// REMATCH
+	public final String REQUEST_REMATCH = "REMATCH";
+	
 	// -- Serwer -> Klient
 	
 	// informacja o kolorze gracza
@@ -47,6 +51,10 @@ public class ServerClientProtocol {
 	// wyslanie stanu planszy
 	// BOARD 0001012020120210012...
 	public final String SEND_BOARD = "BOARD";
+	
+	// wyslanie informacji o zaakcpetowanym ruchu
+	// ACCEPTED
+	public final String MOVE_ACCEPTED = "ACCEPTED";
 	
 	// informacja o zmianie fazy gry
 	// GAME_PHASE [0|1]
@@ -75,6 +83,14 @@ public class ServerClientProtocol {
 	// wyslanie wiadomosci o turze
 	// LAST_MOVE [MOVE|PASS]
 	public final String LAST_MOVE = "LAST_MOVE";
+	
+	// zaakceptowana prosba obu graczy o rewanz
+	// REMATCH_ACC
+	public final String REMATCH_ACCEPTED = "REMATCH_ACC";
+	
+	// zaakceptowana prosba obu graczy o rewanz
+	// REMATCH_DENY
+	public final String REMATCH_DENIED = "REMATCH_DENY";
 	
 	// misc.
 	

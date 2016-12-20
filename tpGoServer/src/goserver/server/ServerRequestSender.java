@@ -31,7 +31,6 @@ public class ServerRequestSender {
 		if (color == BLACK || color == WHITE){
 			StringBuilder command = new StringBuilder(protocol.ASSIGN_COLOR + " ");
 			command.append( ( color == BLACK ? protocol.BLACK : protocol.WHITE ) );
-			System.out.println(command.toString());
 			output.println(command.toString());
 		} else {
 			throw new IllegalArgumentException();
@@ -112,4 +111,15 @@ public class ServerRequestSender {
 			throw new IllegalArgumentException();
 		}
 	}
+	
+	public void sendRematchAccepted(PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.REMATCH_ACCEPTED);
+		output.println(command.toString());
+	}
+	
+	public void sendRematchDenied(PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.REMATCH_DENIED);
+		output.println(command.toString());
+	}
+	
 }

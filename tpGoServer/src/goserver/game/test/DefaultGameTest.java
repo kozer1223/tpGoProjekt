@@ -57,7 +57,7 @@ public class DefaultGameTest {
 		assertEquals(game.getBoard().getWhiteColor(), game.getBoard().getBoard()[0][1]);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidMoveException.class)
 	public void testConflictingMoves() throws InvalidMoveException {
 		GoPlayer player1 = new EmptyGoPlayer();
 		GoPlayer player2 = new EmptyGoPlayer();

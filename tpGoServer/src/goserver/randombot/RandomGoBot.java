@@ -105,8 +105,25 @@ public class RandomGoBot implements GoPlayer {
 
 	@Override
 	public void notifyAboutGameEnd(double playerScore, double opponentScore) {
-		// TODO Auto-generated method stub
+		game.requestRematch(this);
+	}
 
+	@Override
+	public void rematchAccepted() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void rematchDenied() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyAboutGameBegin() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }

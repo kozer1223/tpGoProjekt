@@ -78,5 +78,11 @@ public class ClientRequestSenderTest {
 		instance.sendGroupChanges(labels, writer);
 		assertTrue(writer.read().startsWith(protocol.CHANGE_GROUP_STATE + " " + labelStringData));
 	}
+	
+	@Test
+	public void testRequestRematch() {
+		instance.requestRematch(writer);
+		assertTrue(writer.read().startsWith(protocol.REQUEST_REMATCH));
+	}
 
 }

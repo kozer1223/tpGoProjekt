@@ -128,4 +128,24 @@ public class ClientProtocolParserTest {
 		assertEquals(-1, instance.parseLastTurnInform(protocol.LAST_MOVE + " aaa"));
 	}
 
+	@Test
+	public void testParseRematchAccepted() {
+		assertTrue(instance.parseRematchAccepted(protocol.REMATCH_ACCEPTED));
+	}
+	
+	@Test
+	public void testParseRematchAcceptedWrongInput() {
+		assertFalse(instance.parseRematchAccepted("aaaa"));
+	}
+	
+	@Test
+	public void testParseRematchDenied() {
+		assertTrue(instance.parseRematchDenied(protocol.REMATCH_DENIED));
+	}
+	
+	@Test
+	public void testParseRematchDeniedWrongInput() {
+		assertFalse(instance.parseRematchDenied("aaaa"));
+	}
+	
 }

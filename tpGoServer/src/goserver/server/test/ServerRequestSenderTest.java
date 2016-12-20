@@ -143,5 +143,19 @@ public class ServerRequestSenderTest {
 		instance.sendLastTurnInfo(ServerRequestSender.PASS, new PrintWriter(writer));
 		assertTrue(writer.toString().startsWith(protocol.LAST_MOVE + " " + protocol.PASS));
 	}
+
+	@Test
+	public void testSendRematchAccepted() {
+		StringWriter writer = new StringWriter();
+		instance.sendRematchAccepted(new PrintWriter(writer));
+		assertTrue(writer.toString().startsWith(protocol.REMATCH_ACCEPTED));
+	}
+
+	@Test
+	public void testSendRematchDenied() {
+		StringWriter writer = new StringWriter();
+		instance.sendRematchDenied(new PrintWriter(writer));
+		assertTrue(writer.toString().startsWith(protocol.REMATCH_DENIED));
+	}
 	
 }
