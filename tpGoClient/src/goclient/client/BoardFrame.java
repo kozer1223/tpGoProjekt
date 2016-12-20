@@ -98,7 +98,7 @@ public class BoardFrame implements ActionListener {
 		if(size==9)passbutton.setBounds(210,280,100,100);
 		passbutton.addActionListener(this);
 		
-		JButton acceptDeadButton = new JButton("Accept the dead");
+		JButton acceptDeadButton = new JButton("Accept Proposition");
 		frame.add(acceptDeadButton);
 		acceptDeadButton.setVisible(false);
 		if(size==19)acceptDeadButton.setBounds(0,590,200,100);
@@ -208,7 +208,7 @@ public class BoardFrame implements ActionListener {
 		if(((JButton)e.getSource()).getText()=="PASS") {
 			sender.passTurn(communication);
 		}
-		else if(((JButton)e.getSource()).getText()=="Accept the dead") {
+		else if(((JButton)e.getSource()).getText()=="Accept Proposition") {
 			//TODO sender.sendGroupChanges(, communication);
 		}
 	}
