@@ -61,7 +61,7 @@ public class BoardFrame implements ActionListener {
 				frame.setBounds(100, 0, 395, 550);
 				img = ImageIO.read(new File("resources/go13.png"));
 			} else if (size == 9) {
-				frame.setBounds(100, 0, 270, 420);
+				frame.setBounds(100, 0, 320, 420);
 				img = ImageIO.read(new File("resources/go9.png"));
 			}
 		} catch (IOException e) {
@@ -94,9 +94,18 @@ public class BoardFrame implements ActionListener {
 		passbutton.setContentAreaFilled(true);
 		passbutton.setBorderPainted(true);
 		if(size==19)passbutton.setBounds(250,590,100,100);
-		if(size==13)passbutton.setBounds(180,420,100,100);
-		if(size==9)passbutton.setBounds(130,280,100,100);
+		if(size==13)passbutton.setBounds(210,420,100,100);
+		if(size==9)passbutton.setBounds(210,280,100,100);
 		passbutton.addActionListener(this);
+		
+		JButton acceptDeadButton = new JButton("Accept the dead");
+		frame.add(acceptDeadButton);
+		//acceptDeadButton.setVisible(false);
+		if(size==19)acceptDeadButton.setBounds(0,590,200,100);
+		if(size==13)acceptDeadButton.setBounds(0,420,200,100);
+		if(size==9)acceptDeadButton.setBounds(0,280,200,100);
+		acceptDeadButton.addActionListener(this);
+		
 		ReadingThread thread = new ReadingThread(size, this);
 		thread.start();
 
@@ -198,6 +207,9 @@ public class BoardFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if(((JButton)e.getSource()).getText()=="PASS") {
 			sender.passTurn(communication);
+		}
+		else if(((JButton)e.getSource()).getText()=="Accept the dead") {
+			//TODO sender.sendGroupChanges(, communication);
 		}
 	}
 
