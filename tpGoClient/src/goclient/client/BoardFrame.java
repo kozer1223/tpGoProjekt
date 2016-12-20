@@ -5,6 +5,7 @@ package goclient.client;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.ComponentOrientation;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
@@ -36,6 +37,7 @@ public class BoardFrame implements ActionListener {
 	private String colour = "no colour";
 	private ReaderWriter communication;
 	private BoardCanvas canvas;
+	private ClientRequestSender sender=ClientRequestSender.getInstance();
 
 	Ellipse2D[][] stones;
 	Color[][] stoneColors;
@@ -44,7 +46,8 @@ public class BoardFrame implements ActionListener {
 		communication = GUI.getCommunication();
 		this.size = size;
 		frame = new JFrame("Go");
-		frame.setLayout(new BorderLayout());
+		frame.setLayout(null);
+		//frame.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		frame.setVisible(false);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //?
@@ -52,13 +55,13 @@ public class BoardFrame implements ActionListener {
 		BufferedImage img = null;
 		try {
 			if (size == 19) {
-				frame.setBounds(100, 0, 570, 600);
+				frame.setBounds(100, 0, 570, 700);
 				img = ImageIO.read(new File("resources/go.jpg"));
 			} else if (size == 13) {
-				frame.setBounds(100, 0, 395, 430);
+				frame.setBounds(100, 0, 395, 550);
 				img = ImageIO.read(new File("resources/go13.png"));
 			} else if (size == 9) {
-				frame.setBounds(100, 0, 270, 310);
+				frame.setBounds(100, 0, 320, 420);
 				img = ImageIO.read(new File("resources/go9.png"));
 			}
 		} catch (IOException e) {
@@ -68,6 +71,7 @@ public class BoardFrame implements ActionListener {
 		stoneColors = new Color[size][size];
 		// frame.add(boardImage);
 		canvas = new BoardCanvas(size, img);
+		canvas.setBounds(0, 0, 570, 600);
 		// canvas.add(boardImage);
 		frame.add(canvas);
 		canvas.setLayout(null);
@@ -84,6 +88,24 @@ public class BoardFrame implements ActionListener {
 		waitingFrame.setVisible(false);
 		waitingFrame = null;
 
+		JButton passbutton = new JButton("PASS");
+		frame.add(passbutton);
+		passbutton.setOpaque(true);
+		passbutton.setContentAreaFilled(true);
+		passbutton.setBorderPainted(true);
+		if(size==19)passbutton.setBounds(250,590,100,100);
+		if(size==13)passbutton.setBounds(210,420,100,100);
+		if(size==9)passbutton.setBounds(210,280,100,100);
+		passbutton.addActionListener(this);
+		
+		JButton acceptDeadButton = new JButton("Accept the dead");
+		frame.add(acceptDeadButton);
+		acceptDeadButton.setVisible(false);
+		if(size==19)acceptDeadButton.setBounds(0,590,200,100);
+		if(size==13)acceptDeadButton.setBounds(0,420,200,100);
+		if(size==9)acceptDeadButton.setBounds(0,280,200,100);
+		acceptDeadButton.addActionListener(this);
+		
 		ReadingThread thread = new ReadingThread(size, this);
 		thread.start();
 
@@ -183,7 +205,12 @@ public class BoardFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		
+		if(((JButton)e.getSource()).getText()=="PASS") {
+			sender.passTurn(communication);
+		}
+		else if(((JButton)e.getSource()).getText()=="Accept the dead") {
+			//TODO sender.sendGroupChanges(, communication);
+		}
 	}
 
 }
