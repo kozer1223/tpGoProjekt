@@ -48,17 +48,4 @@ public class Communication implements ReaderWriter {
 		return line;
 	}
 	
-	/* (non-Javadoc)
-	 * @see goclient.ReaderWriter#read()
-	 */
-	@Override
-	public boolean isReadReady(){
-		try {
-			return input.ready();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-			return false;
-		}
-	}
 }

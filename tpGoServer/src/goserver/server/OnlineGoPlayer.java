@@ -72,7 +72,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 			sendTurnData();
 			while (true) {
 				try {
-					if (game.isPlayersTurn(this)) {
+					//if (game.isPlayersTurn(this)) {
 						String line = input.readLine();
 						if (line != null) {
 							System.out.println("[PLAYER]>" + line);
@@ -99,7 +99,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 							}
 
 						}
-					}
+					//}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

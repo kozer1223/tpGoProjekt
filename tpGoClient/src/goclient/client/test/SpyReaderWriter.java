@@ -22,9 +22,4 @@ public class SpyReaderWriter implements ReaderWriter {
 		return str;
 	}
 
-	@Override
-	public boolean isReadReady() {
-		return (resultString == null);
-	}
-
 }
