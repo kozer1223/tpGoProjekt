@@ -173,5 +173,66 @@ public class DefaultGameTest {
 		}
 		assertTrue(game.isStonePlacingPhase());
 	}
+	
+	@Test
+	public void testLeaveGame() {
+		GoPlayer player1 = new EmptyGoPlayer();
+		GoPlayer player2 = new EmptyGoPlayer();
+		int size = 9;
+		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset());
+		game.leaveGame(player2);
+		assertTrue(game.isGameEnd());
+		assertTrue(game.getPlayersScore(player1) > game.getPlayersScore(player2));
+	}
+	
+	@Test
+	public void testRequestRematch() throws InvalidMoveException {
+		GoPlayer player1 = new EmptyGoPlayer();
+		GoPlayer player2 = new EmptyGoPlayer();
+		int size = 9;
+		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset());
+		game.makeMove(player1, 0, 0);
+		game.makeMove(player2, 1, 1);
+		game.passTurn(player1);
+		game.passTurn(player2);
+		assertTrue(game.isGroupMarkingPhase());
+		
+		game.getLabelsMap();
+		Map<Integer, GoGroupType> noChanges = new HashMap<Integer, GoGroupType>();
+		
+		game.applyGroupTypeChanges(player1, noChanges);
+		game.applyGroupTypeChanges(player2, noChanges);
+		assertTrue(game.isGameEnd());
+		
+		game.requestRematch(player1);
+		game.requestRematch(player2);
+		
+		int[][] emptyBoard = new int[size][size];
+		assertTrue(game.isStonePlacingPhase());
+		assertTrue(MatrixUtil.compareMatrix(emptyBoard, game.getBoard().getBoard())); //swieza plansza
+	}
+	
+	@Test
+	public void testDenyRematch() throws InvalidMoveException {
+		GoPlayer player1 = new EmptyGoPlayer();
+		GoPlayer player2 = new EmptyGoPlayer();
+		int size = 9;
+		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset());
+		game.makeMove(player1, 0, 0);
+		game.makeMove(player2, 1, 1);
+		game.passTurn(player1);
+		game.passTurn(player2);
+		assertTrue(game.isGroupMarkingPhase());
+		
+		game.getLabelsMap();
+		Map<Integer, GoGroupType> noChanges = new HashMap<Integer, GoGroupType>();
+		
+		game.applyGroupTypeChanges(player1, noChanges);
+		game.applyGroupTypeChanges(player2, noChanges);
+		assertTrue(game.isGameEnd());
+		
+		game.denyRematch(player1);
+		assertTrue(((EmptyGoPlayer)player2).rematchDenied);
+	}
 
 }

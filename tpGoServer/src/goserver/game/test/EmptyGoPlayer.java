@@ -6,6 +6,8 @@ import goserver.game.GoPlayer;
 
 public class EmptyGoPlayer implements GoPlayer {
 
+	public boolean rematchDenied = false;
+	
 	@Override
 	public void setGame(GoGame game) {
 		// TODO Auto-generated method stub
@@ -45,7 +47,7 @@ public class EmptyGoPlayer implements GoPlayer {
 	@Override
 	public void rematchDenied() {
 		// TODO Auto-generated method stub
-		
+		rematchDenied = true;
 	}
 
 	@Override
