@@ -78,7 +78,7 @@ public class BoardFrame implements ActionListener {
 				button.addActionListener(this);
 				button.setOpaque(false);
 				button.setContentAreaFilled(false);
-				button.setBorderPainted(true);
+				button.setBorderPainted(false);
 				canvas.add(button);
 				button.setName(i + " " + j);
 			}

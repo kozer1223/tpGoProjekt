@@ -51,8 +51,8 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 		if (game != null) {
 			if (game.isStonePlacingPhase()) {
 				sender.sendBoardData(game.getBoard().getBoard(), output);
-				sender.sendCapturedStones(game.getPlayersCapturedStones(this),
-						game.getPlayersCapturedStones(getOpposingPlayer()), output);
+				sender.sendCapturedStones(game.getPlayersCapturedStones(game.getPlayer1()),
+						game.getPlayersCapturedStones(game.getPlayer2()), output);
 			} else {
 				sender.sendLabeledBoardData(game.getBoard().getBoardWithLabeledGroups(), output);
 				sender.sendGroupStateData(game.getLabelsMap(), output);
