@@ -102,7 +102,9 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 					//}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
-					e.printStackTrace();
+					System.out.println("Lost connection with player");
+					game.leaveGame(this);
+					System.out.println("Player left the game");
 					break;
 				}
 			}

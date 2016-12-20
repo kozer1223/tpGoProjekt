@@ -22,11 +22,11 @@ public class GoGameFactory {
 	}
 	
 	public GoGame createDefaultGoGameWithTwoPlayers(GoPlayer player1, GoPlayer player2, int size){
-		return new DefaultGoGame (player1, player2, 19, DefaultGoRuleset.getDefaultRuleset());
+		return new DefaultGoGame (player1, player2, size, DefaultGoRuleset.getDefaultRuleset());
 	}
 	
 	public GoGame createDefaultGoGameWithBot(GoPlayer player, int size){
-		return new DefaultGoGame (player, new RandomGoBot(), 19, DefaultGoRuleset.getDefaultRuleset());
+		return new DefaultGoGame (player, new RandomGoBot(), size, DefaultGoRuleset.getDefaultRuleset());
 	}
 
 }

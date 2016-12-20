@@ -56,11 +56,12 @@ public class ClientProtocolParserTest {
 	
 	@Test
 	public void testParseBoard() {
-		int board[][] = {{0, 1, 0},
-				         {1, 1, 1},
-				         {0, 0, 1}};
+		int board[][] = {{0, 1, 0, 1},
+				         {1, 1, 1, 1},
+				         {0, 0, 1, 1},
+				         {1 ,1 ,1, 0}};
 		int size = board.length;
-		String boardString = "010111001";
+		String boardString = "0101111100111110";
 		assertTrue(MatrixUtil.compareMatrix(board, instance.parseBoard(protocol.SEND_BOARD + " " + boardString, size)));
 	}
 	

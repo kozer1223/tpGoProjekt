@@ -27,9 +27,6 @@ public class ServerGo {
 	private static Map<Integer, OnlineGoPlayer> waitingPlayers; // size - player
 	private static ServerProtocolParser parser;
 
-	private static OnlineGoPlayer waitingPlayer19 = null;
-	private static OnlineGoPlayer waitingPlayer13 = null;
-	private static OnlineGoPlayer waitingPlayer9 = null;
 
 	public static void main(String[] args) {
 		waitingPlayers = new HashMap<Integer, OnlineGoPlayer>();

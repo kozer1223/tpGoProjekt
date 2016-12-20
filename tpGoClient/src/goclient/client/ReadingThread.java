@@ -24,7 +24,9 @@ public class ReadingThread extends Thread {
 			// if (communication.isReadReady()) {
 			String line = communication.read();
 			if (line != null) {
+				System.out.println("[SERVER]> " + line);
 				if (parser.parseBoard(line, size) != null) {
+					System.out.println(size);
 					frame.drawBoard(parser.parseBoard(line, size));
 				}
 			}

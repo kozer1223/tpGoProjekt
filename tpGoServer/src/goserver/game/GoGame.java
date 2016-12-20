@@ -35,4 +35,6 @@ public interface GoGame {
 	public Map<Integer, GoGroupType> getLabelsMap();
 	public void applyGroupTypeChanges(GoPlayer player, Map<Integer, GoGroupType> groupTypeChanges);
 	
+	public void leaveGame(GoPlayer player);
+	
 }

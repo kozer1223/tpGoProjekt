@@ -47,6 +47,7 @@ public class BoardFrame implements ActionListener {
 		frame.setLayout(new BorderLayout());
 		frame.setVisible(false);
 		frame.setResizable(false);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //?
 		// JLabel boardImage = null;
 		BufferedImage img = null;
 		try {
@@ -55,10 +56,10 @@ public class BoardFrame implements ActionListener {
 				img = ImageIO.read(new File("resources\\go.jpg"));
 			} else if (size == 13) {
 				frame.setBounds(100, 0, 395, 430);
-				img = ImageIO.read(new File("resources\\go13.jpg"));
+				img = ImageIO.read(new File("resources\\go13.png"));
 			} else if (size == 9) {
 				frame.setBounds(100, 0, 270, 310);
-				img = ImageIO.read(new File("resources\\go9.jpg"));
+				img = ImageIO.read(new File("resources\\go9.png"));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -66,18 +67,18 @@ public class BoardFrame implements ActionListener {
 		stones = new Ellipse2D[size][size];
 		stoneColors = new Color[size][size];
 		// frame.add(boardImage);
-		canvas = new BoardCanvas(img);
+		canvas = new BoardCanvas(size, img);
 		// canvas.add(boardImage);
 		frame.add(canvas);
 		canvas.setLayout(null);
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				JButton button = new JButton();
-				button.setBounds(29 * (i + 1) - 29, 29 * (j + 1) - 24, 29, 29);
+				button.setBounds(29 * i , 29 * j, 29, 29);
 				button.addActionListener(this);
 				button.setOpaque(false);
 				button.setContentAreaFilled(false);
-				button.setBorderPainted(false);
+				button.setBorderPainted(true);
 				canvas.add(button);
 				button.setName(i + " " + j);
 			}
@@ -104,9 +105,11 @@ public class BoardFrame implements ActionListener {
 	private class BoardCanvas extends JPanel {
 
 		BufferedImage img;
+		int size;
 
-		public BoardCanvas(BufferedImage img) {
+		public BoardCanvas(int size, BufferedImage img) {
 			super();
+			this.size = size;
 			this.img = img;
 		}
 
@@ -128,7 +131,7 @@ public class BoardFrame implements ActionListener {
 	}
 
 	public void drawBoard(int board[][]) {
-		System.out.println("DRAWING BOARD");
+		System.out.println("DRAWING BOARD "+size + " " + board.length);
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				if (board[i][j] == 0) {
@@ -138,7 +141,8 @@ public class BoardFrame implements ActionListener {
 					}
 				} else {
 					if (stones[i][j] == null) {
-						stones[i][j] = new Ellipse2D.Double(29 * i, 29 * j + 5, 29, 29);
+						System.out.println(29*i + ":x y:" + 29*j);
+						stones[i][j] = new Ellipse2D.Double(29 * i, 29 * j, 29, 29);
 					}
 					if (board[i][j] == 1) {
 						stoneColors[i][j] = Color.BLACK;

@@ -307,4 +307,18 @@ public class DefaultGoGame implements GoGame {
 		this.score[getPlayersNo(player)] = score;
 	}
 
+	@Override
+	public void leaveGame(GoPlayer player) {
+		int playerNo = getPlayersNo(player);
+		score[1 - playerNo] = board.getSize() * board.getSize();
+		score[playerNo] = 0;
+		
+		setGamePhase(2);
+		
+		System.out.println("Notifying player " + (1-playerNo));
+		players[1-playerNo].notifyAboutGameEnd(score[1 - playerNo], score[playerNo]);
+		
+		currentPlayer = null;
+	}
+
 }
