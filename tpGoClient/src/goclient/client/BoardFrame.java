@@ -100,7 +100,7 @@ public class BoardFrame implements ActionListener {
 		
 		JButton acceptDeadButton = new JButton("Accept the dead");
 		frame.add(acceptDeadButton);
-		//acceptDeadButton.setVisible(false);
+		acceptDeadButton.setVisible(false);
 		if(size==19)acceptDeadButton.setBounds(0,590,200,100);
 		if(size==13)acceptDeadButton.setBounds(0,420,200,100);
 		if(size==9)acceptDeadButton.setBounds(0,280,200,100);
