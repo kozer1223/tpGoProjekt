@@ -23,6 +23,7 @@ public class DefaultGoGame implements GoGame {
 	private int boardSize;
 	private int[] capturedStones;
 	private double[] score;
+	private boolean[] rematchRequested;
 	private int consecutivePasses;
 	private int gamePhase; // 0 - stawianie kamieni, 1 - oznaczanie grup, 2 - koniec gry
 	private int groupMarkingPhaseLength;
@@ -33,25 +34,36 @@ public class DefaultGoGame implements GoGame {
 		players = new GoPlayer[2];
 		players[0] = player1;
 		player1.setGame(this);
-		// player1.setOpposingPlayer(player2);
+
 		players[1] = player2;
 		player2.setGame(this);
-		// player1.setOpposingPlayer(player1);
+		
+		setRuleset(ruleset);
+		this.boardSize = boardSize;
 
+		restartGame();
+	}
+	
+	protected void restartGame() {
 		capturedStones = new int[2];
 		capturedStones[0] = 0;
 		capturedStones[1] = 0;
 		score = new double[2];
+		rematchRequested = new boolean[2];
+		rematchRequested[0] = false;
+		rematchRequested[1] = false;
 
-		this.boardSize = boardSize;
 		board = new DefaultGoBoard(boardSize);
 
-		setRuleset(ruleset);
 		ruleset.onGameStart(this);
 		
 		gamePhase = 0;
 		consecutivePasses = 0;
 		currentPlayer = players[0];
+		
+		players[0].notifyAboutGameBegin();
+		players[1].notifyAboutGameBegin();
+		
 		currentPlayer.notifyAboutTurn(GoMoveType.FIRST);
 	}
 
@@ -329,6 +341,25 @@ public class DefaultGoGame implements GoGame {
 
 			currentPlayer = null;
 		}
+	}
+
+	@Override
+	public void requestRematch(GoPlayer player) {
+		if (isGameEnd()) {
+			int playerNo = getPlayersNo(player);
+			rematchRequested[playerNo] = true;
+			if (rematchRequested[0] == true && rematchRequested[1] == true){
+				players[0].rematchAccepted();
+				players[1].rematchAccepted();
+				restartGame();
+			}
+		}
+	}
+
+	@Override
+	public void denyRematch(GoPlayer player) {
+		int playerNo = getPlayersNo(player);
+		players[1 - playerNo].rematchDenied();
 	}
 
 }

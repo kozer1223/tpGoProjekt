@@ -48,5 +48,9 @@ public class ClientRequestSender {
 		}
 		communication.write(command.toString());
 	}
+	
+	public void requestRematch(ReaderWriter communication){
+		communication.write(protocol.REQUEST_REMATCH);
+	}
 
 }

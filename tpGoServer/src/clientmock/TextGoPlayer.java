@@ -113,4 +113,22 @@ public class TextGoPlayer implements GoPlayer {
 		System.out.println(playerId + " score: " + playerScore);
 	}
 
+	@Override
+	public void rematchAccepted() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void rematchDenied() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyAboutGameBegin() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }

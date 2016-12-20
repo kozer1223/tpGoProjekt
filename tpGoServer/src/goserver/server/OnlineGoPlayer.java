@@ -31,6 +31,8 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	private ServerProtocolParser parser;
 	private ServerRequestSender sender;
 	private int color;
+	
+	private boolean isRematch = false;
 
 	private static final int BLACK = 1;
 	private static final int WHITE = 2;
@@ -73,43 +75,47 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 			sendTurnData();
 			while (true) {
 				try {
-					//if (game.isPlayersTurn(this)) {
-						String line = input.readLine();
-						if (line != null) {
-							System.out.println("[PLAYER]>" + line);
+					String line = input.readLine();
+					if (line != null) {
+						System.out.println("[PLAYER]>" + line);
 
-							IntPair move;
-							Map<Integer, GoGroupType> changes;
-							try {
-								if ((move = parser.parseMove(line)) != null) {
-									try {
-										game.makeMove(this, move.x, move.y);
-										sender.sendMoveAccepted(output);
-									} catch (InvalidMoveException e) {
-										sender.sendMessage(e.getMessage(), output);
-									}
-								} else if (parser.parsePassTurn(line)) {
-									if (game.isStonePlacingPhase()){
-										game.passTurn(this);
-									} else {
-										//pas jako zgodzenie sie z propozycja grup
-										game.applyGroupTypeChanges(this, new HashMap<Integer, GoGroupType>());
-									}
+						IntPair move;
+						Map<Integer, GoGroupType> changes;
+						try {
+							if (game.isGameEnd() && parser.parseRematchRequest(line)) {
+								game.requestRematch(this);
+							} else if ((move = parser.parseMove(line)) != null) {
+								try {
+									game.makeMove(this, move.x, move.y);
 									sender.sendMoveAccepted(output);
-								} else if ((changes = parser.parseGroupStateChange(line)) != null) {
-									game.applyGroupTypeChanges(this, changes);
-									sender.sendMoveAccepted(output);
+								} catch (InvalidMoveException e) {
+									sender.sendMessage(e.getMessage(), output);
 								}
-							} catch (IllegalArgumentException e) {
-
+							} else if (parser.parsePassTurn(line)) {
+								if (game.isStonePlacingPhase()) {
+									game.passTurn(this);
+								} else {
+									// pas jako zgodzenie sie z propozycja grup
+									game.applyGroupTypeChanges(this, new HashMap<Integer, GoGroupType>());
+								}
+								sender.sendMoveAccepted(output);
+							} else if ((changes = parser.parseGroupStateChange(line)) != null) {
+								game.applyGroupTypeChanges(this, changes);
+								sender.sendMoveAccepted(output);
 							}
+						} catch (IllegalArgumentException e) {
 
 						}
-					//}
+
+					}
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					System.out.println("Lost connection with player");
-					game.leaveGame(this);
+					if(game.isGameEnd()){
+						game.denyRematch(this);
+					} else {
+						game.leaveGame(this);
+					}
 					System.out.println("Player left the game");
 					break;
 				}
@@ -160,6 +166,25 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 			sender.sendGameScore(opponentScore, playerScore, output);
 		}
 
+	}
+
+	@Override
+	public void rematchAccepted() {
+		sender.sendRematchAccepted(output);
+		isRematch = true;
+	}
+
+	@Override
+	public void rematchDenied() {
+		sender.sendRematchDenied(output);
+	}
+
+	@Override
+	public void notifyAboutGameBegin() {
+		if(isRematch){
+			sender.sendGameBegin(output);
+			sendTurnData();
+		}
 	}
 
 }

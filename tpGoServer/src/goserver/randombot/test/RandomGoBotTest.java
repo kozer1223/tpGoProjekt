@@ -81,7 +81,7 @@ public class RandomGoBotTest {
 		Map<Integer, GoGroupType> labels = game.getLabelsMap();
 		
 		game.applyGroupTypeChanges(player, new HashMap<Integer, GoGroupType>());
-		assertTrue(labels.equals(game.getLabelsMap()));
+		assertEquals(labels, game.getLabelsMap());
 		
 	}
 

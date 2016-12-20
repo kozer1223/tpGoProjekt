@@ -124,5 +124,18 @@ public class ServerProtocolParser {
 			return null;
 		}
 	}
+	
+	public boolean parseRematchRequest(String line) {
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.REQUEST_REMATCH);
+			scanner.close();
+			return true;
+		} catch (NoSuchElementException e){
+			scanner.close();
+			return false;
+		}
+	}
 
 }

@@ -36,4 +36,22 @@ public class EmptyGoPlayer implements GoPlayer {
 		
 	}
 
+	@Override
+	public void rematchAccepted() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void rematchDenied() {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void notifyAboutGameBegin() {
+		// TODO Auto-generated method stub
+		
+	}
+
 }
