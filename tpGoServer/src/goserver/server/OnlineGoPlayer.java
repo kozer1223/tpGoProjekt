@@ -116,6 +116,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 						game.denyRematch(this);
 					} else {
 						game.leaveGame(this);
+						game.denyRematch(this);
 					}
 					System.out.println("Player left the game");
 					break;

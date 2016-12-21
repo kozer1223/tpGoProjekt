@@ -26,6 +26,7 @@ public class OpponentFrame implements ActionListener {
 		frame.setLayout(new FlowLayout());
 		frame.setVisible(true);
 		frame.setBounds(800, 300, 300, 100);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		buttonPlayer = new JButton("Player");
 		buttonBot = new JButton("Bot");
 		frame.add(buttonPlayer);

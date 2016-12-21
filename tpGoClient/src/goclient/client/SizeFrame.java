@@ -28,6 +28,7 @@ public class SizeFrame implements ActionListener {
 		frame.setLayout(new FlowLayout());
 		frame.setVisible(true);
 		frame.setBounds(800, 300, 300, 100);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		button19 = new JButton("19");
 		button13 = new JButton("13");
 		button9 = new JButton("9");
