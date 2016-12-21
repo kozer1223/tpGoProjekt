@@ -30,6 +30,7 @@ import javax.imageio.ImageIO;
 import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -52,10 +53,16 @@ public class BoardFrame implements ActionListener {
 	private ClientRequestSender sender = ClientRequestSender.getInstance();
 	private int phase = 0;
 	private JButton proposeChangesButton;
+	private JButton passButton;
 	private JFrame waitingFrame;
+	private boolean waitingForRematch = false;
 	
 	public int getPhase() {
 		return phase;
+	}
+	
+	public boolean isWaitingForRematch() {
+		return waitingForRematch;
 	}
 
 	public void setPhase(int phase) {
@@ -147,13 +154,13 @@ public class BoardFrame implements ActionListener {
 		JPanel buttonPanel = new JPanel(new GridLayout(1,2));
 		mainPanel.add(buttonPanel, c);
 
-		JButton passbutton = new JButton("PASS");
-		buttonPanel.add(passbutton);
-		passbutton.setOpaque(true);
-		passbutton.setContentAreaFilled(true);
-		passbutton.setBorderPainted(true);
+		passButton = new JButton("PASS");
+		buttonPanel.add(passButton);
+		passButton.setOpaque(true);
+		passButton.setContentAreaFilled(true);
+		passButton.setBorderPainted(true);
 
-		passbutton.addActionListener(this);
+		passButton.addActionListener(this);
 
 		proposeChangesButton = new JButton("Propose Changes");
 		buttonPanel.add(proposeChangesButton);
@@ -239,16 +246,18 @@ public class BoardFrame implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			MyButton button = (MyButton) e.getSource();
-			int x = button.getX();
-			int y = button.getY();
-			System.out.println(x + " " + y);
-			if (phase == 0){
-				ClientRequestSender.getInstance().sendMove(x, y, communication);
-			} else if (phase == 1 && groupLabels != null){
-				int label = groupLabels[x][y];
-				if (!isGroupLocked(label)){
-					toggleGroupState(label);
+			if (!isWaitingForRematch()){
+				MyButton button = (MyButton) e.getSource();
+				int x = button.getX();
+				int y = button.getY();
+				System.out.println(x + " " + y);
+				if (phase == 0){
+					ClientRequestSender.getInstance().sendMove(x, y, communication);
+				} else if (phase == 1 && groupLabels != null){
+					int label = groupLabels[x][y];
+					if (!isGroupLocked(label)){
+						toggleGroupState(label);
+					}
 				}
 			}
 		}
@@ -347,17 +356,21 @@ public class BoardFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (((JButton) e.getSource()).getText() == "PASS") {
-			sender.passTurn(communication);
-		} else if (((JButton) e.getSource()).getText() == "Propose Changes") {
-			sender.sendGroupChanges(groupStates, communication);
+		if (!isWaitingForRematch()) {
+			if (((JButton) e.getSource()).getText() == "PASS") {
+				sender.passTurn(communication);
+			} else if (((JButton) e.getSource()).getText() == "Propose Changes") {
+				sender.sendGroupChanges(groupStates, communication);
+			}
 		}
 	}
 
 	public void beginGame() {
 		frame.setVisible(true);
-		waitingFrame.setVisible(false);
-		waitingFrame = null;
+		if (waitingFrame != null){
+			waitingFrame.setVisible(false);
+			waitingFrame = null;
+		}
 	}
 
 	public void showScore(DoublePair score) {
@@ -388,9 +401,42 @@ public class BoardFrame implements ActionListener {
 		int choice = JOptionPane.showConfirmDialog(frame, message);
 		if (choice == JOptionPane.YES_OPTION){
 			//request rematch
+			sender.requestRematch(communication);
+			waitingForRematch = true;
+			setMessage("Waiting for rematch!");
+			passButton.setEnabled(false);
+			proposeChangesButton.setEnabled(false);
 		} else {
-			//deny rematch
+			frame.setVisible(false);
+			frame.dispose();
+			System.exit(0); //powrot do menu?
 		}
+	}
+
+	public void rematchDenied() {
+		JOptionPane.showMessageDialog(frame, "Rematch denied.");
+		frame.setVisible(false);
+		frame.dispose();
+		System.exit(0); //powrot do menu?
+	}
+
+	public void rematchAccepted() {
+		waitingForRematch = false;
+		JOptionPane.showMessageDialog(frame, "Rematch accepted.");
+		resetGame();
+	}
+
+	private void resetGame() {
+		stones = new Ellipse2D[size][size];
+		stoneColors = new Color[size][size];
+		groupLabels = null;
+		groupStates = null;
+		lockedGroups = null;
+		setMessage("");
+		setPhase(0);
+		canvas.repaint();
+		passButton.setEnabled(true);
+		proposeChangesButton.setEnabled(false);
 	}
 
 }
