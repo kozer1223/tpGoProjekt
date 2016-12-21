@@ -14,6 +14,7 @@ import java.awt.Graphics2D;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.GridLayout;
+import java.awt.RenderingHints;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -31,8 +32,10 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import goclient.util.DoublePair;
 import goclient.util.IntPair;
 
 /**
@@ -71,6 +74,7 @@ public class BoardFrame implements ActionListener {
 	
 	public void setColor(String color) {
 		this.color = color;
+		System.out.println(color);
 	}
 
 	private TextArea captured;
@@ -212,6 +216,7 @@ public class BoardFrame implements ActionListener {
 			super.paintComponent(g);
 			Graphics2D g2 = (Graphics2D) g;
 			g2.drawImage(img, 0, 0, null);
+			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					if (stones[i][j] != null) {
@@ -353,6 +358,39 @@ public class BoardFrame implements ActionListener {
 		frame.setVisible(true);
 		waitingFrame.setVisible(false);
 		waitingFrame = null;
+	}
+
+	public void showScore(DoublePair score) {
+		boolean victory;
+		double yourScore;
+		double opponentsScore;
+		if (color.equals(ServerClientProtocol.getInstance().BLACK)){
+			yourScore = score.x;
+			opponentsScore = score.y;
+		} else {
+			yourScore = score.y;
+			opponentsScore = score.x;
+		}
+		System.out.println(color);
+		System.out.println(yourScore + " " + opponentsScore);
+		victory = (yourScore > opponentsScore);
+		boolean tie = (yourScore == opponentsScore);
+		StringBuilder message = new StringBuilder();
+		if (tie){
+			message.append("You tied.\n");
+		} else if (victory){
+			message.append("You won.\n");
+		} else {
+			message.append("You lost.\n");
+		}
+		message.append("You: "+ yourScore + " Opponent: " + opponentsScore + "\n");
+		message.append("Do you want a rematch?");
+		int choice = JOptionPane.showConfirmDialog(frame, message);
+		if (choice == JOptionPane.YES_OPTION){
+			//request rematch
+		} else {
+			//deny rematch
+		}
 	}
 
 }

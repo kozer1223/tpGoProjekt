@@ -44,6 +44,8 @@ public class ReadingThread extends Thread {
 					frame.setGroupStates(parser.parseGroupState(line));
 				} else if (parser.parseLockedGroups(line) != null){
 					frame.setLockedGroups(parser.parseLockedGroups(line));
+				} else if (parser.parseScore(line) != null){
+					frame.showScore(parser.parseScore(line));
 				}
 			}
 		}
