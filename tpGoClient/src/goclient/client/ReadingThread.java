@@ -28,6 +28,12 @@ public class ReadingThread extends Thread {
 					System.out.println(size);
 					frame.drawBoard(parser.parseBoard(line, size));
 				}
+				else if (parser.parsePhase(line)!=-1){
+					frame.setPhase(parser.parsePhase(line));
+				}
+				else if (parser.parseCapturedStones(line)!=null){
+					frame.setCapturedStones(parser.parseCapturedStones(line));
+				}
 			}
 		}
 	}

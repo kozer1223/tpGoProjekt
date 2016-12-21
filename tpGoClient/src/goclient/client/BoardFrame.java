@@ -10,6 +10,7 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
@@ -26,6 +27,8 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import goclient.util.IntPair;
+
 /**
  * @author Maciek
  *
@@ -38,7 +41,16 @@ public class BoardFrame implements ActionListener {
 	private ReaderWriter communication;
 	private BoardCanvas canvas;
 	private ClientRequestSender sender=ClientRequestSender.getInstance();
-
+	private int phase=0;
+	public void setPhase(int x){
+		phase=x;
+		System.out.println("PHASE:"+phase);
+	}
+	private TextArea captured;
+	public void setCapturedStones(IntPair pair) {
+		captured.setText("Black:" + pair.x + "White" + pair.y);
+	}
+	
 	Ellipse2D[][] stones;
 	Color[][] stoneColors;
 
@@ -55,13 +67,13 @@ public class BoardFrame implements ActionListener {
 		BufferedImage img = null;
 		try {
 			if (size == 19) {
-				frame.setBounds(100, 0, 570, 700);
+				frame.setBounds(100, 0, 570, 800);
 				img = ImageIO.read(new File("resources/go.jpg"));
 			} else if (size == 13) {
-				frame.setBounds(100, 0, 395, 550);
+				frame.setBounds(100, 0, 395, 650);
 				img = ImageIO.read(new File("resources/go13.png"));
 			} else if (size == 9) {
-				frame.setBounds(100, 0, 320, 420);
+				frame.setBounds(100, 0, 350, 550);
 				img = ImageIO.read(new File("resources/go9.png"));
 			}
 		} catch (IOException e) {
@@ -101,11 +113,17 @@ public class BoardFrame implements ActionListener {
 		JButton acceptDeadButton = new JButton("Propose Changes");
 		frame.add(acceptDeadButton);
 		acceptDeadButton.setVisible(false);
-		if(size==19)acceptDeadButton.setBounds(0,590,200,100);
-		if(size==13)acceptDeadButton.setBounds(0,420,200,100);
-		if(size==9)acceptDeadButton.setBounds(0,280,200,100);
+		if(size==19) acceptDeadButton.setBounds(0,590,200,100);
+		if(size==13) acceptDeadButton.setBounds(0,420,200,100);
+		if(size==9) acceptDeadButton.setBounds(0,280,200,100);
 		acceptDeadButton.addActionListener(this);
 		
+		captured = new TextArea("Black:0 White:0",1,15,TextArea.SCROLLBARS_NONE);
+		frame.add(captured);
+		if(size==19) captured.setBounds(1, 720, 550, 60);
+		if(size==13) captured.setBounds(1, 570, 375, 60);
+		if(size==9) captured.setBounds(1, 440, 200, 50);
+		captured.setEditable(false);
 		ReadingThread thread = new ReadingThread(size, this);
 		thread.start();
 
@@ -157,7 +175,7 @@ public class BoardFrame implements ActionListener {
 			int x=button.getX();
 			int y=button.getY();
 			System.out.println(x+" "+y);
-			ClientRequestSender.getInstance().sendMove(x, y, communication);
+			if(phase==0) ClientRequestSender.getInstance().sendMove(x, y, communication);
 		}
 		private class MyButton extends JButton {
 			private int x;
