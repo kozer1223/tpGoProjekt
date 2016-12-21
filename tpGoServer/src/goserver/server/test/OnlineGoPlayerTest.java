@@ -133,7 +133,7 @@ public class OnlineGoPlayerTest {
 		}
 		
 		assertTrue(game.isPlayersTurn(opponent));
-		assertTrue(game.getBoard().getBoard()[2][3] == game.getBoard().getWhiteColor());
+		assertTrue(game.getBoard().getBoardData()[2][3] == game.getBoard().getWhiteColor());
 	}
 
 	@Test(timeout = 10000)
@@ -206,7 +206,7 @@ public class OnlineGoPlayerTest {
 		}	
 	}
 	
-	@Test(timeout = 20000)
+	@Test(timeout = 10000)
 	public void testPlayAGameDenyRematch() throws InvalidMoveException, IOException {
 		GoPlayer opponent = new EmptyGoPlayer();
 		int size = 9;
@@ -253,7 +253,6 @@ public class OnlineGoPlayerTest {
 		game.applyGroupTypeChanges(opponent, new HashMap<Integer, GoGroupType>());
 		
 		int label = (int) game.getLabelsMap().keySet().toArray()[0];
-		System.out.println(label);
 		
 		inputWriter.println(protocol.CHANGE_GROUP_STATE + " " + label + " " + protocol.ALIVE);
 		while (true) {

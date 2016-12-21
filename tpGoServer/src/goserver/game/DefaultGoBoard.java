@@ -451,11 +451,11 @@ public class DefaultGoBoard implements GoBoard {
 		return size;
 	}
 
-	public int[][] getBoard() {
+	public int[][] getBoardData() {
 		return board;
 	}
 
-	public int[][] getPreviousBoard() {
+	public int[][] getPreviousBoardData() {
 		return previousBoard;
 	}
 

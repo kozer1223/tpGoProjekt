@@ -26,13 +26,13 @@ public class KoRule implements GoRule {
 
 	@Override
 	public boolean validateMove(GoBoard board, int color, int x, int y) throws InvalidMoveException {
-		if (board.getPreviousBoard()[x][y] == color) {
+		if (board.getPreviousBoardData()[x][y] == color) {
 			// mozliwe ko
 			MockGoBoard mockBoard = new MockGoBoard(board.getSize());
-			mockBoard.setBoard(MatrixUtil.copyMatrix(board.getBoard()));
+			mockBoard.setBoard(MatrixUtil.copyMatrix(board.getBoardData()));
 
 			mockBoard.placeStone(color, x, y);
-			if (MatrixUtil.compareMatrix(board.getPreviousBoard(), mockBoard.getBoard())) {
+			if (MatrixUtil.compareMatrix(board.getPreviousBoardData(), mockBoard.getBoardData())) {
 				// powtorzenie planszy
 				throw new InvalidMoveException(invalidMoveMessage);
 			}

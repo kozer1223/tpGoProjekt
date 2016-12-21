@@ -42,7 +42,7 @@ public class RandomGoBot implements GoPlayer {
 					}
 				}
 
-				int[][] boardData = game.getBoard().getBoard();
+				int[][] boardData = game.getBoard().getBoardData();
 				List<IntPair> validMoves = new ArrayList<IntPair>();
 
 				for (int i = 0; i < boardData.length; i++) {

@@ -24,7 +24,7 @@ public class DefaultGameTest {
 		GoPlayer player2 = new EmptyGoPlayer();
 		int size = 9;
 		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset());
-		assertTrue(MatrixUtil.compareMatrix(game.getBoard().getBoard(), new int[size][size]));
+		assertTrue(MatrixUtil.compareMatrix(game.getBoard().getBoardData(), new int[size][size]));
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -52,9 +52,9 @@ public class DefaultGameTest {
 		int size = 9;
 		GoGame game = new DefaultGoGame(player1, player2, size, new GoRuleset());
 		game.makeMove(player1, 0, 0);
-		assertEquals(game.getBoard().getBlackColor(), game.getBoard().getBoard()[0][0]);
+		assertEquals(game.getBoard().getBlackColor(), game.getBoard().getBoardData()[0][0]);
 		game.makeMove(player2, 0, 1);
-		assertEquals(game.getBoard().getWhiteColor(), game.getBoard().getBoard()[0][1]);
+		assertEquals(game.getBoard().getWhiteColor(), game.getBoard().getBoardData()[0][1]);
 	}
 
 	@Test(expected = InvalidMoveException.class)
@@ -209,7 +209,7 @@ public class DefaultGameTest {
 		
 		int[][] emptyBoard = new int[size][size];
 		assertTrue(game.isStonePlacingPhase());
-		assertTrue(MatrixUtil.compareMatrix(emptyBoard, game.getBoard().getBoard())); //swieza plansza
+		assertTrue(MatrixUtil.compareMatrix(emptyBoard, game.getBoard().getBoardData())); //swieza plansza
 	}
 	
 	@Test

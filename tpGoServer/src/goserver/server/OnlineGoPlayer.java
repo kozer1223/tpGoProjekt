@@ -52,7 +52,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	private void sendTurnData() {
 		if (game != null) {
 			if (game.isStonePlacingPhase()) {
-				sender.sendBoardData(game.getBoard().getBoard(), output);
+				sender.sendBoardData(game.getBoard().getBoardData(), output);
 				sender.sendCapturedStones(game.getPlayersCapturedStones(game.getPlayer1()),
 						game.getPlayersCapturedStones(game.getPlayer2()), output);
 			} else {

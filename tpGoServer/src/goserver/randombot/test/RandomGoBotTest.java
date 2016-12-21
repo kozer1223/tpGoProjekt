@@ -29,7 +29,7 @@ public class RandomGoBotTest {
 
 		game.makeMove(player, 0, 0);
 		// bot wykonał ruch
-		int[][] board = game.getBoard().getBoard();
+		int[][] board = game.getBoard().getBoardData();
 		boolean foundBotsStone = false;
 		for (int i=0; i < game.getBoard().getSize(); i++){
 			for (int j=0; j < game.getBoard().getSize(); j++){
@@ -82,7 +82,6 @@ public class RandomGoBotTest {
 		
 		game.applyGroupTypeChanges(player, new HashMap<Integer, GoGroupType>());
 		assertEquals(labels, game.getLabelsMap());
-		
 	}
-
+	
 }

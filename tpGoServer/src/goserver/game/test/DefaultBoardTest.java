@@ -23,8 +23,8 @@ public class DefaultBoardTest {
 		int size = 9;
 		DefaultGoBoard board = new DefaultGoBoard(size);
 		assertEquals(board.getSize(), size);
-		assertEquals(board.getBoard().length, size);
-		assertEquals(board.getBoard()[0].length, size);
+		assertEquals(board.getBoardData().length, size);
+		assertEquals(board.getBoardData()[0].length, size);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -39,8 +39,8 @@ public class DefaultBoardTest {
 		GoBoard board = new DefaultGoBoard(size);
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
-				assertEquals(board.getBoard()[i][j], DefaultGoBoard.EMPTY);
-				assertEquals(board.getPreviousBoard()[i][j], DefaultGoBoard.EMPTY);
+				assertEquals(board.getBoardData()[i][j], DefaultGoBoard.EMPTY);
+				assertEquals(board.getPreviousBoardData()[i][j], DefaultGoBoard.EMPTY);
 			}
 		}
 	}
@@ -53,8 +53,8 @@ public class DefaultBoardTest {
 		int color = DefaultGoBoard.BLACK;
 		GoBoard board = new DefaultGoBoard(size);
 		board.placeStone(color, x, y);
-		assertEquals(board.getBoard()[x][y], color);
-		assertEquals(board.getPreviousBoard()[x][y], DefaultGoBoard.EMPTY);
+		assertEquals(board.getBoardData()[x][y], color);
+		assertEquals(board.getPreviousBoardData()[x][y], DefaultGoBoard.EMPTY);
 	}
 
 	@Test(expected = IllegalArgumentException.class)
@@ -151,9 +151,9 @@ public class DefaultBoardTest {
 		board.placeStone(DefaultGoBoard.WHITE, 3, 2);
 		board.placeStone(DefaultGoBoard.BLACK, 1, 4);
 		board.placeStone(DefaultGoBoard.WHITE, 2, 2);
-		int[][] boardCopy = MatrixUtil.copyMatrix(board.getBoard());
+		int[][] boardCopy = MatrixUtil.copyMatrix(board.getBoardData());
 		board.placeStone(DefaultGoBoard.BLACK, 5, 4);
-		assertTrue(MatrixUtil.compareMatrix(boardCopy, board.getPreviousBoard()));
+		assertTrue(MatrixUtil.compareMatrix(boardCopy, board.getPreviousBoardData()));
 	}
 
 	@Test
@@ -170,7 +170,7 @@ public class DefaultBoardTest {
 		board.placeStone(DefaultGoBoard.WHITE, 3, 1);
 		int captured = board.placeStone(DefaultGoBoard.WHITE, 0, 1).x;
 		assertEquals(4, captured);
-		assertEquals(DefaultGoBoard.EMPTY, board.getBoard()[0][0]);
+		assertEquals(DefaultGoBoard.EMPTY, board.getBoardData()[0][0]);
 	}
 	
 	@Test
