@@ -58,6 +58,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 			} else {
 				sender.sendLabeledBoardData(game.getBoard().getBoardWithLabeledGroups(), output);
 				sender.sendGroupStateData(game.getLabelsMap(), output);
+				sender.sendLockedGroups(game.getAllLockedGroups(), output);
 			}
 		}
 	}

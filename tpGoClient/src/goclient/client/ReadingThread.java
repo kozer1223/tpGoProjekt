@@ -36,6 +36,12 @@ public class ReadingThread extends Thread {
 					frame.setMessage(parser.parseMessage(line));
 				} else if (parser.parseMoveAccepted(line)){
 					frame.setMessage(""); //nothing to do here
+				} else if (parser.parseLabeledBoard(line, size) != null){
+					frame.setGroupLabels(parser.parseLabeledBoard(line, size));
+				} else if (parser.parseGroupState(line) != null){
+					frame.setGroupStates(parser.parseGroupState(line));
+				} else if (parser.parseLockedGroups(line) != null){
+					frame.setLockedGroups(parser.parseLockedGroups(line));
 				}
 			}
 		}

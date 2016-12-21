@@ -3,6 +3,7 @@
  */
 package goclient.client;
 
+import java.awt.BasicStroke;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ComponentOrientation;
@@ -20,6 +21,8 @@ import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import javax.imageio.ImageIO;
@@ -45,10 +48,24 @@ public class BoardFrame implements ActionListener {
 	private BoardCanvas canvas;
 	private ClientRequestSender sender = ClientRequestSender.getInstance();
 	private int phase = 0;
+	private JButton proposeChangesButton;
+	
+	public int getPhase() {
+		return phase;
+	}
 
 	public void setPhase(int phase) {
 		this.phase = phase;
 		System.out.println("PHASE:" + phase);
+		if (phase == 1){
+			proposeChangesButton.setEnabled(true);
+		} else {
+			proposeChangesButton.setEnabled(false);
+			groupLabels = null;
+			groupStates = null;
+			lockedGroups = null;
+		}
+		canvas.repaint();
 	}
 	
 	public void setColor(String color) {
@@ -63,6 +80,9 @@ public class BoardFrame implements ActionListener {
 
 	Ellipse2D[][] stones;
 	Color[][] stoneColors;
+	int[][] groupLabels;
+	Map<Integer, GoGroupType> groupStates; 
+	List<Integer> lockedGroups;
 	
 	private TextArea messageArea;
 	
@@ -138,7 +158,7 @@ public class BoardFrame implements ActionListener {
 
 		passbutton.addActionListener(this);
 
-		JButton proposeChangesButton = new JButton("Propose Changes");
+		proposeChangesButton = new JButton("Propose Changes");
 		buttonPanel.add(proposeChangesButton);
 		proposeChangesButton.setEnabled(false);
 		proposeChangesButton.addActionListener(this);
@@ -152,6 +172,10 @@ public class BoardFrame implements ActionListener {
 
 		ReadingThread thread = new ReadingThread(size, this);
 		thread.start();
+		
+		groupLabels = null;
+		groupStates = null;
+		lockedGroups = null;
 
 		frame.pack();
 		// wait for game start info
@@ -195,6 +219,12 @@ public class BoardFrame implements ActionListener {
 					if (stones[i][j] != null) {
 						g2.setColor(stoneColors[i][j]);
 						g2.fill(stones[i][j]);
+						if (getPhase() == 1 && groupLabels != null && groupStates != null){
+							Color borderColor = (groupStates.get(groupLabels[i][j]) == GoGroupType.ALIVE ? Color.GREEN : Color.RED);
+							g2.setColor(borderColor);
+							g2.setStroke(new BasicStroke(2));
+							g2.draw(stones[i][j]);
+						}
 					}
 				}
 			}
@@ -206,8 +236,14 @@ public class BoardFrame implements ActionListener {
 			int x = button.getX();
 			int y = button.getY();
 			System.out.println(x + " " + y);
-			if (phase == 0)
+			if (phase == 0){
 				ClientRequestSender.getInstance().sendMove(x, y, communication);
+			} else if (phase == 1 && groupLabels != null){
+				int label = groupLabels[x][y];
+				if (!isGroupLocked(label)){
+					toggleGroupState(label);
+				}
+			}
 		}
 
 		private class MyButton extends JButton {
@@ -257,13 +293,57 @@ public class BoardFrame implements ActionListener {
 		}
 		canvas.repaint();
 	}
+	
+	public void setGroupLabels(int[][] labeledBoard){
+		this.groupLabels = labeledBoard;
+		canvas.repaint();
+	}
+	
+	public void setGroupStates(Map<Integer, GoGroupType> groupStates){
+		this.groupStates = groupStates;
+		canvas.repaint();
+	}
+	
+	public void setLockedGroups(List<Integer> lockedGroups){
+		this.lockedGroups = lockedGroups;
+		canvas.repaint();
+	}
+	
+	public GoGroupType getGroupState(int label){
+		if (groupStates != null){
+			return groupStates.get(label);
+		}
+		return null;
+	}
+	
+	public void setGroupState(int label, GoGroupType state){
+		if (groupStates != null){
+			groupStates.put(label, state);
+		}
+		canvas.repaint();
+	}
+	
+	public boolean isGroupLocked(int label){
+		if (lockedGroups != null){
+			return lockedGroups.contains(label);
+		}
+		return false;
+	}
+	
+	public void toggleGroupState(int label){
+		GoGroupType state;
+		if ((state = getGroupState(label)) != null){
+			state = (state == GoGroupType.ALIVE ? GoGroupType.DEAD : GoGroupType.ALIVE);
+			setGroupState(label, state);
+		}
+	}
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (((JButton) e.getSource()).getText() == "PASS") {
 			sender.passTurn(communication);
 		} else if (((JButton) e.getSource()).getText() == "Propose Changes") {
-			// TODO sender.sendGroupChanges(, communication);
+			sender.sendGroupChanges(groupStates, communication);
 		}
 	}
 

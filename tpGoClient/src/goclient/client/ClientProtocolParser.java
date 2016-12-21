@@ -3,8 +3,10 @@
  */
 package goclient.client;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.InputMismatchException;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Scanner;
@@ -159,6 +161,24 @@ public class ClientProtocolParser {
 			}
 			scanner.close();
 			return changes;
+		} catch (InputMismatchException e){
+			scanner.close();
+			return null;
+		}
+	}
+	
+	public List<Integer> parseLockedGroups(String line) {
+		Scanner scanner = new Scanner(line);
+		List<Integer> lockedGroups = new ArrayList<Integer>();
+		
+		try {
+			scanner.next(protocol.SEND_LOCKED_GROUPS);
+			while (scanner.hasNext()){
+				int label = scanner.nextInt();
+				lockedGroups.add(label);
+			}
+			scanner.close();
+			return lockedGroups;
 		} catch (InputMismatchException e){
 			scanner.close();
 			return null;

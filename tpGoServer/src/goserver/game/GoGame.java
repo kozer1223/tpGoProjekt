@@ -1,5 +1,6 @@
 package goserver.game;
 
+import java.util.List;
 import java.util.Map;
 
 import goserver.game.rules.GoRuleset;
@@ -34,6 +35,7 @@ public interface GoGame {
 	
 	public Map<Integer, GoGroupType> getLabelsMap();
 	public void applyGroupTypeChanges(GoPlayer player, Map<Integer, GoGroupType> groupTypeChanges);
+	public List<Integer> getAllLockedGroups();
 	
 	public void leaveGame(GoPlayer player);
 	public void requestRematch(GoPlayer player);

@@ -3,7 +3,9 @@
  */
 package goserver.game;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import goserver.game.rules.GoRuleset;
@@ -198,6 +200,18 @@ public class DefaultGoGame implements GoGame {
 			}
 		}
 		return true;
+	}
+	
+	public List<Integer> getAllLockedGroups(){
+		List<Integer> lockedGroups = new ArrayList<Integer>();
+		
+		for(int label : board.getAllGroupLabels()){
+			if (board.checkIfGroupIsLocked(label)){
+				lockedGroups.add(label);
+			}
+		}
+		
+		return lockedGroups;
 	}
 	
 	/*

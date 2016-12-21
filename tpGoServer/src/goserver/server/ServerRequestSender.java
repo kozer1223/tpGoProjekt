@@ -1,6 +1,7 @@
 package goserver.server;
 
 import java.io.PrintWriter;
+import java.util.List;
 import java.util.Map;
 
 import goserver.game.GoGroupType;
@@ -78,6 +79,14 @@ public class ServerRequestSender {
 		for(int label : labels.keySet()){
 			command.append(label + " ");
 			command.append( (labels.get(label) == GoGroupType.ALIVE ? protocol.ALIVE : protocol.DEAD) + " ");
+		}
+		output.println(command.toString());
+	}
+	
+	public void sendLockedGroups(List<Integer> lockedGroups, PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.SEND_LOCKED_GROUPS + " ");
+		for(int label : lockedGroups){
+			command.append(label + " ");
 		}
 		output.println(command.toString());
 	}

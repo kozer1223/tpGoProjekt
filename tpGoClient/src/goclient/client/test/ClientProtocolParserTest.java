@@ -5,7 +5,9 @@ package goclient.client.test;
 
 import static org.junit.Assert.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -98,6 +100,15 @@ public class ClientProtocolParserTest {
 		labels.put(3, GoGroupType.DEAD);
 		String labelStringData = "1 A 3 D";
 		assertEquals(labels, instance.parseGroupState(protocol.SEND_GROUP_STATE + " " + labelStringData));
+	}
+	
+	@Test
+	public void testParseLockedGroups() {
+		List<Integer> labels = new ArrayList<Integer>();
+		labels.add(1);
+		labels.add(3);
+		String labelStringData = "1 3";
+		assertEquals(labels, instance.parseLockedGroups(protocol.SEND_LOCKED_GROUPS + " " + labelStringData));
 	}
 	
 	@Test

@@ -7,7 +7,9 @@ import static org.junit.Assert.*;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.junit.Before;
@@ -102,6 +104,17 @@ public class ServerRequestSenderTest {
 		String labelData = "1 A 3 D";
 		instance.sendGroupStateData(labels, new PrintWriter(writer));
 		assertTrue(writer.toString().startsWith(protocol.SEND_GROUP_STATE + " " + labelData));
+	}
+	
+	@Test
+	public void testSendLockedGroups() {
+		StringWriter writer = new StringWriter();
+		List<Integer> lockedGroups = new ArrayList<Integer>();
+		lockedGroups.add(1);
+		lockedGroups.add(3);
+		String labelData = "1 3";
+		instance.sendLockedGroups(lockedGroups, new PrintWriter(writer));
+		assertTrue(writer.toString().startsWith(protocol.SEND_LOCKED_GROUPS + " " + labelData));
 	}
 	
 	@Test

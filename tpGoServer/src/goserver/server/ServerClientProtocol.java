@@ -65,8 +65,12 @@ public class ServerClientProtocol {
 	public final String SEND_LABELED_BOARD = "LABEL_BOARD";
 	
 	// wyslanie stanu grup
-	// GROUP [x1] [A|D] [x2] [A|D] (np. GROUP 1 D 2 A 3 D 4 D...)
+	// GROUP [x1] [A|D] [x2] [A|D] (np. GROUP_STATE 1 D 2 A 3 D 4 D...)
 	public final String SEND_GROUP_STATE = "GROUP_STATE";
+	
+	// wyslanie stanu grup
+	// GROUP [x1] [x2] (np. GROUP_LOCKED 1 3 4...)
+	public final String SEND_LOCKED_GROUPS = "GROUP_LOCKED";
 	
 	// wyslanie wyniku gry
 	// SCORE [BLACK's score] [WHITE's score]
