@@ -24,7 +24,9 @@ public class ReadingThread extends Thread {
 			String line = communication.read();
 			if (line != null) {
 				System.out.println("[SERVER]> " + line);
-				if (parser.parseColor(line) != ""){
+				if (parser.parseBeginGame(line)){
+					frame.beginGame();
+				} else if (parser.parseColor(line) != ""){
 					frame.setColor(parser.parseColor(line));
 				} else if (parser.parseBoard(line, size) != null) {
 					frame.drawBoard(parser.parseBoard(line, size));

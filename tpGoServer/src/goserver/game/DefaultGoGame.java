@@ -159,7 +159,9 @@ public class DefaultGoGame implements GoGame {
 				} else {
 					setGamePhase(0);
 					board.resetGroupLabels();
-					currentPlayer.notifyAboutGamePhaseChange(getGamePhase());
+					players[0].notifyAboutGamePhaseChange(getGamePhase());
+					players[1].notifyAboutGamePhaseChange(getGamePhase());
+					currentPlayer.notifyAboutTurn(GoMoveType.GROUP_CHANGED);
 					players[0].updateBoard();
 					players[1].updateBoard();
 				}

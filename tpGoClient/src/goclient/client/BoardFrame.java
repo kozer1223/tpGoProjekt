@@ -49,6 +49,7 @@ public class BoardFrame implements ActionListener {
 	private ClientRequestSender sender = ClientRequestSender.getInstance();
 	private int phase = 0;
 	private JButton proposeChangesButton;
+	private JFrame waitingFrame;
 	
 	public int getPhase() {
 		return phase;
@@ -128,14 +129,6 @@ public class BoardFrame implements ActionListener {
 		c.gridy = 1;
 		mainPanel.add(canvas, c);
 		canvas.setLayout(null);
-		JFrame waitingFrame = new JFrame("Please Wait");
-		waitingFrame.setVisible(true);
-		waitingFrame.setBounds(800, 300, 200, 120);
-		System.out.println("waiting for input");
-		
-		frame.setVisible(true);
-		waitingFrame.setVisible(false);
-		waitingFrame = null;
 		
 		captured = new TextArea("Black:0 White:0", 1, 15, TextArea.SCROLLBARS_NONE);
 		c.fill = GridBagConstraints.HORIZONTAL;
@@ -176,7 +169,12 @@ public class BoardFrame implements ActionListener {
 		groupLabels = null;
 		groupStates = null;
 		lockedGroups = null;
-
+		
+		waitingFrame = new JFrame("Please Wait");
+		waitingFrame.setVisible(true);
+		waitingFrame.setBounds(800, 300, 200, 220);
+		System.out.println("waiting for input");
+				
 		frame.pack();
 		// wait for game start info
 	}
@@ -221,6 +219,10 @@ public class BoardFrame implements ActionListener {
 						g2.fill(stones[i][j]);
 						if (getPhase() == 1 && groupLabels != null && groupStates != null){
 							Color borderColor = (groupStates.get(groupLabels[i][j]) == GoGroupType.ALIVE ? Color.GREEN : Color.RED);
+							if (isGroupLocked(groupLabels[i][j])){
+								borderColor = (borderColor == Color.GREEN ? new Color(0, 80, 0) : new Color (80, 0, 0));
+							}
+							
 							g2.setColor(borderColor);
 							g2.setStroke(new BasicStroke(2));
 							g2.draw(stones[i][j]);
@@ -345,6 +347,12 @@ public class BoardFrame implements ActionListener {
 		} else if (((JButton) e.getSource()).getText() == "Propose Changes") {
 			sender.sendGroupChanges(groupStates, communication);
 		}
+	}
+
+	public void beginGame() {
+		frame.setVisible(true);
+		waitingFrame.setVisible(false);
+		waitingFrame = null;
 	}
 
 }
