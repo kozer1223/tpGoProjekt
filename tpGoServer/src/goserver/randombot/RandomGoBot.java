@@ -87,10 +87,6 @@ public class RandomGoBot implements GoPlayer {
 		game.passTurn(this);
 	}
 
-	private int getBoardSize() {
-		return game.getBoard().getSize();
-	}
-
 	@Override
 	public void updateBoard() {
 		// bot ma dostep do planszy poprzez serwer wiec nie musi byc

@@ -12,6 +12,7 @@ import java.io.PipedWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +20,7 @@ import org.junit.Test;
 import goserver.game.DefaultGoGame;
 import goserver.game.DefaultGoRuleset;
 import goserver.game.GoGame;
+import goserver.game.GoGroupType;
 import goserver.game.GoPlayer;
 import goserver.game.InvalidMoveException;
 import goserver.game.test.EmptyGoPlayer;
@@ -132,7 +134,150 @@ public class OnlineGoPlayerTest {
 		
 		assertTrue(game.isPlayersTurn(opponent));
 		assertTrue(game.getBoard().getBoard()[2][3] == game.getBoard().getWhiteColor());
-
 	}
 
+	@Test(timeout = 10000)
+	public void testPlayAGamePassAndRematch() throws InvalidMoveException, IOException {
+		GoPlayer opponent = new EmptyGoPlayer();
+		int size = 9;
+		GoGame game = new DefaultGoGame(opponent, onlinePlayer, size, DefaultGoRuleset.getDefaultRuleset());
+		onlinePlayer.start();
+		
+		ServerClientProtocol protocol = ServerClientProtocol.getInstance();
+
+		while (true) {
+			if (outputReader.ready()) {
+				String out = outputReader.readLine();
+				if (out.contains(protocol.GAME_BEGIN)) {
+					break;
+				}
+			}
+
+		}
+
+		game.passTurn(opponent);
+		
+		while (true) {
+			if (outputReader.ready()) {
+				String out = outputReader.readLine();
+				if (out.contains(protocol.LAST_MOVE + " " + protocol.PASS)) {
+					break;
+				}
+			}
+		}
+		
+		inputWriter.println(protocol.PASS_TURN);
+		while (true) {
+			if (outputReader.ready()) {
+				String out = outputReader.readLine();
+				if (out.contains(protocol.MOVE_ACCEPTED)) {
+					break;
+				}
+			}
+		}
+		
+		assertTrue(game.isGroupMarkingPhase());
+		
+		// accept changes
+		game.applyGroupTypeChanges(opponent, new HashMap<Integer, GoGroupType>());
+		inputWriter.println(protocol.PASS_TURN);
+		
+		// game ends
+		while (true) {
+			if (outputReader.ready()) {
+				String out = outputReader.readLine();
+				if (out.contains(protocol.SEND_SCORE)) {
+					break;
+				}
+			}
+		}	
+		
+		inputWriter.println(protocol.REQUEST_REMATCH);
+		game.requestRematch(opponent);
+		
+		// rematch begins
+		while (true) {
+			if (outputReader.ready()) {
+				String out = outputReader.readLine();
+				if (out.contains(protocol.GAME_BEGIN)) {
+					break;
+				}
+			}
+		}	
+	}
+	
+	@Test(timeout = 20000)
+	public void testPlayAGameDenyRematch() throws InvalidMoveException, IOException {
+		GoPlayer opponent = new EmptyGoPlayer();
+		int size = 9;
+		GoGame game = new DefaultGoGame(onlinePlayer, opponent, size, DefaultGoRuleset.getDefaultRuleset());
+		onlinePlayer.start();
+		
+		ServerClientProtocol protocol = ServerClientProtocol.getInstance();
+
+		while (true) {
+			if (outputReader.ready()) {
+				String out = outputReader.readLine();
+				if (out.contains(protocol.GAME_BEGIN)) {
+					break;
+				}
+			}
+
+		}
+
+		inputWriter.println(protocol.SEND_MOVE + " " + 2 + " " + 3);
+		while (true) {
+			if (outputReader.ready()) {
+				String out = outputReader.readLine();
+				if (out.contains(protocol.MOVE_ACCEPTED)) {
+					break;
+				}
+			}
+		}
+		
+		game.passTurn(opponent);
+		inputWriter.println(protocol.PASS_TURN);
+		
+		while (true) {
+			if (outputReader.ready()) {
+				String out = outputReader.readLine();
+				if (out.contains(protocol.SEND_PHASE + " " + 1)) {
+					break;
+				}
+			}
+		}
+		
+		assertTrue(game.isGroupMarkingPhase());
+		
+		//accept changes
+		game.applyGroupTypeChanges(opponent, new HashMap<Integer, GoGroupType>());
+		
+		int label = (int) game.getLabelsMap().keySet().toArray()[0];
+		System.out.println(label);
+		
+		inputWriter.println(protocol.CHANGE_GROUP_STATE + " " + label + " " + protocol.ALIVE);
+		while (true) {
+			if (outputReader.ready()) {
+				String out = outputReader.readLine();
+				if (out.contains(protocol.SEND_SCORE)) {
+					break;
+				}
+			}
+		}
+		
+		assertTrue(game.isGameEnd());
+		
+		// deny rematch
+		game.denyRematch(opponent);
+		
+		while (true) {
+			if (outputReader.ready()) {
+				String out = outputReader.readLine();
+				if (out.contains(protocol.REMATCH_DENIED)) {
+					break;
+				}
+			}
+		}
+	}
+	
 }
