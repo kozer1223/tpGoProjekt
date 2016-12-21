@@ -24,14 +24,13 @@ public class ReadingThread extends Thread {
 			String line = communication.read();
 			if (line != null) {
 				System.out.println("[SERVER]> " + line);
-				if (parser.parseBoard(line, size) != null) {
-					System.out.println(size);
+				if (parser.parseColor(line) != ""){
+					frame.setColor(parser.parseColor(line));
+				} else if (parser.parseBoard(line, size) != null) {
 					frame.drawBoard(parser.parseBoard(line, size));
-				}
-				else if (parser.parsePhase(line)!=-1){
+				} else if (parser.parsePhase(line)!=-1){
 					frame.setPhase(parser.parsePhase(line));
-				}
-				else if (parser.parseCapturedStones(line)!=null){
+				} else if (parser.parseCapturedStones(line)!=null){
 					frame.setCapturedStones(parser.parseCapturedStones(line));
 				}
 			}

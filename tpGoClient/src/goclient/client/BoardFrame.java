@@ -37,20 +37,27 @@ public class BoardFrame implements ActionListener {
 
 	private JFrame frame;
 	private int size;
-	private String colour = "no colour";
+	private String color = "";
 	private ReaderWriter communication;
 	private BoardCanvas canvas;
-	private ClientRequestSender sender=ClientRequestSender.getInstance();
-	private int phase=0;
-	public void setPhase(int x){
-		phase=x;
-		System.out.println("PHASE:"+phase);
-	}
-	private TextArea captured;
-	public void setCapturedStones(IntPair pair) {
-		captured.setText("Black:" + pair.x + "White" + pair.y);
+	private ClientRequestSender sender = ClientRequestSender.getInstance();
+	private int phase = 0;
+
+	public void setPhase(int phase) {
+		this.phase = phase;
+		System.out.println("PHASE:" + phase);
 	}
 	
+	public void setColor(String color) {
+		this.color = color;
+	}
+
+	private TextArea captured;
+
+	public void setCapturedStones(IntPair pair) {
+		captured.setText("Black:" + pair.x + " White: " + pair.y);
+	}
+
 	Ellipse2D[][] stones;
 	Color[][] stoneColors;
 
@@ -59,10 +66,10 @@ public class BoardFrame implements ActionListener {
 		this.size = size;
 		frame = new JFrame("Go");
 		frame.setLayout(null);
-		//frame.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
+		// frame.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		frame.setVisible(false);
 		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); //?
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // ?
 		// JLabel boardImage = null;
 		BufferedImage img = null;
 		try {
@@ -83,19 +90,32 @@ public class BoardFrame implements ActionListener {
 		stoneColors = new Color[size][size];
 		// frame.add(boardImage);
 		canvas = new BoardCanvas(size, img);
-		canvas.setBounds(0, 0, 570, 600);
+		canvas.setBounds(0, 50, 570, 600);
 		// canvas.add(boardImage);
+		
+		captured = new TextArea("Black:0 White:0", 1, 15, TextArea.SCROLLBARS_NONE);
+		frame.add(captured);
+		if (size == 19)
+			captured.setBounds(1, 0, 550, 50);
+		if (size == 13)
+			captured.setBounds(1, 0, 375, 50);
+		if (size == 9)
+			captured.setBounds(1, 0, 200, 50);
+		captured.setEditable(false);
+		
+		
 		frame.add(canvas);
 		canvas.setLayout(null);
 		JFrame waitingFrame = new JFrame("Please Wait");
 		waitingFrame.setVisible(true);
-		waitingFrame.setBounds(800, 300, 200, 20);
+		waitingFrame.setBounds(800, 300, 200, 120);
 		System.out.println("waiting for input");
-		colour = null;
+		/*colour = null;
 		while (colour == null) {
 			colour = communication.read();
 		}
-		System.out.println(colour);
+		System.out.println(colour);*/
+		
 		frame.setVisible(true);
 		waitingFrame.setVisible(false);
 		waitingFrame = null;
@@ -105,32 +125,32 @@ public class BoardFrame implements ActionListener {
 		passbutton.setOpaque(true);
 		passbutton.setContentAreaFilled(true);
 		passbutton.setBorderPainted(true);
-		if(size==19)passbutton.setBounds(250,590,100,100);
-		if(size==13)passbutton.setBounds(210,420,100,100);
-		if(size==9)passbutton.setBounds(210,280,100,100);
+		if (size == 19)
+			passbutton.setBounds(250, 650, 100, 100);
+		if (size == 13)
+			passbutton.setBounds(210, 480, 100, 100);
+		if (size == 9)
+			passbutton.setBounds(210, 340, 100, 100);
 		passbutton.addActionListener(this);
-		
+
 		JButton acceptDeadButton = new JButton("Propose Changes");
 		frame.add(acceptDeadButton);
 		acceptDeadButton.setVisible(false);
-		if(size==19) acceptDeadButton.setBounds(0,590,200,100);
-		if(size==13) acceptDeadButton.setBounds(0,420,200,100);
-		if(size==9) acceptDeadButton.setBounds(0,280,200,100);
+		if (size == 19)
+			acceptDeadButton.setBounds(0, 650, 200, 100);
+		if (size == 13)
+			acceptDeadButton.setBounds(0, 480, 200, 100);
+		if (size == 9)
+			acceptDeadButton.setBounds(0, 340, 200, 100);
 		acceptDeadButton.addActionListener(this);
-		
-		captured = new TextArea("Black:0 White:0",1,15,TextArea.SCROLLBARS_NONE);
-		frame.add(captured);
-		if(size==19) captured.setBounds(1, 720, 550, 60);
-		if(size==13) captured.setBounds(1, 570, 375, 60);
-		if(size==9) captured.setBounds(1, 440, 200, 50);
-		captured.setEditable(false);
+
 		ReadingThread thread = new ReadingThread(size, this);
 		thread.start();
 
 		// wait for game start info
 	}
 
-	private class BoardCanvas extends JPanel implements ActionListener{
+	private class BoardCanvas extends JPanel implements ActionListener {
 
 		BufferedImage img;
 		int size;
@@ -142,7 +162,7 @@ public class BoardFrame implements ActionListener {
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					MyButton button = new MyButton();
-					button.setBounds(29 * i , 29 * j, 29, 29);
+					button.setBounds(29 * i, 29 * j, 29, 29);
 					button.addActionListener(this);
 					button.setOpaque(false);
 					button.setContentAreaFilled(false);
@@ -172,24 +192,30 @@ public class BoardFrame implements ActionListener {
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			MyButton button = (MyButton) e.getSource();
-			int x=button.getX();
-			int y=button.getY();
-			System.out.println(x+" "+y);
-			if(phase==0) ClientRequestSender.getInstance().sendMove(x, y, communication);
+			int x = button.getX();
+			int y = button.getY();
+			System.out.println(x + " " + y);
+			if (phase == 0)
+				ClientRequestSender.getInstance().sendMove(x, y, communication);
 		}
+
 		private class MyButton extends JButton {
 			private int x;
 			private int y;
-			public void setX(int x){
-				this.x=x;
+
+			public void setX(int x) {
+				this.x = x;
 			}
-			public void setY(int y){
-				this.y=y;
+
+			public void setY(int y) {
+				this.y = y;
 			}
-			public int getY(){
+
+			public int getY() {
 				return y;
 			}
-			public int getX(){
+
+			public int getX() {
 				return x;
 			}
 		}
@@ -197,7 +223,7 @@ public class BoardFrame implements ActionListener {
 	}
 
 	public void drawBoard(int board[][]) {
-		System.out.println("DRAWING BOARD "+size + " " + board.length);
+		System.out.println("DRAWING BOARD " + size + " " + board.length);
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				if (board[i][j] == 0) {
@@ -207,7 +233,7 @@ public class BoardFrame implements ActionListener {
 					}
 				} else {
 					if (stones[i][j] == null) {
-						System.out.println(29*i + ":x y:" + 29*j);
+						System.out.println(29 * i + ":x y:" + 29 * j);
 						stones[i][j] = new Ellipse2D.Double(29 * i, 29 * j, 29, 29);
 					}
 					if (board[i][j] == 1) {
@@ -223,11 +249,10 @@ public class BoardFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if(((JButton)e.getSource()).getText()=="PASS") {
+		if (((JButton) e.getSource()).getText() == "PASS") {
 			sender.passTurn(communication);
-		}
-		else if(((JButton)e.getSource()).getText()=="Propose Changes") {
-			//TODO sender.sendGroupChanges(, communication);
+		} else if (((JButton) e.getSource()).getText() == "Propose Changes") {
+			// TODO sender.sendGroupChanges(, communication);
 		}
 	}
 
