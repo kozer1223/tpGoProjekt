@@ -32,7 +32,7 @@ public class ServerGo {
 		waitingPlayers = new HashMap<Integer, OnlineGoPlayer>();
 		parser = ServerProtocolParser.getInstance();
 		try {
-			ServerSocket serverSocket = new ServerSocket(ServerConfig.SERVER_SOCKET);
+			ServerSocket serverSocket = new ServerSocket(ServerConfig.getInstance().getServerSocket());
 			while (true) {
 				Socket socket = serverSocket.accept();
 				BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));

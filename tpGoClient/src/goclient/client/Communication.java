@@ -14,7 +14,7 @@ public class Communication implements ReaderWriter {
 
 	public Communication() {
 		try {
-			socket = new Socket(ClientConfig.HOST_SERVER, ClientConfig.SERVER_SOCKET);
+			socket = new Socket(ClientConfig.getInstance().getServerAddress(), ClientConfig.getInstance().getServerSocket());
 			input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 			output = new PrintWriter(socket.getOutputStream(), true);
 		} catch (Exception e) {
