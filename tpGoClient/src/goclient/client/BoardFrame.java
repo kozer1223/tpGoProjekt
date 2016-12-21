@@ -10,6 +10,9 @@ import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.GridLayout;
 import java.awt.TextArea;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -65,11 +68,15 @@ public class BoardFrame implements ActionListener {
 		communication = GUI.getCommunication();
 		this.size = size;
 		frame = new JFrame("Go");
-		frame.setLayout(null);
+		frame.setLayout(new GridLayout(1,1));
 		// frame.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		frame.setVisible(false);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // ?
+		
+		JPanel mainPanel = new JPanel(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints();
+		frame.add(mainPanel);
 		// JLabel boardImage = null;
 		BufferedImage img = null;
 		try {
@@ -80,7 +87,7 @@ public class BoardFrame implements ActionListener {
 				frame.setBounds(100, 0, 395, 650);
 				img = ImageIO.read(new File("resources/go13.png"));
 			} else if (size == 9) {
-				frame.setBounds(100, 0, 350, 550);
+				frame.setBounds(100, 0, 270, 550);
 				img = ImageIO.read(new File("resources/go9.png"));
 			}
 		} catch (IOException e) {
@@ -88,65 +95,52 @@ public class BoardFrame implements ActionListener {
 		}
 		stones = new Ellipse2D[size][size];
 		stoneColors = new Color[size][size];
-		// frame.add(boardImage);
 		canvas = new BoardCanvas(size, img);
-		canvas.setBounds(0, 50, 570, 600);
-		// canvas.add(boardImage);
 		
-		captured = new TextArea("Black:0 White:0", 1, 15, TextArea.SCROLLBARS_NONE);
-		frame.add(captured);
-		if (size == 19)
-			captured.setBounds(1, 0, 550, 50);
-		if (size == 13)
-			captured.setBounds(1, 0, 375, 50);
-		if (size == 9)
-			captured.setBounds(1, 0, 200, 50);
-		captured.setEditable(false);
-		
-		
-		frame.add(canvas);
+		c.fill = GridBagConstraints.NONE;
+		c.gridx = 0;
+		c.gridy = 1;
+		mainPanel.add(canvas, c);
 		canvas.setLayout(null);
 		JFrame waitingFrame = new JFrame("Please Wait");
 		waitingFrame.setVisible(true);
 		waitingFrame.setBounds(800, 300, 200, 120);
 		System.out.println("waiting for input");
-		/*colour = null;
-		while (colour == null) {
-			colour = communication.read();
-		}
-		System.out.println(colour);*/
 		
 		frame.setVisible(true);
 		waitingFrame.setVisible(false);
 		waitingFrame = null;
+		
+		captured = new TextArea("Black:0 White:0", 1, 15, TextArea.SCROLLBARS_NONE);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 0;
+		mainPanel.add(captured, c);
+		captured.setEditable(false);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 2;
+		JPanel buttonPanel = new JPanel(new GridLayout(1,2));
+		mainPanel.add(buttonPanel, c);
 
 		JButton passbutton = new JButton("PASS");
-		frame.add(passbutton);
+		buttonPanel.add(passbutton);
 		passbutton.setOpaque(true);
 		passbutton.setContentAreaFilled(true);
 		passbutton.setBorderPainted(true);
-		if (size == 19)
-			passbutton.setBounds(250, 650, 100, 100);
-		if (size == 13)
-			passbutton.setBounds(210, 480, 100, 100);
-		if (size == 9)
-			passbutton.setBounds(210, 340, 100, 100);
+
 		passbutton.addActionListener(this);
 
-		JButton acceptDeadButton = new JButton("Propose Changes");
-		frame.add(acceptDeadButton);
-		acceptDeadButton.setVisible(false);
-		if (size == 19)
-			acceptDeadButton.setBounds(0, 650, 200, 100);
-		if (size == 13)
-			acceptDeadButton.setBounds(0, 480, 200, 100);
-		if (size == 9)
-			acceptDeadButton.setBounds(0, 340, 200, 100);
-		acceptDeadButton.addActionListener(this);
+		JButton proposeChangesButton = new JButton("Propose Changes");
+		buttonPanel.add(proposeChangesButton);
+		proposeChangesButton.setEnabled(false);
+		proposeChangesButton.addActionListener(this);
 
 		ReadingThread thread = new ReadingThread(size, this);
 		thread.start();
 
+		frame.pack();
 		// wait for game start info
 	}
 
@@ -159,6 +153,10 @@ public class BoardFrame implements ActionListener {
 			super();
 			this.size = size;
 			this.img = img;
+			System.out.println(img.getWidth() + "  " + img.getHeight());
+			this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
+			this.setMinimumSize(new Dimension(img.getWidth(), img.getHeight()));
+			this.setMaximumSize(new Dimension(img.getWidth(), img.getHeight()));
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					MyButton button = new MyButton();
