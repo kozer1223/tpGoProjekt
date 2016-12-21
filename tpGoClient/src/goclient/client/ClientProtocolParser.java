@@ -62,6 +62,18 @@ public class ClientProtocolParser {
 		}
 	}
 	
+	public boolean parseMoveAccepted(String line){
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.MOVE_ACCEPTED);
+			scanner.close();
+			return true;
+		} catch (InputMismatchException e){
+			return false;
+		}
+	}
+	
 	public int[][] parseBoard(String line, int size){
 		Scanner scanner = new Scanner(line);
 		int[][] board = new int[size][size];

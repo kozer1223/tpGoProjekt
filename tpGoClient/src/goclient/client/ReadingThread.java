@@ -32,6 +32,10 @@ public class ReadingThread extends Thread {
 					frame.setPhase(parser.parsePhase(line));
 				} else if (parser.parseCapturedStones(line)!=null){
 					frame.setCapturedStones(parser.parseCapturedStones(line));
+				} else if (parser.parseMessage(line) != null){
+					frame.setMessage(parser.parseMessage(line));
+				} else if (parser.parseMoveAccepted(line)){
+					frame.setMessage(""); //nothing to do here
 				}
 			}
 		}

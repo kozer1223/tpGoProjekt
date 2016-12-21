@@ -63,6 +63,12 @@ public class BoardFrame implements ActionListener {
 
 	Ellipse2D[][] stones;
 	Color[][] stoneColors;
+	
+	private TextArea messageArea;
+	
+	public void setMessage(String message){
+		messageArea.setText(message);
+	}
 
 	public BoardFrame(int size) {
 		communication = GUI.getCommunication();
@@ -136,6 +142,13 @@ public class BoardFrame implements ActionListener {
 		buttonPanel.add(proposeChangesButton);
 		proposeChangesButton.setEnabled(false);
 		proposeChangesButton.addActionListener(this);
+		
+		messageArea = new TextArea("", 1, 15, TextArea.SCROLLBARS_NONE);
+		c.fill = GridBagConstraints.HORIZONTAL;
+		c.gridx = 0;
+		c.gridy = 3;
+		mainPanel.add(messageArea, c);
+		messageArea.setEditable(false);
 
 		ReadingThread thread = new ReadingThread(size, this);
 		thread.start();

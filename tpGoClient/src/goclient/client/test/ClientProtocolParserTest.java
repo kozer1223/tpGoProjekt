@@ -53,6 +53,15 @@ public class ClientProtocolParserTest {
 	public void testParseBeginGameWrongInput() {
 		assertFalse(instance.parseBeginGame("aaaa"));
 	}
+	@Test
+	public void testParseMoveAccepted() {
+		assertTrue(instance.parseMoveAccepted(protocol.MOVE_ACCEPTED));
+	}
+	
+	@Test
+	public void testParseMoveAcceptedWrongInput() {
+		assertFalse(instance.parseMoveAccepted("aaaa"));
+	}
 	
 	@Test
 	public void testParseBoard() {
