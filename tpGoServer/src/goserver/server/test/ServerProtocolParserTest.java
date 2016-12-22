@@ -104,5 +104,15 @@ public class ServerProtocolParserTest {
 	public void testParseRematchWrongInput() {
 		assertFalse(instance.parseRematchRequest(protocol.SEND_MOVE));
 	}
+	
+	@Test
+	public void testParsePing() {
+		assertTrue(instance.parsePing(protocol.PING));
+	}
+	
+	@Test
+	public void testParsePingWrongInput() {
+		assertFalse(instance.parsePing("aaa"));
+	}
 
 }

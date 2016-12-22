@@ -84,5 +84,11 @@ public class ClientRequestSenderTest {
 		instance.requestRematch(writer);
 		assertTrue(writer.read().startsWith(protocol.REQUEST_REMATCH));
 	}
+	
+	@Test
+	public void testSendPing() {
+		instance.sendPing(writer);
+		assertTrue(writer.read().startsWith(protocol.PING));
+	}
 
 }

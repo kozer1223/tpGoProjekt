@@ -125,6 +125,7 @@ public class BoardFrame implements ActionListener {
 		messageArea.setEditable(false);
 
 		ReadingThread thread = new ReadingThread(size, this);
+		thread.setCommunication(GUI.getCommunication());
 		thread.start();
 
 		groupLabels = null;

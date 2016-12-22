@@ -279,4 +279,12 @@ public class OnlineGoPlayerTest {
 		}
 	}
 	
+	@Test
+	public void testPingPlayer() throws IOException{
+		onlinePlayer.start();
+		ServerClientProtocol protocol = ServerClientProtocol.getInstance();
+		inputWriter.println(protocol.PING);
+		assertTrue(onlinePlayer.pingPlayer());
+	}
+	
 }

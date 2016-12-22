@@ -168,4 +168,13 @@ public class ClientProtocolParserTest {
 		assertFalse(instance.parseRematchDenied("aaaa"));
 	}
 	
+	@Test
+	public void testParsePing() {
+		assertTrue(instance.parsePing(protocol.PING));
+	}
+	
+	@Test
+	public void testParsePingWrongInput() {
+		assertFalse(instance.parsePing("aaa"));
+	}	
 }

@@ -6,6 +6,12 @@ import java.util.Map;
 
 import goserver.game.GoGroupType;
 
+/**
+ * Class sending messages from server to client.
+ * 
+ * @author Kacper
+ *
+ */
 public class ServerRequestSender {
 
 	private static ServerRequestSender instance;

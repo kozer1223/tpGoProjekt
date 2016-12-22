@@ -171,4 +171,11 @@ public class ServerRequestSenderTest {
 		assertTrue(writer.toString().startsWith(protocol.REMATCH_DENIED));
 	}
 	
+	@Test
+	public void testSendPing() {
+		StringWriter writer = new StringWriter();
+		instance.sendPing(new PrintWriter(writer));
+		assertTrue(writer.toString().startsWith(protocol.PING));
+	}
+	
 }

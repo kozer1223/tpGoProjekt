@@ -11,14 +11,18 @@ public class ReadingThread extends Thread {
 
 	private int size;
 	private BoardFrame frame;
+	private ReaderWriter communication;
 
 	public ReadingThread(int size, BoardFrame frame) {
 		this.size = size;
 		this.frame = frame;
 	}
+	
+	public void setCommunication(ReaderWriter communication){
+		this.communication = communication;
+	}
 
 	public void run() {
-		ReaderWriter communication = GUI.getCommunication();
 		ClientProtocolParser parser = ClientProtocolParser.getInstance();
 		while (true) {
 			String line = communication.read();

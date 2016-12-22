@@ -57,7 +57,7 @@ public class DefaultBoardTest {
 		assertEquals(board.getPreviousBoardData()[x][y], DefaultGoBoard.EMPTY);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidMoveException.class)
 	public void testPlaceStoneInvalidLocationOverX() throws InvalidMoveException {
 		int size = 9;
 		int x = 9;
@@ -67,7 +67,7 @@ public class DefaultBoardTest {
 		board.placeStone(color, x, y);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidMoveException.class)
 	public void testPlaceStoneInvalidLocationUnderX() throws InvalidMoveException {
 		int size = 9;
 		int x = -1;
@@ -87,7 +87,7 @@ public class DefaultBoardTest {
 		board.placeStone(color, x, y);
 	}
 
-	@Test(expected = IllegalArgumentException.class)
+	@Test(expected = InvalidMoveException.class)
 	public void testPlaceStoneOnNonEmpty() throws InvalidMoveException {
 		int size = 9;
 		int x = 2;
