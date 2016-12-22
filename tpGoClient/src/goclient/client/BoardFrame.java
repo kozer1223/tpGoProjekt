@@ -49,71 +49,35 @@ public class BoardFrame implements ActionListener {
 	private int size;
 	private String color = "";
 	private ReaderWriter communication;
-	private BoardCanvas canvas;
 	private ClientRequestSender sender = ClientRequestSender.getInstance();
 	private int phase = 0;
-	private JButton proposeChangesButton;
-	private JButton passButton;
-	private JFrame waitingFrame;
 	private boolean waitingForRematch = false;
 	private boolean isDisabled = false;
-	
-	public int getPhase() {
-		return phase;
-	}
-	
-	public boolean isWaitingForRematch() {
-		return waitingForRematch;
-	}
 
-	public void setPhase(int phase) {
-		this.phase = phase;
-		System.out.println("PHASE:" + phase);
-		if (phase == 1){
-			if(!isDisabled){
-				proposeChangesButton.setEnabled(true);
-			}
-		} else {
-			proposeChangesButton.setEnabled(false);
-			groupLabels = null;
-			groupStates = null;
-			lockedGroups = null;
-		}
-		canvas.repaint();
-	}
-	
-	public void setColor(String color) {
-		this.color = color;
-		System.out.println(color);
-	}
-
-	private TextArea captured;
-
-	public void setCapturedStones(IntPair pair) {
-		captured.setText("Black:" + pair.x + " White: " + pair.y);
-	}
-
+	// board data
 	Ellipse2D[][] stones;
 	Color[][] stoneColors;
 	int[][] groupLabels;
-	Map<Integer, GoGroupType> groupStates; 
+	Map<Integer, GoGroupType> groupStates;
 	List<Integer> lockedGroups;
-	
+
+	// GUI elements
+	private BoardCanvas canvas;
+	private JButton proposeChangesButton;
+	private JButton passButton;
+	private JFrame waitingFrame;
+	private StatusJPanel statusPanel;
 	private TextArea messageArea;
-	
-	public void setMessage(String message){
-		messageArea.setText(message);
-	}
 
 	public BoardFrame(int size) {
 		communication = GUI.getCommunication();
 		this.size = size;
 		frame = new JFrame("Go");
-		frame.setLayout(new GridLayout(1,1));
+		frame.setLayout(new GridLayout(1, 1));
 		frame.setVisible(false);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // ?
-		
+
 		JPanel mainPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		frame.add(mainPanel);
@@ -121,24 +85,23 @@ public class BoardFrame implements ActionListener {
 		stones = new Ellipse2D[size][size];
 		stoneColors = new Color[size][size];
 		canvas = new BoardCanvas(size);
-		
+
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;
 		c.gridy = 1;
 		mainPanel.add(canvas, c);
 		canvas.setLayout(null);
-		
-		captured = new TextArea("Black: 0 White: 0", 1, 15, TextArea.SCROLLBARS_NONE);
+
+		statusPanel = new StatusJPanel();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
-		mainPanel.add(captured, c);
-		captured.setEditable(false);
+		mainPanel.add(statusPanel, c);
 
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 2;
-		JPanel buttonPanel = new JPanel(new GridLayout(1,2));
+		JPanel buttonPanel = new JPanel(new GridLayout(1, 2));
 		mainPanel.add(buttonPanel, c);
 
 		passButton = new JButton("PASS");
@@ -153,7 +116,7 @@ public class BoardFrame implements ActionListener {
 		buttonPanel.add(proposeChangesButton);
 		proposeChangesButton.setEnabled(false);
 		proposeChangesButton.addActionListener(this);
-		
+
 		messageArea = new TextArea("", 1, 15, TextArea.SCROLLBARS_NONE);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -163,11 +126,12 @@ public class BoardFrame implements ActionListener {
 
 		ReadingThread thread = new ReadingThread(size, this);
 		thread.start();
-		
+
 		groupLabels = null;
 		groupStates = null;
 		lockedGroups = null;
-		
+
+		// waiting for a player window
 		waitingFrame = new JFrame("Please Wait");
 		waitingFrame.setVisible(true);
 		waitingFrame.setBounds(800, 300, 300, 120);
@@ -175,18 +139,164 @@ public class BoardFrame implements ActionListener {
 		waitLabel.setHorizontalAlignment(JLabel.CENTER);
 		waitingFrame.getContentPane().add(waitLabel);
 		waitingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-				
+
 		frame.pack();
-		if (color.equals(ServerClientProtocol.getInstance().BLACK)){
+		if (color.equals(ServerClientProtocol.getInstance().BLACK)) {
 			enableInput();
 		} else {
 			disableInput();
 		}
-		// wait for game start info
+	}
+
+	public int getPhase() {
+		return phase;
+	}
+
+	public void setPhase(int phase) {
+		this.phase = phase;
+		System.out.println("PHASE:" + phase);
+		if (phase == 1) {
+			if (!isDisabled) {
+				proposeChangesButton.setEnabled(true);
+			}
+		} else {
+			proposeChangesButton.setEnabled(false);
+			groupLabels = null;
+			groupStates = null;
+			lockedGroups = null;
+		}
+		canvas.repaint();
+	}
+
+	public void setColor(String color) {
+		this.color = color;
+		statusPanel.setColor(color);
+	}
+
+	public void setCapturedStones(IntPair pair) {
+		statusPanel.setCaptured(pair.x, pair.y);
+	}
+
+	public void setMessage(String message) {
+		messageArea.setText(message);
+	}
+
+	public boolean isWaitingForRematch() {
+		return waitingForRematch;
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if (!isWaitingForRematch() && !isDisabled) {
+			if (((JButton) e.getSource()).equals(passButton)) {
+				disableInput();
+				sender.passTurn(communication);
+				setMessage("Waiting...");
+			} else if (((JButton) e.getSource()).equals(proposeChangesButton)) {
+				disableInput();
+				sender.sendGroupChanges(groupStates, communication);
+				setMessage("Waiting...");
+			}
+		}
+	}
+
+	public void beginGame() {
+		frame.setVisible(true);
+		if (waitingFrame != null) {
+			waitingFrame.setVisible(false);
+			waitingFrame = null;
+		}
+	}
+
+	public void showScore(DoublePair score) {
+		boolean victory;
+		double yourScore;
+		double opponentsScore;
+		if (color.equals(ServerClientProtocol.getInstance().BLACK)) {
+			yourScore = score.x;
+			opponentsScore = score.y;
+		} else {
+			yourScore = score.y;
+			opponentsScore = score.x;
+		}
+		System.out.println(color);
+		System.out.println(yourScore + " " + opponentsScore);
+		victory = (yourScore > opponentsScore);
+		boolean tie = (yourScore == opponentsScore);
+
+		StringBuilder message = new StringBuilder();
+		if (tie) {
+			message.append("You tied.\n");
+		} else if (victory) {
+			message.append("You won.\n");
+		} else {
+			message.append("You lost.\n");
+		}
+		message.append("You: " + yourScore + " Opponent: " + opponentsScore + "\n");
+		message.append("Do you want a rematch?");
+		int choice = JOptionPane.showConfirmDialog(frame, message, "Rematch", JOptionPane.YES_NO_OPTION);
+
+		if (choice == JOptionPane.YES_OPTION) {
+			// request rematch
+			sender.requestRematch(communication);
+			waitingForRematch = true;
+			setMessage("Waiting for rematch!");
+			passButton.setEnabled(false);
+			proposeChangesButton.setEnabled(false);
+		} else {
+			frame.setVisible(false);
+			frame.dispose();
+			System.exit(0); // powrot do menu?
+		}
+	}
+
+	public void rematchDenied() {
+		JOptionPane.showMessageDialog(frame, "Rematch denied.");
+		frame.setVisible(false);
+		frame.dispose();
+		System.exit(0); // powrot do menu?
+	}
+
+	public void rematchAccepted() {
+		waitingForRematch = false;
+		JOptionPane.showMessageDialog(frame, "Rematch accepted.");
+		resetGame();
+	}
+
+	private void resetGame() {
+		stones = new Ellipse2D[size][size];
+		stoneColors = new Color[size][size];
+		groupLabels = null;
+		groupStates = null;
+		lockedGroups = null;
+		setMessage("");
+		setPhase(0);
+		canvas.repaint();
+		if (color.equals(ServerClientProtocol.getInstance().BLACK)) {
+			enableInput();
+		} else {
+			disableInput();
+		}
+	}
+
+	public void disableInput() {
+		isDisabled = true;
+		passButton.setEnabled(false);
+		proposeChangesButton.setEnabled(false);
+	}
+
+	public void enableInput() {
+		isDisabled = false;
+		passButton.setEnabled(true);
+		if (getPhase() == 1) {
+			proposeChangesButton.setEnabled(true);
+		}
+
 	}
 
 	private class BoardCanvas extends JPanel implements ActionListener {
 
+		private static final long serialVersionUID = -3929397568035091522L;
 		BufferedImage img;
 		int size;
 
@@ -212,10 +322,10 @@ public class BoardFrame implements ActionListener {
 			this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
 			this.setMinimumSize(new Dimension(img.getWidth(), img.getHeight()));
 			this.setMaximumSize(new Dimension(img.getWidth(), img.getHeight()));
-			
+
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
-					MyButton button = new MyButton();
+					StonePlaceButton button = new StonePlaceButton();
 					button.setBounds(29 * i, 29 * j, 29, 29);
 					button.addActionListener(this);
 					button.setOpaque(false);
@@ -234,19 +344,20 @@ public class BoardFrame implements ActionListener {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.drawImage(img, 0, 0, null);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-			
+
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					if (stones[i][j] != null) {
 						g2.setColor(stoneColors[i][j]);
 						g2.fill(stones[i][j]);
-						if (getPhase() == 1 && groupLabels != null && groupStates != null){
-							Color borderColor = (groupStates.get(groupLabels[i][j]) == GoGroupType.ALIVE ? Color.GREEN : Color.RED);
-							if (isGroupLocked(groupLabels[i][j])){
+						if (getPhase() == 1 && groupLabels != null && groupStates != null) {
+							Color borderColor = (groupStates.get(groupLabels[i][j]) == GoGroupType.ALIVE ? Color.GREEN
+									: Color.RED);
+							if (isGroupLocked(groupLabels[i][j])) {
 								// ciemniejszy kolor dla zablokowanych
-								borderColor = (borderColor == Color.GREEN ? new Color(0, 80, 0) : new Color (80, 0, 0));
+								borderColor = (borderColor == Color.GREEN ? new Color(0, 80, 0) : new Color(80, 0, 0));
 							}
-							
+
 							g2.setColor(borderColor);
 							g2.setStroke(new BasicStroke(2));
 							g2.draw(stones[i][j]);
@@ -258,26 +369,27 @@ public class BoardFrame implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!isWaitingForRematch() & !isDisabled){
-				MyButton button = (MyButton) e.getSource();
+			if (!isWaitingForRematch() & !isDisabled) {
+				StonePlaceButton button = (StonePlaceButton) e.getSource();
 				int x = button.getX();
 				int y = button.getY();
-				
-				if (phase == 0){
+
+				if (phase == 0) {
 					disableInput();
 					ClientRequestSender.getInstance().sendMove(x, y, communication);
 					setMessage("Waiting...");
-				} else if (phase == 1 && groupLabels != null){
+				} else if (phase == 1 && groupLabels != null) {
 					int label = groupLabels[x][y];
-					if (!isGroupLocked(label)){
+					if (!isGroupLocked(label)) {
 						toggleGroupState(label);
 					}
-					
+
 				}
 			}
 		}
 
-		private class MyButton extends JButton {
+		private class StonePlaceButton extends JButton {
+			private static final long serialVersionUID = 1L;
 			private int x;
 			private int y;
 
@@ -322,158 +434,104 @@ public class BoardFrame implements ActionListener {
 		}
 		canvas.repaint();
 	}
-	
-	public void setGroupLabels(int[][] labeledBoard){
+
+	public void setGroupLabels(int[][] labeledBoard) {
 		this.groupLabels = labeledBoard;
 		canvas.repaint();
 	}
-	
-	public void setGroupStates(Map<Integer, GoGroupType> groupStates){
+
+	public void setGroupStates(Map<Integer, GoGroupType> groupStates) {
 		this.groupStates = groupStates;
 		canvas.repaint();
 	}
-	
-	public void setLockedGroups(List<Integer> lockedGroups){
+
+	public void setLockedGroups(List<Integer> lockedGroups) {
 		this.lockedGroups = lockedGroups;
 		canvas.repaint();
 	}
-	
-	public GoGroupType getGroupState(int label){
-		if (groupStates != null){
+
+	public GoGroupType getGroupState(int label) {
+		if (groupStates != null) {
 			return groupStates.get(label);
 		}
 		return null;
 	}
-	
-	public void setGroupState(int label, GoGroupType state){
-		if (groupStates != null){
+
+	public void setGroupState(int label, GoGroupType state) {
+		if (groupStates != null) {
 			groupStates.put(label, state);
 		}
 		canvas.repaint();
 	}
-	
-	public boolean isGroupLocked(int label){
-		if (lockedGroups != null){
+
+	public boolean isGroupLocked(int label) {
+		if (lockedGroups != null) {
 			return lockedGroups.contains(label);
 		}
 		return false;
 	}
-	
-	public void toggleGroupState(int label){
+
+	public void toggleGroupState(int label) {
 		GoGroupType state;
-		if ((state = getGroupState(label)) != null){
+		if ((state = getGroupState(label)) != null) {
 			state = (state == GoGroupType.ALIVE ? GoGroupType.DEAD : GoGroupType.ALIVE);
 			setGroupState(label, state);
 		}
 	}
-
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (!isWaitingForRematch() && !isDisabled) {
-			if (((JButton) e.getSource()).equals(passButton)) {
-				disableInput();
-				sender.passTurn(communication);
-				setMessage("Waiting...");
-			} else if (((JButton) e.getSource()).equals(proposeChangesButton)) {
-				disableInput();
-				sender.sendGroupChanges(groupStates, communication);
-				setMessage("Waiting...");
+	
+	private class StatusJPanel extends JPanel {
+		JLabel blackPlayer;
+		JLabel whitePlayer;
+		JLabel blackCaptured;
+		JLabel whiteCaptured;
+		
+		final String YOU = "You";
+		final String OPPONENT = "Opponent";
+		final String CAPTURED = "Captured: ";
+		
+		public StatusJPanel(){
+			setLayout(new GridLayout(1, 2, 5, 5));
+			
+			JPanel blackPanel = new JPanel(new GridLayout(3, 1));
+			JPanel whitePanel = new JPanel(new GridLayout(3, 1));
+			add(blackPanel);
+			add(whitePanel);
+			
+			JLabel blackName = new JLabel("Black");
+			blackName.setHorizontalAlignment(JLabel.CENTER);
+			JLabel whiteName = new JLabel("White");
+			whiteName.setHorizontalAlignment(JLabel.CENTER);
+			blackPlayer = new JLabel();
+			blackPlayer.setHorizontalAlignment(JLabel.CENTER);
+			whitePlayer = new JLabel();
+			whitePlayer.setHorizontalAlignment(JLabel.CENTER);
+			blackCaptured = new JLabel(CAPTURED + 0);
+			blackCaptured.setHorizontalAlignment(JLabel.CENTER);
+			whiteCaptured = new JLabel(CAPTURED + 0);
+			whiteCaptured.setHorizontalAlignment(JLabel.CENTER);
+			
+			blackPanel.add(blackName);
+			blackPanel.add(blackPlayer);
+			blackPanel.add(blackCaptured);
+			whitePanel.add(whiteName);
+			whitePanel.add(whitePlayer);
+			whitePanel.add(whiteCaptured);
+		}
+		
+		public void setColor(String color){
+			if (color.equals(ServerClientProtocol.getInstance().BLACK)){
+				blackPlayer.setText(YOU); whitePlayer.setText(OPPONENT);
+			} else if (color.equals(ServerClientProtocol.getInstance().WHITE)) {
+				blackPlayer.setText(OPPONENT); whitePlayer.setText(YOU);
+			} else {
+				blackPlayer.setText(""); whitePlayer.setText("");
 			}
 		}
-	}
-
-	public void beginGame() {
-		frame.setVisible(true);
-		if (waitingFrame != null){
-			waitingFrame.setVisible(false);
-			waitingFrame = null;
-		}
-	}
-
-	public void showScore(DoublePair score) {
-		boolean victory;
-		double yourScore;
-		double opponentsScore;
-		if (color.equals(ServerClientProtocol.getInstance().BLACK)){
-			yourScore = score.x;
-			opponentsScore = score.y;
-		} else {
-			yourScore = score.y;
-			opponentsScore = score.x;
-		}
-		System.out.println(color);
-		System.out.println(yourScore + " " + opponentsScore);
-		victory = (yourScore > opponentsScore);
-		boolean tie = (yourScore == opponentsScore);
 		
-		StringBuilder message = new StringBuilder();
-		if (tie){
-			message.append("You tied.\n");
-		} else if (victory){
-			message.append("You won.\n");
-		} else {
-			message.append("You lost.\n");
+		public void setCaptured(int black, int white){
+			blackCaptured.setText(CAPTURED + black);
+			whiteCaptured.setText(CAPTURED + white);
 		}
-		message.append("You: "+ yourScore + " Opponent: " + opponentsScore + "\n");
-		message.append("Do you want a rematch?");
-		int choice = JOptionPane.showConfirmDialog(frame, message, "Rematch", JOptionPane.YES_NO_OPTION);
-		
-		if (choice == JOptionPane.YES_OPTION){
-			//request rematch
-			sender.requestRematch(communication);
-			waitingForRematch = true;
-			setMessage("Waiting for rematch!");
-			passButton.setEnabled(false);
-			proposeChangesButton.setEnabled(false);
-		} else {
-			frame.setVisible(false);
-			frame.dispose();
-			System.exit(0); //powrot do menu?
-		}
-	}
-
-	public void rematchDenied() {
-		JOptionPane.showMessageDialog(frame, "Rematch denied.");
-		frame.setVisible(false);
-		frame.dispose();
-		System.exit(0); //powrot do menu?
-	}
-
-	public void rematchAccepted() {
-		waitingForRematch = false;
-		JOptionPane.showMessageDialog(frame, "Rematch accepted.");
-		resetGame();
-	}
-
-	private void resetGame() {
-		stones = new Ellipse2D[size][size];
-		stoneColors = new Color[size][size];
-		groupLabels = null;
-		groupStates = null;
-		lockedGroups = null;
-		setMessage("");
-		setPhase(0);
-		canvas.repaint();
-		if (color.equals(ServerClientProtocol.getInstance().BLACK)){
-			enableInput();
-		} else {
-			disableInput();
-		}
-	}
-	
-	public void disableInput() {
-		isDisabled = true;
-		passButton.setEnabled(false);
-		proposeChangesButton.setEnabled(false);
-	}
-	
-	public void enableInput() {
-		isDisabled = false;
-		passButton.setEnabled(true);
-		if (getPhase() == 1){
-			proposeChangesButton.setEnabled(true);
-		}
-		
 	}
 
 }

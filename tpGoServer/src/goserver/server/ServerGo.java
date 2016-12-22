@@ -27,20 +27,25 @@ public class ServerGo {
 	private static Map<Integer, OnlineGoPlayer> waitingPlayers; // size - player
 	private static ServerProtocolParser parser;
 
-
 	public static void main(String[] args) {
 		waitingPlayers = new HashMap<Integer, OnlineGoPlayer>();
 		parser = ServerProtocolParser.getInstance();
+		ServerSocket serverSocket = null;
 		try {
-			ServerSocket serverSocket = new ServerSocket(ServerConfig.getInstance().getServerSocket());
-			while (true) {
+			serverSocket = new ServerSocket(ServerConfig.getInstance().getServerSocket());
+		} catch (Exception e) {
+			e.printStackTrace();
+			System.exit(1);
+		}
+		while (true) {
+			try {
 				// accept new player
-				Socket socket = serverSocket.accept();
+				Socket socket;
+				socket = serverSocket.accept();
 				BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
 				String line = input.readLine();
 				int size;
-				System.out.println(line);
 
 				// with bot
 				if ((size = parser.parseGameWithBotRequest(line)) > 0) {
@@ -49,11 +54,12 @@ public class ServerGo {
 					System.out.println("Player playing with bot on size " + size);
 					player.start();
 				}
-				
+
 				// with player
 				if ((size = parser.parseGameWithPlayerRequest(line)) > 0) {
 					OnlineGoPlayer player = new OnlineGoPlayer(socket, input, output);
-					if (waitingPlayers.containsKey(size) && waitingPlayers.get(size) != null && waitingPlayers.get(size).pingPlayer()) {
+					if (waitingPlayers.containsKey(size) && waitingPlayers.get(size) != null
+							&& waitingPlayers.get(size).pingPlayer()) {
 						// there is a player waiting
 						GoGame game = GoGameFactory.getInstance()
 								.createDefaultGoGameWithTwoPlayers(waitingPlayers.get(size), player, size);
@@ -69,10 +75,11 @@ public class ServerGo {
 				}
 
 				System.out.println(size);
+			} catch (IOException e) {
+				System.out.println("Lost connection.");
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+
 	}
 
 }
