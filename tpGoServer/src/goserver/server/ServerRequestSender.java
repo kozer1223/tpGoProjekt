@@ -131,4 +131,9 @@ public class ServerRequestSender {
 		output.println(command.toString());
 	}
 	
+	public void sendPing(PrintWriter output){
+		StringBuilder command = new StringBuilder(protocol.PING);
+		output.println(command.toString());
+	}
+	
 }

@@ -110,7 +110,6 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 
 					}
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					System.out.println("Lost connection with player");
 					if(game.isGameEnd()){
 						game.denyRematch(this);
@@ -186,6 +185,20 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 		if(isRematch){
 			sender.sendGameBegin(output);
 			sendTurnData();
+		}
+	}
+	
+	public boolean pingPlayer() {
+		try{
+			sender.sendPing(output);
+			String line = input.readLine();
+			if(line == null){
+				return false;
+			} else {
+				return true;
+			}
+		} catch (IOException e){
+			return false;
 		}
 	}
 

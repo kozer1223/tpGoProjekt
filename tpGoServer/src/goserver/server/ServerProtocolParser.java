@@ -137,5 +137,18 @@ public class ServerProtocolParser {
 			return false;
 		}
 	}
+	
+	public boolean parsePing(String line) {
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.PING);
+			scanner.close();
+			return true;
+		} catch (NoSuchElementException e){
+			scanner.close();
+			return false;
+		}
+	}
 
 }

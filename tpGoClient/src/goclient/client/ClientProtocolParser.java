@@ -9,6 +9,7 @@ import java.util.InputMismatchException;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import goclient.client.GoGroupType;
@@ -276,5 +277,17 @@ public class ClientProtocolParser {
 		}
 	}
 	
+	public boolean parsePing(String line) {
+		Scanner scanner = new Scanner(line);
+		
+		try {
+			scanner.next(protocol.PING);
+			scanner.close();
+			return true;
+		} catch (NoSuchElementException e){
+			scanner.close();
+			return false;
+		}
+	}
 	
 }

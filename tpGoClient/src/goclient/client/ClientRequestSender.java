@@ -53,4 +53,8 @@ public class ClientRequestSender {
 		communication.write(protocol.REQUEST_REMATCH);
 	}
 
+	public void sendPing(ReaderWriter communication){
+		communication.write(protocol.PING);
+	}
+	
 }

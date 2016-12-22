@@ -50,7 +50,7 @@ public class ServerGo {
 				}
 				if ((size = parser.parseGameWithPlayerRequest(line)) > 0) {
 					OnlineGoPlayer player = new OnlineGoPlayer(socket, input, output);
-					if (waitingPlayers.containsKey(size) && waitingPlayers.get(size) != null) {
+					if (waitingPlayers.containsKey(size) && waitingPlayers.get(size) != null && waitingPlayers.get(size).pingPlayer()) {
 						//ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.WHITE, output);
 						GoGame game = GoGameFactory.getInstance()
 								.createDefaultGoGameWithTwoPlayers(waitingPlayers.get(size), player, size);

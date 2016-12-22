@@ -50,6 +50,8 @@ public class ReadingThread extends Thread {
 					frame.rematchDenied();
 				} else if (parser.parseRematchAccepted(line)){
 					frame.rematchAccepted();
+				} else if (parser.parsePing(line)){
+					ClientRequestSender.getInstance().sendPing(communication);
 				}
 			}
 		}

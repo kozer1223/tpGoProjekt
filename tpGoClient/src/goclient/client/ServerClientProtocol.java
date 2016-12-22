@@ -109,6 +109,7 @@ public class ServerClientProtocol {
 	
 	public final String MOVE = "MOVE";
 	public final String PASS = "PASS";
-
+	
+	public final String PING = "PING";
 
 }

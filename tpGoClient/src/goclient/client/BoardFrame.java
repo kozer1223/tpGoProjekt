@@ -107,7 +107,6 @@ public class BoardFrame implements ActionListener {
 		this.size = size;
 		frame = new JFrame("Go");
 		frame.setLayout(new GridLayout(1,1));
-		// frame.setComponentOrientation(ComponentOrientation.LEFT_TO_RIGHT);
 		frame.setVisible(false);
 		frame.setResizable(false);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // ?
@@ -115,25 +114,10 @@ public class BoardFrame implements ActionListener {
 		JPanel mainPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
 		frame.add(mainPanel);
-		// JLabel boardImage = null;
-		BufferedImage img = null;
-		try {
-			if (size == 19) {
-				frame.setBounds(100, 0, 570, 800);
-				img = ImageIO.read(new File("resources/go.jpg"));
-			} else if (size == 13) {
-				frame.setBounds(100, 0, 395, 650);
-				img = ImageIO.read(new File("resources/go13.png"));
-			} else if (size == 9) {
-				frame.setBounds(100, 0, 270, 550);
-				img = ImageIO.read(new File("resources/go9.png"));
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
 		stones = new Ellipse2D[size][size];
 		stoneColors = new Color[size][size];
-		canvas = new BoardCanvas(size, img);
+		canvas = new BoardCanvas(size);
 		
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;
@@ -183,8 +167,11 @@ public class BoardFrame implements ActionListener {
 		
 		waitingFrame = new JFrame("Please Wait");
 		waitingFrame.setVisible(true);
-		waitingFrame.setBounds(800, 300, 200, 220);
-		System.out.println("waiting for input");
+		waitingFrame.setBounds(800, 300, 300, 120);
+		JLabel waitLabel = new JLabel("Waiting for a player...");
+		waitLabel.setHorizontalAlignment(JLabel.CENTER);
+		waitingFrame.getContentPane().add(waitLabel);
+		waitingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				
 		frame.pack();
 		// wait for game start info
@@ -195,14 +182,29 @@ public class BoardFrame implements ActionListener {
 		BufferedImage img;
 		int size;
 
-		public BoardCanvas(int size, BufferedImage img) {
+		public BoardCanvas(int size) {
 			super();
 			this.size = size;
-			this.img = img;
-			System.out.println(img.getWidth() + "  " + img.getHeight());
+			img = null;
+			try {
+				if (size == 19) {
+					frame.setBounds(100, 0, 570, 800);
+					img = ImageIO.read(new File("resources/go.jpg"));
+				} else if (size == 13) {
+					frame.setBounds(100, 0, 395, 650);
+					img = ImageIO.read(new File("resources/go13.png"));
+				} else if (size == 9) {
+					frame.setBounds(100, 0, 270, 550);
+					img = ImageIO.read(new File("resources/go9.png"));
+				}
+			} catch (IOException e) {
+				System.err.println("Error: Resources not found.");
+				System.exit(1);
+			}
 			this.setPreferredSize(new Dimension(img.getWidth(), img.getHeight()));
 			this.setMinimumSize(new Dimension(img.getWidth(), img.getHeight()));
 			this.setMaximumSize(new Dimension(img.getWidth(), img.getHeight()));
+			
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					MyButton button = new MyButton();
@@ -224,6 +226,7 @@ public class BoardFrame implements ActionListener {
 			Graphics2D g2 = (Graphics2D) g;
 			g2.drawImage(img, 0, 0, null);
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+			
 			for (int i = 0; i < size; i++) {
 				for (int j = 0; j < size; j++) {
 					if (stones[i][j] != null) {
@@ -232,6 +235,7 @@ public class BoardFrame implements ActionListener {
 						if (getPhase() == 1 && groupLabels != null && groupStates != null){
 							Color borderColor = (groupStates.get(groupLabels[i][j]) == GoGroupType.ALIVE ? Color.GREEN : Color.RED);
 							if (isGroupLocked(groupLabels[i][j])){
+								// ciemniejszy kolor dla zablokowanych
 								borderColor = (borderColor == Color.GREEN ? new Color(0, 80, 0) : new Color (80, 0, 0));
 							}
 							
@@ -250,7 +254,7 @@ public class BoardFrame implements ActionListener {
 				MyButton button = (MyButton) e.getSource();
 				int x = button.getX();
 				int y = button.getY();
-				System.out.println(x + " " + y);
+				
 				if (phase == 0){
 					ClientRequestSender.getInstance().sendMove(x, y, communication);
 				} else if (phase == 1 && groupLabels != null){
@@ -258,6 +262,7 @@ public class BoardFrame implements ActionListener {
 					if (!isGroupLocked(label)){
 						toggleGroupState(label);
 					}
+					
 				}
 			}
 		}
@@ -286,7 +291,6 @@ public class BoardFrame implements ActionListener {
 	}
 
 	public void drawBoard(int board[][]) {
-		System.out.println("DRAWING BOARD " + size + " " + board.length);
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
 				if (board[i][j] == 0) {
@@ -296,7 +300,6 @@ public class BoardFrame implements ActionListener {
 					}
 				} else {
 					if (stones[i][j] == null) {
-						System.out.println(29 * i + ":x y:" + 29 * j);
 						stones[i][j] = new Ellipse2D.Double(29 * i, 29 * j, 29, 29);
 					}
 					if (board[i][j] == 1) {
@@ -357,9 +360,9 @@ public class BoardFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (!isWaitingForRematch()) {
-			if (((JButton) e.getSource()).getText() == "PASS") {
+			if (((JButton) e.getSource()).equals(passButton)) {
 				sender.passTurn(communication);
-			} else if (((JButton) e.getSource()).getText() == "Propose Changes") {
+			} else if (((JButton) e.getSource()).equals(proposeChangesButton)) {
 				sender.sendGroupChanges(groupStates, communication);
 			}
 		}
@@ -388,6 +391,7 @@ public class BoardFrame implements ActionListener {
 		System.out.println(yourScore + " " + opponentsScore);
 		victory = (yourScore > opponentsScore);
 		boolean tie = (yourScore == opponentsScore);
+		
 		StringBuilder message = new StringBuilder();
 		if (tie){
 			message.append("You tied.\n");
@@ -398,7 +402,8 @@ public class BoardFrame implements ActionListener {
 		}
 		message.append("You: "+ yourScore + " Opponent: " + opponentsScore + "\n");
 		message.append("Do you want a rematch?");
-		int choice = JOptionPane.showConfirmDialog(frame, message);
+		int choice = JOptionPane.showConfirmDialog(frame, message, "Rematch", JOptionPane.YES_NO_OPTION);
+		
 		if (choice == JOptionPane.YES_OPTION){
 			//request rematch
 			sender.requestRematch(communication);
