@@ -19,6 +19,8 @@ import goserver.game.DefaultGoRuleset;
 import goserver.game.GoGame;
 
 /**
+ * Main server class.
+ * 
  * @author Maciek
  *
  */

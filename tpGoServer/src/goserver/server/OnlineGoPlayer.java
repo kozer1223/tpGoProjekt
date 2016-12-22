@@ -20,6 +20,8 @@ import goserver.game.InvalidMoveException;
 import goserver.util.IntPair;
 
 /**
+ * Implementation of GoPlayer which communicates with a client using sockets.
+ * 
  * @author Maciek
  *
  */
@@ -31,12 +33,22 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 	private ServerProtocolParser parser;
 	private ServerRequestSender sender;
 	private int color;
-	
+
 	private boolean isRematch = false;
 
 	private static final int BLACK = 1;
 	private static final int WHITE = 2;
 
+	/**
+	 * Create a new OnlineGoPlayer using a socket, input and an output object.
+	 * 
+	 * @param socket
+	 *            Socket.
+	 * @param input
+	 *            Input (incoming messages).
+	 * @param output
+	 *            Output (outgoing messages).
+	 */
 	public OnlineGoPlayer(Socket socket, BufferedReader input, PrintWriter output) {
 		this.socket = socket;
 		this.input = input;
@@ -45,10 +57,17 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 		sender = ServerRequestSender.getInstance();
 	}
 
+	/**
+	 * @return Opposing player.
+	 */
 	protected GoPlayer getOpposingPlayer() {
 		return game.getOpposingPlayer(this);
 	}
 
+	/**
+	 * Method which sends game status. Information sent depends on the current
+	 * phase.
+	 */
 	private void sendTurnData() {
 		if (game != null) {
 			if (game.isStonePlacingPhase()) {
@@ -63,6 +82,11 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Thread#run()
+	 */
 	public void run() {
 		if (game != null) {
 			if (game.getPlayer1() == this) {
@@ -111,7 +135,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 					}
 				} catch (IOException e) {
 					System.out.println("Lost connection with player");
-					if(game.isGameEnd()){
+					if (game.isGameEnd()) {
 						game.denyRematch(this);
 					} else {
 						game.leaveGame(this);
@@ -124,14 +148,21 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 		}
 	}
 
-	// @Override
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#setGame(goserver.game.GoGame)
+	 */
 	public void setGame(GoGame game) {
 		this.game = game;
 	}
 
-	// @Override
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#notifyAboutTurn(goserver.game.GoMoveType)
+	 */
 	public void notifyAboutTurn(GoMoveType opponentsMove) {
-		// TODO Auto-generated method stub
 		int turnInfo;
 		if (!(opponentsMove == GoMoveType.FIRST)) {
 			if (opponentsMove == GoMoveType.MOVE || opponentsMove == GoMoveType.GROUP_CHANGED) {
@@ -139,28 +170,40 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 			} else if (opponentsMove == GoMoveType.PASS || opponentsMove == GoMoveType.GROUP_NOCHANGE) {
 				turnInfo = ServerRequestSender.PASS;
 			} else {
-				turnInfo = ServerRequestSender.PASS; // nieokreslony przypadek
+				turnInfo = ServerRequestSender.PASS; // undefined
 			}
 			sender.sendLastTurnInfo(turnInfo, output);
 		}
 
 	}
 
-	// @Override
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#updateBoard()
+	 */
+	@Override
 	public void updateBoard() {
-		// TODO Auto-generated method stub
 		sendTurnData();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#notifyAboutGamePhaseChange(int)
+	 */
 	@Override
 	public void notifyAboutGamePhaseChange(int gamePhase) {
-		// TODO Auto-generated method stub
 		sender.sendGamePhase(gamePhase, output);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#notifyAboutGameEnd(double, double)
+	 */
 	@Override
 	public void notifyAboutGameEnd(double playerScore, double opponentScore) {
-		// TODO Auto-generated method stub
 		if (color == BLACK) {
 			sender.sendGameScore(playerScore, opponentScore, output);
 		} else {
@@ -169,35 +212,56 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#rematchAccepted()
+	 */
 	@Override
 	public void rematchAccepted() {
 		sender.sendRematchAccepted(output);
 		isRematch = true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#rematchDenied()
+	 */
 	@Override
 	public void rematchDenied() {
 		sender.sendRematchDenied(output);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#notifyAboutGameBegin()
+	 */
 	@Override
 	public void notifyAboutGameBegin() {
-		if(isRematch){
+		if (isRematch) {
 			sender.sendGameBegin(output);
 			sendTurnData();
 		}
 	}
-	
+
+	/**
+	 * Send a message to a player and wait for a reply.
+	 * 
+	 * @return true if could reach the client and receive a message from it,
+	 *         false if it failed.
+	 */
 	public boolean pingPlayer() {
-		try{
+		try {
 			sender.sendPing(output);
 			String line = input.readLine();
-			if(line == null){
+			if (line == null) {
 				return false;
 			} else {
 				return true;
 			}
-		} catch (IOException e){
+		} catch (IOException e) {
 			return false;
 		}
 	}

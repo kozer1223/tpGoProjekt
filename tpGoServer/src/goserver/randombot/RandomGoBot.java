@@ -31,11 +31,21 @@ public class RandomGoBot implements GoPlayer {
 		rng = new Random();
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#setGame(goserver.game.GoGame)
+	 */
 	@Override
 	public void setGame(GoGame game) {
 		this.game = game;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#notifyAboutTurn(goserver.game.GoMoveType)
+	 */
 	@Override
 	public void notifyAboutTurn(GoMoveType opponentsMove) {
 		// make a move
@@ -72,7 +82,7 @@ public class RandomGoBot implements GoPlayer {
 
 				passTurn();
 				return;
-			} else if (game.isGroupMarkingPhase()){
+			} else if (game.isGroupMarkingPhase()) {
 				// accept all group type changes
 				game.applyGroupTypeChanges(this, new HashMap<Integer, GoGroupType>());
 			}
@@ -80,6 +90,15 @@ public class RandomGoBot implements GoPlayer {
 		}
 	}
 
+	/**
+	 * Attempt to place stone on a given spot.
+	 * 
+	 * @param x
+	 *            X position on the board.
+	 * @param y
+	 *            Y position on the board.
+	 * @return true if move was valid.
+	 */
 	private boolean makeMove(int x, int y) {
 		try {
 			game.makeMove(this, x, y);
@@ -89,31 +108,68 @@ public class RandomGoBot implements GoPlayer {
 		}
 	}
 
+	/**
+	 * Pass turn.
+	 */
 	private void passTurn() {
 		game.passTurn(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#updateBoard()
+	 */
 	@Override
 	public void updateBoard() {
 		// bot already has access to the board
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#notifyAboutGamePhaseChange(int)
+	 */
 	@Override
-	public void notifyAboutGamePhaseChange(int gamePhase) {}
+	public void notifyAboutGamePhaseChange(int gamePhase) {
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#notifyAboutGameEnd(double, double)
+	 */
 	@Override
 	public void notifyAboutGameEnd(double playerScore, double opponentScore) {
 		// always accept a rematch
 		game.requestRematch(this);
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#rematchAccepted()
+	 */
 	@Override
-	public void rematchAccepted() {}
+	public void rematchAccepted() {
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#rematchDenied()
+	 */
 	@Override
-	public void rematchDenied() {}
+	public void rematchDenied() {
+	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see goserver.game.GoPlayer#notifyAboutGameBegin()
+	 */
 	@Override
-	public void notifyAboutGameBegin() {}
+	public void notifyAboutGameBegin() {
+	}
 
 }

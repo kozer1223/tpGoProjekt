@@ -10,16 +10,16 @@ public class ServerConfig {
 
 	private final String CONFIG_FILE = "config/config.properties";
 	private Properties prop;
-	
+
 	private static ServerConfig instance;
 
 	private ServerConfig() throws IOException {
 		prop = new Properties();
 		InputStream inputStream = new FileInputStream(CONFIG_FILE);
-		
+
 		prop.load(inputStream);
 	}
-	
+
 	public synchronized static ServerConfig getInstance() {
 		if (instance == null) {
 			try {
@@ -31,8 +31,13 @@ public class ServerConfig {
 		}
 		return instance;
 	}
-	
-	public int getServerSocket(){
+
+	/**
+	 * Gets the server socket number from the config file.
+	 * 
+	 * @return Socket number.
+	 */
+	public int getServerSocket() {
 		return Integer.parseInt(prop.getProperty("socket"));
 	}
 

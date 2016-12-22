@@ -154,7 +154,6 @@ public class BoardFrame implements ActionListener {
 
 	public void setPhase(int phase) {
 		this.phase = phase;
-		System.out.println("PHASE:" + phase);
 		if (phase == 1) {
 			if (!isDisabled) {
 				proposeChangesButton.setEnabled(true);
@@ -219,8 +218,7 @@ public class BoardFrame implements ActionListener {
 			yourScore = score.y;
 			opponentsScore = score.x;
 		}
-		System.out.println(color);
-		System.out.println(yourScore + " " + opponentsScore);
+
 		victory = (yourScore > opponentsScore);
 		boolean tie = (yourScore == opponentsScore);
 
