@@ -27,10 +27,10 @@ fontsize=11
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>336</x>
-      <y>96</y>
+      <x>744</x>
+      <y>184</y>
       <w>96</w>
-      <h>56</h>
+      <h>40</h>
     </coordinates>
     <panel_attributes>Server
 --
@@ -41,25 +41,28 @@ _main(): void_
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>192</x>
-      <y>104</y>
-      <w>80</w>
-      <h>96</h>
+      <x>96</x>
+      <y>160</y>
+      <w>160</w>
+      <h>104</h>
     </coordinates>
-    <panel_attributes>Player
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+GoPlayer
 --
--socket: Socket
---
--sendBoard()
--sendMove()
-+run()</panel_attributes>
++notifyAboutGameBegin()
++notifyAboutTurn(lastMove)
++updateBoard()
++notifyAboutGamePhaseChange()
++notifyAboutGameEnd()
++rematchAccepted()
++rematchDenied()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>192</x>
-      <y>40</y>
+      <x>512</x>
+      <y>112</y>
       <w>80</w>
       <h>24</h>
     </coordinates>
@@ -69,127 +72,127 @@ _main(): void_
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>224</x>
-      <y>56</y>
+      <x>544</x>
+      <y>128</y>
       <w>24</w>
-      <h>64</h>
+      <h>48</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;60.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;40.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>144</x>
-      <y>248</y>
-      <w>168</w>
-      <h>128</h>
+      <x>56</x>
+      <y>320</y>
+      <w>240</w>
+      <h>168</h>
     </coordinates>
-    <panel_attributes>Game
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+GoGame
 --
--board: Board
--players: Player[2]
---
-+makeMove(player, x, y): boolean
-+getBoard(): Board
-</panel_attributes>
++setPlayer1(player)
++getPlayer1: GoPlayer
++setPlayer2(player)
++getPlayer2: GoPlayer
++setRuleset(ruleset)
++getBoard(): GoBoard
++makeMove(player, x, y)
++passTurn(player)
++applyGroupTypeChanges(player, changesMap)
++leaveGame(player)
++getPlayersScore(): Double[2]
++requestRematch(player)
++denyRematch(player)</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>224</x>
-      <y>192</y>
+      <x>168</x>
+      <y>256</y>
       <w>32</w>
-      <h>72</h>
+      <h>80</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=2
 m2=0..1</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>264</x>
-      <y>120</y>
-      <w>88</w>
+      <x>600</x>
+      <y>192</y>
+      <w>160</w>
       <h>32</h>
     </coordinates>
     <panel_attributes>lt=-
 m1=1
 m2=0*</panel_attributes>
-    <additional_attributes>90.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>304</x>
-      <y>144</y>
-      <w>64</w>
-      <h>136</h>
-    </coordinates>
-    <panel_attributes>lt=-
-m1=1
-m2=0*</panel_attributes>
-    <additional_attributes>60.0;10.0;60.0;140.0;10.0;140.0</additional_attributes>
+    <additional_attributes>180.0;10.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>160</x>
-      <y>440</y>
-      <w>136</w>
-      <h>64</h>
+      <x>128</x>
+      <y>528</y>
+      <w>208</w>
+      <h>128</h>
     </coordinates>
-    <panel_attributes>Board
+    <panel_attributes>&lt;&lt;interface&gt;&gt;
+GoBoard
 --
--size: int
--board: int[][]
---
-+placeStone(color, x, y)</panel_attributes>
++getSize(): int
++getBoardData(): int[][]
++getPreviousBoardData(): int[][]
++placeStone(color, x, y): int
++getLabeledBoard: int[][]
++getLabelsMap: Map&lt;Integer, GoGroupType&gt;
++applyGroupTypeChanges(color, changesMap)
++calculateTerritoryScore(): Integer[2]</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>584</x>
-      <y>288</y>
+      <x>416</x>
+      <y>776</y>
       <w>104</w>
-      <h>80</h>
+      <h>72</h>
     </coordinates>
     <panel_attributes>&lt;&lt;interface&gt;&gt;
-Rule
+GoRule
 --
 +validateMove()
 +onGameStart()
 +onGameEnd()
-...
 </panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>632</x>
-      <y>408</y>
-      <w>48</w>
+      <x>552</x>
+      <y>800</y>
+      <w>72</w>
       <h>16</h>
     </coordinates>
-    <panel_attributes>KoRule</panel_attributes>
+    <panel_attributes>KoRule {1}</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>408</x>
-      <y>304</y>
+      <x>416</x>
+      <y>648</y>
       <w>104</w>
       <h>80</h>
     </coordinates>
-    <panel_attributes>Ruleset
+    <panel_attributes>&lt;&lt;abstract&gt;&gt;
+GoRuleset
 --
-+addRule(Rule rule)
++addRule(GoRule rule)
 +validateMove()
 +onGameStart()
 +onGameEnd()</panel_attributes>
@@ -198,203 +201,513 @@ Rule
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>416</x>
-      <y>432</y>
-      <w>80</w>
+      <x>552</x>
+      <y>664</y>
+      <w>128</w>
       <h>48</h>
     </coordinates>
-    <panel_attributes>DefaultRuleset
---</panel_attributes>
+    <panel_attributes>DefaultRuleset {1}
+--
+-instance: DefaultRuleset
+--
++getDefaultRuleset()</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>448</x>
-      <y>376</y>
-      <w>24</w>
-      <h>72</h>
+      <x>512</x>
+      <y>680</y>
+      <w>56</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;-</panel_attributes>
-    <additional_attributes>10.0;10.0;10.0;70.0</additional_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
     <coordinates>
-      <x>576</x>
-      <y>408</y>
-      <w>48</w>
+      <x>552</x>
+      <y>824</y>
+      <w>72</w>
       <h>16</h>
     </coordinates>
-    <panel_attributes>KomiRule</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>504</x>
-      <y>408</y>
-      <w>64</w>
-      <h>16</h>
-    </coordinates>
-    <panel_attributes>StandardRule</panel_attributes>
+    <panel_attributes>KomiRule {1}</panel_attributes>
     <additional_attributes/>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>536</x>
-      <y>360</y>
-      <w>88</w>
-      <h>64</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>90.0;10.0;10.0;60.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>592</x>
-      <y>360</y>
+      <x>512</x>
+      <y>824</y>
       <w>56</w>
-      <h>64</h>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>50.0;10.0;10.0;60.0</additional_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>640</x>
-      <y>360</y>
+      <x>512</x>
+      <y>776</y>
+      <w>56</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>464</x>
+      <y>720</y>
       <w>32</w>
-      <h>64</h>
-    </coordinates>
-    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;20.0;60.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>504</x>
-      <y>312</y>
-      <w>96</w>
-      <h>40</h>
+      <h>72</h>
     </coordinates>
     <panel_attributes>lt=-
 
-m2=0*</panel_attributes>
-    <additional_attributes>100.0;20.0;10.0;20.0</additional_attributes>
+m1=0*</panel_attributes>
+    <additional_attributes>10.0;70.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
-      <x>304</x>
-      <y>320</y>
-      <w>120</w>
-      <h>32</h>
+      <x>104</x>
+      <y>480</y>
+      <w>328</w>
+      <h>232</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m1=1</panel_attributes>
-    <additional_attributes>130.0;10.0;10.0;10.0</additional_attributes>
+    <additional_attributes>390.0;260.0;10.0;260.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>Relation</id>
     <coordinates>
       <x>216</x>
-      <y>368</y>
+      <y>480</y>
       <w>24</w>
-      <h>88</h>
+      <h>64</h>
     </coordinates>
     <panel_attributes>lt=&lt;-
 m1=1</panel_attributes>
-    <additional_attributes>10.0;90.0;10.0;10.0</additional_attributes>
+    <additional_attributes>10.0;60.0;10.0;10.0</additional_attributes>
   </element>
   <element>
     <id>UMLClass</id>
-    <coordinates>
-      <x>376</x>
-      <y>168</y>
-      <w>224</w>
-      <h>48</h>
-    </coordinates>
-    <panel_attributes>GameFactory {1}
---
-+makeGoGame(player1, player2, boardSize, ruleset)</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>304</x>
-      <y>208</y>
-      <w>136</w>
-      <h>88</h>
-    </coordinates>
-    <panel_attributes>lt=.&gt;
-&lt;&lt;use&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;90.0;150.0;90.0;150.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>424</x>
-      <y>112</y>
-      <w>80</w>
-      <h>72</h>
-    </coordinates>
-    <panel_attributes>lt=.&gt;
-&lt;&lt;use&gt;&gt;</panel_attributes>
-    <additional_attributes>50.0;70.0;50.0;10.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>Relation</id>
-    <coordinates>
-      <x>448</x>
-      <y>208</y>
-      <w>48</w>
-      <h>112</h>
-    </coordinates>
-    <panel_attributes>lt=.&gt;
-&lt;&lt;use&gt;&gt;</panel_attributes>
-    <additional_attributes>10.0;120.0;10.0;10.0</additional_attributes>
-  </element>
-  <element>
-    <id>UMLNote</id>
-    <coordinates>
-      <x>0</x>
-      <y>256</y>
-      <w>136</w>
-      <h>64</h>
-    </coordinates>
-    <panel_attributes>Interfejsy do Game, Board,
-Ruleset, Rule, GameFactory,
-itp.?
-Wtedy można zaimplementować
-inne gry.
-bg=#CCCCFF</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>UMLClass</id>
-    <coordinates>
-      <x>688</x>
-      <y>408</y>
-      <w>64</w>
-      <h>16</h>
-    </coordinates>
-    <panel_attributes>SuicideRule</panel_attributes>
-    <additional_attributes/>
-  </element>
-  <element>
-    <id>Relation</id>
     <coordinates>
       <x>656</x>
-      <y>360</y>
-      <w>80</w>
-      <h>64</h>
+      <y>280</y>
+      <w>280</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>GoGameFactory {1}
+--
++createDefaultGoGameWithTwoPlayers(player1, player2, boardSize)
++createDefaultGoGameWithBot(player, boardSize)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>456</x>
+      <y>320</y>
+      <w>288</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>310.0;10.0;310.0;110.0;10.0;110.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>784</x>
+      <y>216</y>
+      <w>48</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;80.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>608</x>
+      <y>320</y>
+      <w>160</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>180.0;10.0;180.0;190.0;10.0;190.0;10.0;430.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>552</x>
+      <y>776</y>
+      <w>72</w>
+      <h>16</h>
+    </coordinates>
+    <panel_attributes>SuicideRule {1}</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>512</x>
+      <y>800</y>
+      <w>56</w>
+      <h>24</h>
     </coordinates>
     <panel_attributes>lt=&lt;&lt;.</panel_attributes>
-    <additional_attributes>10.0;10.0;80.0;60.0</additional_attributes>
+    <additional_attributes>10.0;10.0;50.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>344</x>
+      <y>360</y>
+      <w>120</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>DefaultGoGame
+--
+-board: GoBoard
+-players: GoPlayer[2]
+-capturedStones: int[2]
+-score: double[2]
+-gamePhase: int
+--
+#resetGame()
+#endGame()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>288</x>
+      <y>392</y>
+      <w>64</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>360</x>
+      <y>536</y>
+      <w>168</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>DefaultGoBoard
+--
+-board: int[][]
+-previousBoard: int[][]
+-labeledBoard: int[][]
+-groups: Map&lt;Integer, GoGroupType&gt;
+--
+-captureStones()
+-createLabels()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>328</x>
+      <y>584</y>
+      <w>48</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>10.0;10.0;40.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>392</x>
+      <y>456</y>
+      <w>48</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>504</x>
+      <y>160</y>
+      <w>104</w>
+      <h>104</h>
+    </coordinates>
+    <panel_attributes>OnlineGoPlayer
+--
+-socket: Socket
+-output: PrintWriter
+-input: BufferedReader
+-game: GoGame
+--
++run()
+-sendTurnData()
++pingPlayer()</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>248</x>
+      <y>208</y>
+      <w>272</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>320.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>504</x>
+      <y>288</y>
+      <w>104</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>RandomGoBot
+--
+-game: GoGame
+
+</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>248</x>
+      <y>224</y>
+      <w>272</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=&lt;&lt;.</panel_attributes>
+    <additional_attributes>320.0;100.0;220.0;100.0;220.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>288</y>
+      <w>72</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>70.0;20.0;10.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>472</x>
+      <y>0</y>
+      <w>552</w>
+      <h>360</h>
+    </coordinates>
+    <panel_attributes>lt=-
+</panel_attributes>
+    <additional_attributes>10.0;10.0;10.0;430.0;670.0;430.0</additional_attributes>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>504</x>
+      <y>80</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>Server</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Text</id>
+    <coordinates>
+      <x>392</x>
+      <y>80</y>
+      <w>80</w>
+      <h>24</h>
+    </coordinates>
+    <panel_attributes>Game</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>896</x>
+      <y>200</y>
+      <w>104</w>
+      <h>48</h>
+    </coordinates>
+    <panel_attributes>ServerConfig {1}
+--
++CONFIG_FILE: String
+--
++getServerSocket(): int</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>712</x>
+      <y>16</y>
+      <w>104</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>ServerClientProtocol {1}
+--
+(Protocol constants)</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>776</x>
+      <y>64</y>
+      <w>168</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>ServerProtocolParser {1}
+--
++parseGameWithPlayerRequest(line): int
++parseGameWithBotRequest(line): int
++parseMove(line): Int[2]
+...</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>UMLClass</id>
+    <coordinates>
+      <x>600</x>
+      <y>64</y>
+      <w>168</w>
+      <h>72</h>
+    </coordinates>
+    <panel_attributes>ServerRequestSender {1}
+--
++assignColorToClient(int color, output)
++sendGameBegin(output)
++sendBoardData(int[][] board, output)
+...</panel_attributes>
+    <additional_attributes/>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>664</x>
+      <y>24</y>
+      <w>64</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;50.0;10.0;10.0;60.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>808</x>
+      <y>24</y>
+      <w>96</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>70.0;50.0;70.0;10.0;10.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>128</y>
+      <w>88</w>
+      <h>56</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;50.0;90.0;50.0;90.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>600</x>
+      <y>128</y>
+      <w>208</w>
+      <h>64</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;60.0;240.0;60.0;240.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>832</x>
+      <y>128</y>
+      <w>56</w>
+      <h>80</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;80.0;50.0;80.0;50.0;10.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>832</x>
+      <y>200</y>
+      <w>80</w>
+      <h>32</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>10.0;20.0;80.0;20.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>704</y>
+      <w>64</w>
+      <h>96</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>30.0;10.0;30.0;100.0;10.0;100.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>704</y>
+      <w>72</w>
+      <h>120</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>40.0;10.0;40.0;130.0;10.0;130.0</additional_attributes>
+  </element>
+  <element>
+    <id>Relation</id>
+    <coordinates>
+      <x>616</x>
+      <y>704</y>
+      <w>80</w>
+      <h>144</h>
+    </coordinates>
+    <panel_attributes>lt=.&gt;
+&lt;&lt;use&gt;&gt;</panel_attributes>
+    <additional_attributes>50.0;10.0;50.0;160.0;10.0;160.0</additional_attributes>
   </element>
 </diagram>
