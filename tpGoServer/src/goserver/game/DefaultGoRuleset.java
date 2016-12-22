@@ -9,6 +9,10 @@ public class DefaultGoRuleset {
 
 	private static GoRuleset defaultRulesetInstance;
 
+	/**
+	 * Get a ruleset with default rules (Suicide rule, Ko rule and Komi rule)
+	 * @return Default ruleset object.
+	 */
 	public synchronized static GoRuleset getDefaultRuleset() {
 		if (defaultRulesetInstance == null) {
 			defaultRulesetInstance = new GoRuleset();

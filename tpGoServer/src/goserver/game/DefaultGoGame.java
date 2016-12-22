@@ -12,12 +12,18 @@ import goserver.game.rules.GoRuleset;
 import goserver.util.IntPair;
 
 /**
+ * Default implementation of a Go game logic.
+ * 
  * @author Kacper
  *
  */
 public class DefaultGoGame implements GoGame {
-	
-	public final static int MAX_GROUP_MARKING_PHASE_LENGTH = 6; // maksymalna liczba tur na ustalenie grup
+
+	public final static int MAX_GROUP_MARKING_PHASE_LENGTH = 6; // maximum
+																// number of
+																// turns to
+																// decide group
+																// states
 
 	private GoBoard board;
 	private GoPlayer[] players;
@@ -27,11 +33,18 @@ public class DefaultGoGame implements GoGame {
 	private double[] score;
 	private boolean[] rematchRequested;
 	private int consecutivePasses;
-	private int gamePhase; // 0 - stawianie kamieni, 1 - oznaczanie grup, 2 - koniec gry
+	private int gamePhase; // 0 - stone placing, 1 - group marking, 2 - game end
 	private int groupMarkingPhaseLength;
 
 	GoPlayer currentPlayer;
 
+	/**
+	 * Create a Go game with two given players, board size and a ruleset.
+	 * @param player1 Black player.
+	 * @param player2 White player.
+	 * @param boardSize Size of the board.
+	 * @param ruleset The ruleset of the game.
+	 */
 	public DefaultGoGame(GoPlayer player1, GoPlayer player2, int boardSize, GoRuleset ruleset) {
 		players = new GoPlayer[2];
 		players[0] = player1;
@@ -46,6 +59,9 @@ public class DefaultGoGame implements GoGame {
 		restartGame();
 	}
 	
+	/**
+	 * Restarts the game.
+	 */
 	protected void restartGame() {
 		capturedStones = new int[2];
 		capturedStones[0] = 0;
@@ -137,9 +153,8 @@ public class DefaultGoGame implements GoGame {
 		}
 	}
 
-	/**
-	 * @param groupTypeChanges
-	 * @see goserver.game.GoBoard#applyGroupTypeChanges(java.util.Map)
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#applyGroupTypeChanges(goserver.game.GoPlayer, java.util.Map)
 	 */
 	public void applyGroupTypeChanges(GoPlayer player, Map<Integer, GoGroupType> groupTypeChanges) {
 		if (isPlayersTurn(player) && isGroupMarkingPhase()){
@@ -178,6 +193,9 @@ public class DefaultGoGame implements GoGame {
 		}
 	}
 	
+	/**
+	 * End the game.
+	 */
 	protected void endGame() {
 		if (!isGameEnd()) {
 			board.removeDeadGroups();
@@ -195,6 +213,9 @@ public class DefaultGoGame implements GoGame {
 		}
 	}
 
+	/**
+	 * @return true if all groups are locked.
+	 */
 	protected boolean areAllGroupsLocked() {
 		for(int label : board.getAllGroupLabels()){
 			if (!board.checkIfGroupIsLocked(label)){
@@ -204,6 +225,9 @@ public class DefaultGoGame implements GoGame {
 		return true;
 	}
 	
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#getAllLockedGroups()
+	 */
 	public List<Integer> getAllLockedGroups(){
 		List<Integer> lockedGroups = new ArrayList<Integer>();
 		
@@ -236,35 +260,57 @@ public class DefaultGoGame implements GoGame {
 		return board;
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#getPlayer1()
+	 */
 	@Override
 	public GoPlayer getPlayer1() {
 		return players[0];
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#setPlayer1(goserver.game.GoPlayer)
+	 */
 	@Override
 	public void setPlayer1(GoPlayer player) {
 		players[0] = player;
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#getPlayer2()
+	 */
 	@Override
 	public GoPlayer getPlayer2() {
 		return players[1];
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#setPlayer2(goserver.game.GoPlayer)
+	 */
 	@Override
 	public void setPlayer2(GoPlayer player) {
 		players[1] = player;
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#getRuleset()
+	 */
 	@Override
 	public GoRuleset getRuleset() {
 		return ruleset;
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#getOpposingPlayer(goserver.game.GoPlayer)
+	 */
 	public GoPlayer getOpposingPlayer(GoPlayer player) {
 		return players[1 - getPlayersNo(player)];
 	}
 
+	/**
+	 * @param player Player.
+	 * @return 0 for the Black player, 1 for the White player.
+	 */
 	protected int getPlayersNo(GoPlayer player) {
 		if (player.equals(players[0])) {
 			return 0;
@@ -275,24 +321,41 @@ public class DefaultGoGame implements GoGame {
 		}
 	}
 
+	/**
+	 * @param playerNo Number of the player (0 for Black, 1 for White)
+	 * @return Color corresponding to the player of the given number.
+	 */
 	protected int getPlayersColor(int playerNo) {
 		return (playerNo == 0) ? board.getBlackColor() : board.getWhiteColor();
 	}
 
+	/**
+	 * @param player Player.
+	 * @return Color corresponding to the player.
+	 */
 	protected int getPlayersColor(GoPlayer player) {
 		return getPlayersColor(getPlayersNo(player));
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#getPlayersCapturedStones(goserver.game.GoPlayer)
+	 */
 	@Override
 	public int getPlayersCapturedStones(GoPlayer player) {
 		return capturedStones[getPlayersNo(player)];
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#isPlayersTurn(goserver.game.GoPlayer)
+	 */
 	@Override
 	public boolean isPlayersTurn(GoPlayer player) {
 		return (currentPlayer == player);
 	}
 	
+	/**
+	 * @param gamePhase New game phase.
+	 */
 	protected void setGamePhase(int gamePhase) {
 		if (gamePhase != 0 && gamePhase != 1 && gamePhase != 2) {
 			throw new IllegalArgumentException();
@@ -302,26 +365,41 @@ public class DefaultGoGame implements GoGame {
 		this.gamePhase = gamePhase;
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#getGamePhase()
+	 */
 	@Override
 	public int getGamePhase() {
 		return gamePhase;
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#isStonePlacingPhase()
+	 */
 	@Override
 	public boolean isStonePlacingPhase() {
 		return getGamePhase() == 0;
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#isGroupMarkingPhase()
+	 */
 	@Override
 	public boolean isGroupMarkingPhase() {
 		return getGamePhase() == 1;
 	}
 	
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#isGameEnd()
+	 */
 	@Override
 	public boolean isGameEnd() {
 		return getGamePhase() == 2;
 	}
 	
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#getLabelsMap()
+	 */
 	@Override
 	public Map<Integer, GoGroupType> getLabelsMap() {
 		Map<Integer, GoGroupType> labelMap = new HashMap<Integer, GoGroupType>();
@@ -333,16 +411,25 @@ public class DefaultGoGame implements GoGame {
 		return labelMap;
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#getPlayersScore(goserver.game.GoPlayer)
+	 */
 	@Override
 	public double getPlayersScore(GoPlayer player) {
 		return score[getPlayersNo(player)];
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#setPlayersScore(goserver.game.GoPlayer, double)
+	 */
 	@Override
 	public void setPlayersScore(GoPlayer player, double score) {
 		this.score[getPlayersNo(player)] = score;
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#leaveGame(goserver.game.GoPlayer)
+	 */
 	@Override
 	public void leaveGame(GoPlayer player) {
 		if (!isGameEnd()) {
@@ -359,6 +446,9 @@ public class DefaultGoGame implements GoGame {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#requestRematch(goserver.game.GoPlayer)
+	 */
 	@Override
 	public void requestRematch(GoPlayer player) {
 		if (isGameEnd()) {
@@ -372,6 +462,9 @@ public class DefaultGoGame implements GoGame {
 		}
 	}
 
+	/* (non-Javadoc)
+	 * @see goserver.game.GoGame#denyRematch(goserver.game.GoPlayer)
+	 */
 	@Override
 	public void denyRematch(GoPlayer player) {
 		int playerNo = getPlayersNo(player);

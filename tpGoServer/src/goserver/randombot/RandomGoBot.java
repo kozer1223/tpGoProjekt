@@ -12,15 +12,22 @@ import goserver.game.GoPlayer;
 import goserver.game.InvalidMoveException;
 import goserver.util.IntPair;
 
+/**
+ * Implementation of a Go bot which makes random moves.
+ * 
+ * @author Kacper
+ *
+ */
 public class RandomGoBot implements GoPlayer {
 
 	GoGame game;
 	Random rng;
-	final double passChance = 0.5; // szansa na spasowanie po spasowaniu przez
-									// przeciwnika
+	final double passChance = 0.5; // chance to pass after opponent passes turn
 
+	/**
+	 * Create a RandomGoBot.
+	 */
 	public RandomGoBot() {
-		// TODO Auto-generated constructor stub
 		rng = new Random();
 	}
 
@@ -31,7 +38,7 @@ public class RandomGoBot implements GoPlayer {
 
 	@Override
 	public void notifyAboutTurn(GoMoveType opponentsMove) {
-		// wykonaj ruch
+		// make a move
 		if (game.isPlayersTurn(this)) {
 			if (game.isStonePlacingPhase()) {
 				if (opponentsMove == GoMoveType.PASS) {
@@ -66,11 +73,10 @@ public class RandomGoBot implements GoPlayer {
 				passTurn();
 				return;
 			} else if (game.isGroupMarkingPhase()){
+				// accept all group type changes
 				game.applyGroupTypeChanges(this, new HashMap<Integer, GoGroupType>());
 			}
 
-		} else {
-			// ???
 		}
 	}
 
@@ -89,37 +95,25 @@ public class RandomGoBot implements GoPlayer {
 
 	@Override
 	public void updateBoard() {
-		// bot ma dostep do planszy poprzez serwer wiec nie musi byc
-		// powiadamiany na bieżąco
+		// bot already has access to the board
 	}
 
 	@Override
-	public void notifyAboutGamePhaseChange(int gamePhase) {
-		// TODO Auto-generated method stub
-
-	}
+	public void notifyAboutGamePhaseChange(int gamePhase) {}
 
 	@Override
 	public void notifyAboutGameEnd(double playerScore, double opponentScore) {
+		// always accept a rematch
 		game.requestRematch(this);
 	}
 
 	@Override
-	public void rematchAccepted() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void rematchAccepted() {}
 
 	@Override
-	public void rematchDenied() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void rematchDenied() {}
 
 	@Override
-	public void notifyAboutGameBegin() {
-		// TODO Auto-generated method stub
-		
-	}
+	public void notifyAboutGameBegin() {}
 
 }

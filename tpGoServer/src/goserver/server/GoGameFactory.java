@@ -21,10 +21,25 @@ public class GoGameFactory {
 		return instance;
 	}
 	
+	/**
+	 * Create a default Go Game with two online players.
+	 * 
+	 * @param player1 Black player.
+	 * @param player2 White player.
+	 * @param size Board size.
+	 * @return GoGame object.
+	 */
 	public GoGame createDefaultGoGameWithTwoPlayers(GoPlayer player1, GoPlayer player2, int size){
 		return new DefaultGoGame (player1, player2, size, DefaultGoRuleset.getDefaultRuleset());
 	}
 	
+	/**
+	 * Create a default Go Game with a player and a RandomGoBot.
+	 * 
+	 * @param player Online player.
+	 * @param size Board size.
+	 * @return GoGame object.
+	 */
 	public GoGame createDefaultGoGameWithBot(GoPlayer player, int size){
 		return new DefaultGoGame (player, new RandomGoBot(), size, DefaultGoRuleset.getDefaultRuleset());
 	}

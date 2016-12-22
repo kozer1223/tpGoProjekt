@@ -9,9 +9,7 @@ package goserver.game;
  */
 public class InvalidMoveException extends Exception {
 
-	/**
-	 * 
-	 */
+
 	private static final long serialVersionUID = -6687156793420175471L;
 
 	/**

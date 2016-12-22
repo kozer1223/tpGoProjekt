@@ -34,6 +34,7 @@ public class ServerGo {
 		try {
 			ServerSocket serverSocket = new ServerSocket(ServerConfig.getInstance().getServerSocket());
 			while (true) {
+				// accept new player
 				Socket socket = serverSocket.accept();
 				BufferedReader input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
 				PrintWriter output = new PrintWriter(socket.getOutputStream(), true);
@@ -41,17 +42,19 @@ public class ServerGo {
 				int size;
 				System.out.println(line);
 
+				// with bot
 				if ((size = parser.parseGameWithBotRequest(line)) > 0) {
 					OnlineGoPlayer player = new OnlineGoPlayer(socket, input, output);
-					//ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.BLACK, output);
 					GoGame game = GoGameFactory.getInstance().createDefaultGoGameWithBot(player, size);
 					System.out.println("Player playing with bot on size " + size);
 					player.start();
 				}
+				
+				// with player
 				if ((size = parser.parseGameWithPlayerRequest(line)) > 0) {
 					OnlineGoPlayer player = new OnlineGoPlayer(socket, input, output);
 					if (waitingPlayers.containsKey(size) && waitingPlayers.get(size) != null && waitingPlayers.get(size).pingPlayer()) {
-						//ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.WHITE, output);
+						// there is a player waiting
 						GoGame game = GoGameFactory.getInstance()
 								.createDefaultGoGameWithTwoPlayers(waitingPlayers.get(size), player, size);
 						System.out.println("Paired 2 players for size " + size);
@@ -59,8 +62,8 @@ public class ServerGo {
 						player.start();
 						waitingPlayers.remove(size);
 					} else {
+						// no waiting players
 						waitingPlayers.put(size, player);
-						//ServerRequestSender.getInstance().assignColorToClient(ServerRequestSender.BLACK, output);
 						System.out.println("Player waiting for size " + size);
 					}
 				}
