@@ -78,10 +78,10 @@ public class DefaultGoBoard implements GoBoard {
 	 */
 	public IntPair placeStone(int color, int x, int y) throws InvalidMoveException {
 		if (x < 0 || x >= size || y < 0 || y >= size) {
-			throw new IllegalArgumentException();
+			throw new InvalidMoveException("Invalid move.");
 		}
 		if (board[x][y] != EMPTY) {
-			throw new IllegalArgumentException();
+			throw new InvalidMoveException("Invalid move.");
 		}
 		if (color != WHITE && color != BLACK) {
 			throw new IllegalArgumentException();

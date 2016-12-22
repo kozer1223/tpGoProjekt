@@ -224,7 +224,7 @@ public class ClientProtocolParser {
 		
 		try {
 			scanner.next(protocol.SEND_MESSAGE);
-			String message = scanner.next(); 
+			String message = scanner.nextLine();
 			scanner.close();
 			return message;
 		} catch (InputMismatchException e){

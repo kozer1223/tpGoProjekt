@@ -56,6 +56,7 @@ public class BoardFrame implements ActionListener {
 	private JButton passButton;
 	private JFrame waitingFrame;
 	private boolean waitingForRematch = false;
+	private boolean isDisabled = false;
 	
 	public int getPhase() {
 		return phase;
@@ -69,7 +70,9 @@ public class BoardFrame implements ActionListener {
 		this.phase = phase;
 		System.out.println("PHASE:" + phase);
 		if (phase == 1){
-			proposeChangesButton.setEnabled(true);
+			if(!isDisabled){
+				proposeChangesButton.setEnabled(true);
+			}
 		} else {
 			proposeChangesButton.setEnabled(false);
 			groupLabels = null;
@@ -125,7 +128,7 @@ public class BoardFrame implements ActionListener {
 		mainPanel.add(canvas, c);
 		canvas.setLayout(null);
 		
-		captured = new TextArea("Black:0 White:0", 1, 15, TextArea.SCROLLBARS_NONE);
+		captured = new TextArea("Black: 0 White: 0", 1, 15, TextArea.SCROLLBARS_NONE);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
@@ -174,6 +177,11 @@ public class BoardFrame implements ActionListener {
 		waitingFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 				
 		frame.pack();
+		if (color.equals(ServerClientProtocol.getInstance().BLACK)){
+			enableInput();
+		} else {
+			disableInput();
+		}
 		// wait for game start info
 	}
 
@@ -250,13 +258,15 @@ public class BoardFrame implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if (!isWaitingForRematch()){
+			if (!isWaitingForRematch() & !isDisabled){
 				MyButton button = (MyButton) e.getSource();
 				int x = button.getX();
 				int y = button.getY();
 				
 				if (phase == 0){
+					disableInput();
 					ClientRequestSender.getInstance().sendMove(x, y, communication);
+					setMessage("Waiting...");
 				} else if (phase == 1 && groupLabels != null){
 					int label = groupLabels[x][y];
 					if (!isGroupLocked(label)){
@@ -359,11 +369,15 @@ public class BoardFrame implements ActionListener {
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-		if (!isWaitingForRematch()) {
+		if (!isWaitingForRematch() && !isDisabled) {
 			if (((JButton) e.getSource()).equals(passButton)) {
+				disableInput();
 				sender.passTurn(communication);
+				setMessage("Waiting...");
 			} else if (((JButton) e.getSource()).equals(proposeChangesButton)) {
+				disableInput();
 				sender.sendGroupChanges(groupStates, communication);
+				setMessage("Waiting...");
 			}
 		}
 	}
@@ -440,8 +454,26 @@ public class BoardFrame implements ActionListener {
 		setMessage("");
 		setPhase(0);
 		canvas.repaint();
-		passButton.setEnabled(true);
+		if (color.equals(ServerClientProtocol.getInstance().BLACK)){
+			enableInput();
+		} else {
+			disableInput();
+		}
+	}
+	
+	public void disableInput() {
+		isDisabled = true;
+		passButton.setEnabled(false);
 		proposeChangesButton.setEnabled(false);
+	}
+	
+	public void enableInput() {
+		isDisabled = false;
+		passButton.setEnabled(true);
+		if (getPhase() == 1){
+			proposeChangesButton.setEnabled(true);
+		}
+		
 	}
 
 }
