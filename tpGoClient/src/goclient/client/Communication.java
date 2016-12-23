@@ -6,6 +6,12 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
 
+/**
+ * Class used to communicate with the server.
+ * 
+ * @author Maciek
+ *
+ */
 public class Communication implements ReaderWriter {
 
 	private Socket socket;

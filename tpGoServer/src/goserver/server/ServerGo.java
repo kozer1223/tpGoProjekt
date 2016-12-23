@@ -39,6 +39,7 @@ public class ServerGo {
 			e.printStackTrace();
 			System.exit(1);
 		}
+		System.out.println("Welcome to the Go Server.\nWaiting for players.");
 		while (true) {
 			try {
 				// accept new player

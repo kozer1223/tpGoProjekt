@@ -102,6 +102,7 @@ public class OnlineGoPlayer extends Thread implements GoPlayer {
 				try {
 					String line = input.readLine();
 					if (line != null) {
+						//debug
 						System.out.println("[PLAYER]>" + line);
 
 						IntPair move;

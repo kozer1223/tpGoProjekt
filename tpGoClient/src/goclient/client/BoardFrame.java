@@ -76,7 +76,7 @@ public class BoardFrame implements ActionListener {
 		frame.setLayout(new GridLayout(1, 1));
 		frame.setVisible(false);
 		frame.setResizable(false);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // ?
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		JPanel mainPanel = new JPanel(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints();
@@ -86,18 +86,21 @@ public class BoardFrame implements ActionListener {
 		stoneColors = new Color[size][size];
 		canvas = new BoardCanvas(size);
 
+		// canvas
 		c.fill = GridBagConstraints.NONE;
 		c.gridx = 0;
 		c.gridy = 1;
 		mainPanel.add(canvas, c);
 		canvas.setLayout(null);
 
+		// game status panel
 		statusPanel = new StatusJPanel();
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 0;
 		mainPanel.add(statusPanel, c);
 
+		// pass and propose changes button
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
 		c.gridy = 2;
@@ -117,6 +120,7 @@ public class BoardFrame implements ActionListener {
 		proposeChangesButton.setEnabled(false);
 		proposeChangesButton.addActionListener(this);
 
+		// invalid move message box
 		messageArea = new TextArea("", 1, 15, TextArea.SCROLLBARS_NONE);
 		c.fill = GridBagConstraints.HORIZONTAL;
 		c.gridx = 0;
@@ -143,16 +147,24 @@ public class BoardFrame implements ActionListener {
 
 		frame.pack();
 		if (color.equals(ServerClientProtocol.getInstance().BLACK)) {
+			// black starts
 			enableInput();
 		} else {
 			disableInput();
 		}
 	}
 
+	/**
+	 * @return Current game phase.
+	 */
 	public int getPhase() {
 		return phase;
 	}
 
+	/**
+	 * @param phase
+	 *            Phase (0 - stone placing, 1 - group marking)
+	 */
 	public void setPhase(int phase) {
 		this.phase = phase;
 		if (phase == 1) {
@@ -168,19 +180,34 @@ public class BoardFrame implements ActionListener {
 		canvas.repaint();
 	}
 
+	/**
+	 * @param color
+	 *            Player's color as String.
+	 */
 	public void setColor(String color) {
 		this.color = color;
 		statusPanel.setColor(color);
 	}
 
+	/**
+	 * @param pair
+	 *            (Stones captured by Black, stones captured by White)
+	 */
 	public void setCapturedStones(IntPair pair) {
 		statusPanel.setCaptured(pair.x, pair.y);
 	}
 
+	/**
+	 * @param message
+	 *            Invalid move message.
+	 */
 	public void setMessage(String message) {
 		messageArea.setText(message);
 	}
 
+	/**
+	 * @return true if player is currently waiting for a rematch.
+	 */
 	public boolean isWaitingForRematch() {
 		return waitingForRematch;
 	}
@@ -189,10 +216,12 @@ public class BoardFrame implements ActionListener {
 	public void actionPerformed(ActionEvent e) {
 		if (!isWaitingForRematch() && !isDisabled) {
 			if (((JButton) e.getSource()).equals(passButton)) {
+				// pass and wait for other player's turn
 				disableInput();
 				sender.passTurn(communication);
 				setMessage("Waiting...");
 			} else if (((JButton) e.getSource()).equals(proposeChangesButton)) {
+				// propose changes and wait for other player's turn
 				disableInput();
 				sender.sendGroupChanges(groupStates, communication);
 				setMessage("Waiting...");
@@ -200,6 +229,9 @@ public class BoardFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * Method called when there are two players and the game begins.
+	 */
 	public void beginGame() {
 		frame.setVisible(true);
 		if (waitingFrame != null) {
@@ -208,6 +240,12 @@ public class BoardFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * Shows a window with received score.
+	 * 
+	 * @param score
+	 *            (Black's score, White's score)
+	 */
 	public void showScore(DoublePair score) {
 		boolean victory;
 		double yourScore;
@@ -245,23 +283,32 @@ public class BoardFrame implements ActionListener {
 		} else {
 			frame.setVisible(false);
 			frame.dispose();
-			System.exit(0); // powrot do menu?
+			System.exit(0); // quit
 		}
 	}
 
+	/**
+	 * Method called when opponent denies a rematch request.
+	 */
 	public void rematchDenied() {
 		JOptionPane.showMessageDialog(frame, "Rematch denied.");
 		frame.setVisible(false);
 		frame.dispose();
-		System.exit(0); // powrot do menu?
+		System.exit(0); // quit
 	}
 
+	/**
+	 * Method caled when a rematch request is accepted.
+	 */
 	public void rematchAccepted() {
 		waitingForRematch = false;
 		JOptionPane.showMessageDialog(frame, "Rematch accepted.");
 		resetGame();
 	}
 
+	/**
+	 * Reset game data upon a start of a rematch.
+	 */
 	private void resetGame() {
 		stones = new Ellipse2D[size][size];
 		stoneColors = new Color[size][size];
@@ -278,12 +325,18 @@ public class BoardFrame implements ActionListener {
 		}
 	}
 
+	/**
+	 * Disable all buttons.
+	 */
 	public void disableInput() {
 		isDisabled = true;
 		passButton.setEnabled(false);
 		proposeChangesButton.setEnabled(false);
 	}
 
+	/**
+	 * Enable input buttons depending on the current phase.
+	 */
 	public void enableInput() {
 		isDisabled = false;
 		passButton.setEnabled(true);
@@ -293,12 +346,25 @@ public class BoardFrame implements ActionListener {
 
 	}
 
+	/**
+	 * Panel containing a graphical representation of the board with buttons for
+	 * placing stones and marking groups.
+	 * 
+	 * @author Kacper
+	 *
+	 */
 	private class BoardCanvas extends JPanel implements ActionListener {
 
 		private static final long serialVersionUID = -3929397568035091522L;
 		BufferedImage img;
 		int size;
 
+		/**
+		 * Create canvas for a board of given size.
+		 * 
+		 * @param size
+		 *            Board size.
+		 */
 		public BoardCanvas(int size) {
 			super();
 			this.size = size;
@@ -337,6 +403,11 @@ public class BoardFrame implements ActionListener {
 			}
 		}
 
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see javax.swing.JComponent#paintComponent(java.awt.Graphics)
+		 */
 		@Override
 		public void paintComponent(Graphics g) {
 			super.paintComponent(g);
@@ -374,10 +445,12 @@ public class BoardFrame implements ActionListener {
 				int y = button.getY();
 
 				if (phase == 0) {
+					// send move and wait for server reply
 					disableInput();
 					ClientRequestSender.getInstance().sendMove(x, y, communication);
 					setMessage("Waiting...");
 				} else if (phase == 1 && groupLabels != null) {
+					// group marking phase, so toggle group state
 					int label = groupLabels[x][y];
 					if (!isGroupLocked(label)) {
 						toggleGroupState(label);
@@ -411,6 +484,12 @@ public class BoardFrame implements ActionListener {
 
 	}
 
+	/**
+	 * Update board graphic with given board data.
+	 * 
+	 * @param board
+	 *            Board data.
+	 */
 	public void drawBoard(int board[][]) {
 		for (int i = 0; i < size; i++) {
 			for (int j = 0; j < size; j++) {
@@ -434,21 +513,46 @@ public class BoardFrame implements ActionListener {
 		canvas.repaint();
 	}
 
+	/**
+	 * Set group labels.
+	 * 
+	 * @param labeledBoard
+	 *            Labeled board data.
+	 */
 	public void setGroupLabels(int[][] labeledBoard) {
 		this.groupLabels = labeledBoard;
 		canvas.repaint();
 	}
 
+	/**
+	 * Set group states.
+	 * 
+	 * @param groupStates
+	 *            Group states map.
+	 */
 	public void setGroupStates(Map<Integer, GoGroupType> groupStates) {
 		this.groupStates = groupStates;
 		canvas.repaint();
 	}
 
+	/**
+	 * Set locked groups.
+	 * 
+	 * @param lockedGroups
+	 *            List of locked groups.
+	 */
 	public void setLockedGroups(List<Integer> lockedGroups) {
 		this.lockedGroups = lockedGroups;
 		canvas.repaint();
 	}
 
+	/**
+	 * Get state of a group with a given label.
+	 * 
+	 * @param label
+	 *            Group label.
+	 * @return Group's state.
+	 */
 	public GoGroupType getGroupState(int label) {
 		if (groupStates != null) {
 			return groupStates.get(label);
@@ -456,6 +560,14 @@ public class BoardFrame implements ActionListener {
 		return null;
 	}
 
+	/**
+	 * Change group state and redraw the canvas.
+	 * 
+	 * @param label
+	 *            Group label.
+	 * @param state
+	 *            New state.
+	 */
 	public void setGroupState(int label, GoGroupType state) {
 		if (groupStates != null) {
 			groupStates.put(label, state);
@@ -463,6 +575,13 @@ public class BoardFrame implements ActionListener {
 		canvas.repaint();
 	}
 
+	/**
+	 * Check if a group is locked.
+	 * 
+	 * @param label
+	 *            Group label.
+	 * @return true if group is locked.
+	 */
 	public boolean isGroupLocked(int label) {
 		if (lockedGroups != null) {
 			return lockedGroups.contains(label);
@@ -470,6 +589,12 @@ public class BoardFrame implements ActionListener {
 		return false;
 	}
 
+	/**
+	 * Toggle group state of a group with the given label.
+	 * 
+	 * @param label
+	 *            Group label.
+	 */
 	public void toggleGroupState(int label) {
 		GoGroupType state;
 		if ((state = getGroupState(label)) != null) {
@@ -477,25 +602,38 @@ public class BoardFrame implements ActionListener {
 			setGroupState(label, state);
 		}
 	}
-	
+
+	/**
+	 * Game status panel. Display information about each player's captured
+	 * stones, as well as information about client's color.
+	 * 
+	 * @author Kacper
+	 *
+	 */
+	/**
+	 * @author Kacper
+	 *
+	 */
 	private class StatusJPanel extends JPanel {
+		// displays "You" or "Opponent" depending on player's color
 		JLabel blackPlayer;
 		JLabel whitePlayer;
+		// displays each player's number of captured stones.
 		JLabel blackCaptured;
 		JLabel whiteCaptured;
-		
+
 		final String YOU = "You";
 		final String OPPONENT = "Opponent";
 		final String CAPTURED = "Captured: ";
-		
-		public StatusJPanel(){
+
+		public StatusJPanel() {
 			setLayout(new GridLayout(1, 2, 5, 5));
-			
+
 			JPanel blackPanel = new JPanel(new GridLayout(3, 1));
 			JPanel whitePanel = new JPanel(new GridLayout(3, 1));
 			add(blackPanel);
 			add(whitePanel);
-			
+
 			JLabel blackName = new JLabel("Black");
 			blackName.setHorizontalAlignment(JLabel.CENTER);
 			JLabel whiteName = new JLabel("White");
@@ -508,7 +646,7 @@ public class BoardFrame implements ActionListener {
 			blackCaptured.setHorizontalAlignment(JLabel.CENTER);
 			whiteCaptured = new JLabel(CAPTURED + 0);
 			whiteCaptured.setHorizontalAlignment(JLabel.CENTER);
-			
+
 			blackPanel.add(blackName);
 			blackPanel.add(blackPlayer);
 			blackPanel.add(blackCaptured);
@@ -516,18 +654,36 @@ public class BoardFrame implements ActionListener {
 			whitePanel.add(whitePlayer);
 			whitePanel.add(whiteCaptured);
 		}
-		
-		public void setColor(String color){
-			if (color.equals(ServerClientProtocol.getInstance().BLACK)){
-				blackPlayer.setText(YOU); whitePlayer.setText(OPPONENT);
+
+		/**
+		 * Update information about which player is which by passing the
+		 * client's color.
+		 * 
+		 * @param color
+		 *            Client's color.
+		 */
+		public void setColor(String color) {
+			if (color.equals(ServerClientProtocol.getInstance().BLACK)) {
+				blackPlayer.setText(YOU);
+				whitePlayer.setText(OPPONENT);
 			} else if (color.equals(ServerClientProtocol.getInstance().WHITE)) {
-				blackPlayer.setText(OPPONENT); whitePlayer.setText(YOU);
+				blackPlayer.setText(OPPONENT);
+				whitePlayer.setText(YOU);
 			} else {
-				blackPlayer.setText(""); whitePlayer.setText("");
+				blackPlayer.setText("");
+				whitePlayer.setText("");
 			}
 		}
-		
-		public void setCaptured(int black, int white){
+
+		/**
+		 * Update information about each player's captured stones.
+		 * 
+		 * @param black
+		 *            Black's captured stones.
+		 * @param white
+		 *            White's captured stones.
+		 */
+		public void setCaptured(int black, int white) {
 			blackCaptured.setText(CAPTURED + black);
 			whiteCaptured.setText(CAPTURED + white);
 		}

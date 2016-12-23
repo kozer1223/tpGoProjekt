@@ -31,10 +31,16 @@ public class ClientConfig {
 		return instance;
 	}
 	
+	/**
+	 * @return Server address string.
+	 */
 	public String getServerAddress(){
 		return prop.getProperty("server_address");
 	}
 	
+	/**
+	 * @return Server socket.
+	 */
 	public int getServerSocket(){
 		return Integer.parseInt(prop.getProperty("server_socket"));
 	}
