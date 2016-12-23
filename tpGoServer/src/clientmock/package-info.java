@@ -1,8 +1,0 @@
-/**
- * 
- */
-/**
- * @author Kacper
- *
- */
-package clientmock;
